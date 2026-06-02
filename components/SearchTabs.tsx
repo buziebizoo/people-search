@@ -45,8 +45,6 @@ export default function SearchTabs() {
   const [imageSearchName, setImageSearchName] = useState("");
   const [imageSearchLocation, setImageSearchLocation] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const lensFormRef = useRef<HTMLFormElement>(null);
-  const lensFileInputRef = useRef<HTMLInputElement>(null);
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
@@ -66,17 +64,7 @@ export default function SearchTabs() {
   }
 
   function handleFaceSearch() {
-    if (!selectedFile) return;
-    if (lensFormRef.current && lensFileInputRef.current) {
-      try {
-        const dt = new DataTransfer();
-        dt.items.add(selectedFile);
-        lensFileInputRef.current.files = dt.files;
-      } catch {
-        // DataTransfer not available — Lens will open without the pre-loaded image
-      }
-    }
-    lensFormRef.current?.submit();
+    window.open("https://lens.google.com", "_blank");
   }
 
   function doSearch() {
@@ -118,18 +106,6 @@ export default function SearchTabs() {
 
   return (
     <div className="w-full max-w-4xl">
-      {/* Hidden form — submits the uploaded image to Google Lens in a new tab */}
-      <form
-        ref={lensFormRef}
-        method="post"
-        action="https://lens.google.com/upload"
-        encType="multipart/form-data"
-        target="_blank"
-        className="hidden"
-      >
-        <input ref={lensFileInputRef} type="file" name="encoded_image" />
-      </form>
-
       {/* Tab bar */}
       <div className="flex bg-white/10 rounded-t-xl overflow-hidden">
         {TABS.map((tab) => (
@@ -301,6 +277,9 @@ export default function SearchTabs() {
                     Search by Face
                   </button>
                 </div>
+                <p className="text-xs text-gray-400 text-center -mt-1">
+                  Upload your photo to Google Lens to search by face
+                </p>
               </>
             )}
 
