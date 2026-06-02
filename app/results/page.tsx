@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
+import { createServerClient } from "@/lib/supabase";
 
 type SearchParams = {
   type?: string;
@@ -10,56 +11,19 @@ type SearchParams = {
   street?: string;
 };
 
-const RESULTS = [
-  {
-    name: "Michael J. Thompson",
-    age: 43,
-    city: "Austin",
-    state: "TX",
-    relatives: ["Karen Thompson", "Daniel Thompson"],
-    phonePrefix: "512",
-  },
-  {
-    name: "Sarah L. Martinez",
-    age: 38,
-    city: "Phoenix",
-    state: "AZ",
-    relatives: ["Carlos Martinez", "Elena Ruiz", "Pedro Martinez"],
-    phonePrefix: "602",
-  },
-  {
-    name: "James R. Anderson",
-    age: 55,
-    city: "Nashville",
-    state: "TN",
-    relatives: ["Patricia Anderson", "Robert Anderson"],
-    phonePrefix: "615",
-  },
-  {
-    name: "Emily K. Chen",
-    age: 29,
-    city: "Seattle",
-    state: "WA",
-    relatives: ["David Chen", "Lisa Chen"],
-    phonePrefix: "206",
-  },
-  {
-    name: "Robert D. Williams",
-    age: 61,
-    city: "Charlotte",
-    state: "NC",
-    relatives: ["Margaret Williams", "Thomas Williams", "Amy Williams"],
-    phonePrefix: "704",
-  },
-  {
-    name: "Jennifer A. Davis",
-    age: 34,
-    city: "Denver",
-    state: "CO",
-    relatives: ["Mark Davis", "Susan Hollings"],
-    phonePrefix: "720",
-  },
-];
+type Person = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  age: number;
+  city: string;
+  state: string;
+  zip: string;
+  address: string;
+  phone_prefix: string;
+  relatives: string[];
+};
 
 function queryLabel(params: SearchParams): string {
   const { type, first, last, q, street, location } = params;
@@ -84,6 +48,40 @@ export default async function ResultsPage({
   const params = await searchParams;
   const label = queryLabel(params);
 
+  const supabase = createServerClient();
+  let query = supabase.from("people").select("*").limit(20);
+
+  if (params.type === "name") {
+    if (params.first) query = query.ilike("first_name", `%${params.first}%`);
+    if (params.last) query = query.ilike("last_name", `%${params.last}%`);
+    if (params.location) {
+      const city = params.location.split(",")[0].trim();
+      if (city) query = query.ilike("city", `%${city}%`);
+    }
+  } else if (params.type === "phone") {
+    if (params.q) query = query.ilike("phone_prefix", `%${params.q}%`);
+  } else if (params.type === "address") {
+    if (params.street) query = query.ilike("address", `%${params.street}%`);
+    if (params.location) {
+      const city = params.location.split(",")[0].trim();
+      if (city) query = query.ilike("city", `%${city}%`);
+    }
+  }
+
+  const { data: results, error } = await query;
+
+  if (error) {
+    return (
+      <div className="bg-gray-50 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <p className="text-red-500">Error loading results. Please try again.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const people = (results ?? []) as Person[];
+
   return (
     <div className="bg-gray-50 flex-1">
       {/* Condensed search bar */}
@@ -100,7 +98,8 @@ export default async function ResultsPage({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         {/* Result count */}
         <p className="text-sm text-gray-500 mb-4">
-          Showing <span className="font-semibold text-gray-800">6 results</span>{" "}
+          Showing{" "}
+          <span className="font-semibold text-gray-800">{people.length} results</span>{" "}
           for <span className="font-semibold text-gray-800">{label}</span>
         </p>
 
@@ -109,59 +108,81 @@ export default async function ResultsPage({
           Advertisement
         </div>
 
+        {/* Empty state */}
+        {people.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-gray-500 text-lg">No results found for &ldquo;{label}&rdquo;.</p>
+            <Link href="/" className="mt-4 inline-block text-teal-600 hover:underline text-sm">
+              ← Try a new search
+            </Link>
+          </div>
+        )}
+
         {/* Result cards */}
-        <div className="flex flex-col gap-4">
-          {RESULTS.map((person) => (
-            <div
-              key={person.name}
-              className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm"
-            >
-              {/* Top row: name/age and location */}
-              <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
-                <div>
-                  <span className="text-lg font-bold text-gray-900">
-                    {person.name}
-                  </span>
-                  <span className="ml-2 text-sm text-gray-400">
-                    Age {person.age}
-                  </span>
+        {people.length > 0 && (
+          <div className="flex flex-col gap-4">
+            {people.map((person) => (
+              <div
+                key={person.id}
+                className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm"
+              >
+                {/* Top row: name/age and location */}
+                <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+                  <div>
+                    <span className="text-lg font-bold text-gray-900">
+                      {person.full_name}
+                    </span>
+                    {person.age && (
+                      <span className="ml-2 text-sm text-gray-400">
+                        Age {person.age}
+                      </span>
+                    )}
+                  </div>
+                  {(person.city || person.state) && (
+                    <span className="text-sm text-gray-500">
+                      📍 {[person.city, person.state].filter(Boolean).join(", ")}
+                    </span>
+                  )}
                 </div>
-                <span className="text-sm text-gray-500">
-                  📍 {person.city}, {person.state}
-                </span>
+
+                {/* Relatives */}
+                {person.relatives?.length > 0 && (
+                  <p className="text-sm text-gray-600 mb-2">
+                    <span className="font-medium">Possible relatives:</span>{" "}
+                    {person.relatives.join(" · ")}
+                  </p>
+                )}
+
+                {/* Phone teaser */}
+                {person.phone_prefix && (
+                  <p className="text-sm text-gray-400 italic mb-4">
+                    Phone: {person.phone_prefix}-***-****
+                  </p>
+                )}
+
+                {/* Action buttons */}
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href={`/profile/${encodeURIComponent(
+                      person.full_name.toLowerCase().replace(/\s+/g, "-")
+                    )}`}
+                    className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                  >
+                    View Full Profile
+                  </Link>
+                  <a
+                    href="https://www.spokeo.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                  >
+                    Get Full Report →
+                  </a>
+                </div>
               </div>
-
-              {/* Relatives */}
-              <p className="text-sm text-gray-600 mb-2">
-                <span className="font-medium">Possible relatives:</span>{" "}
-                {person.relatives.join(" · ")}
-              </p>
-
-              {/* Phone teaser */}
-              <p className="text-sm text-gray-400 italic mb-4">
-                Phone: {person.phonePrefix}-***-****
-              </p>
-
-              {/* Action buttons */}
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href={`/profile/${encodeURIComponent(person.name.toLowerCase().replace(/\s+/g, "-"))}`}
-                  className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                >
-                  View Full Profile
-                </Link>
-                <a
-                  href="https://www.spokeo.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                >
-                  Get Full Report →
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Inline FCRA disclaimer */}
         <p className="text-xs text-gray-400 border-t border-gray-100 pt-6 mt-8 leading-relaxed">
