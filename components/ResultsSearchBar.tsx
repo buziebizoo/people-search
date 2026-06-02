@@ -60,8 +60,7 @@ export default function ResultsSearchBar({
     }
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function doSearch() {
     if (active === "name") {
       const params = new URLSearchParams({ type: "name" });
       if (firstName) params.set("first", firstName);
@@ -77,6 +76,18 @@ export default function ResultsSearchBar({
       router.push(`/results?${params}`);
     } else if (active === "image") {
       handleImageSearch(selectedFile);
+    }
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    doSearch();
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      doSearch();
     }
   }
 
@@ -110,22 +121,22 @@ export default function ResultsSearchBar({
         <form onSubmit={handleSubmit}>
           {active === "name" && (
             <div className="flex flex-row gap-2 items-center">
-              <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" className={inputClass} />
-              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name" className={inputClass} />
-              <input type="text" value={nameLocation} onChange={(e) => setNameLocation(e.target.value)} placeholder="City, State" className={inputClass} />
+              <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} onKeyDown={handleKeyDown} placeholder="First Name" className={inputClass} />
+              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} onKeyDown={handleKeyDown} placeholder="Last Name" className={inputClass} />
+              <input type="text" value={nameLocation} onChange={(e) => setNameLocation(e.target.value)} onKeyDown={handleKeyDown} placeholder="City, State" className={inputClass} />
               <button type="submit" className={submitClass}>Search</button>
             </div>
           )}
           {active === "phone" && (
             <div className="flex flex-row gap-2 items-center">
-              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone Number" className={inputClass} />
+              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} onKeyDown={handleKeyDown} placeholder="Phone Number" className={inputClass} />
               <button type="submit" className={submitClass}>Search</button>
             </div>
           )}
           {active === "address" && (
             <div className="flex flex-row gap-2 items-center">
-              <input type="text" value={street} onChange={(e) => setStreet(e.target.value)} placeholder="Street Address" className={inputClass} />
-              <input type="text" value={addrLocation} onChange={(e) => setAddrLocation(e.target.value)} placeholder="City, State" className={inputClass} />
+              <input type="text" value={street} onChange={(e) => setStreet(e.target.value)} onKeyDown={handleKeyDown} placeholder="Street Address" className={inputClass} />
+              <input type="text" value={addrLocation} onChange={(e) => setAddrLocation(e.target.value)} onKeyDown={handleKeyDown} placeholder="City, State" className={inputClass} />
               <button type="submit" className={submitClass}>Search</button>
             </div>
           )}

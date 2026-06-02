@@ -75,8 +75,7 @@ export default function SearchTabs() {
     }
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function doSearch() {
     if (active === "name") {
       const params = new URLSearchParams({ type: "name" });
       if (firstName) params.set("first", firstName);
@@ -92,6 +91,18 @@ export default function SearchTabs() {
       router.push(`/results?${params}`);
     } else if (active === "image") {
       handleImageSearch(selectedFile);
+    }
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    doSearch();
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      doSearch();
     }
   }
 
@@ -126,6 +137,7 @@ export default function SearchTabs() {
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="First Name"
               className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
             />
@@ -133,6 +145,7 @@ export default function SearchTabs() {
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Last Name"
               className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
             />
@@ -140,6 +153,7 @@ export default function SearchTabs() {
               type="text"
               value={nameLocation}
               onChange={(e) => setNameLocation(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="City, State"
               className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
             />
@@ -158,6 +172,7 @@ export default function SearchTabs() {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Phone Number"
               className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
             />
@@ -176,6 +191,7 @@ export default function SearchTabs() {
               type="text"
               value={street}
               onChange={(e) => setStreet(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Street Address"
               className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
             />
@@ -183,6 +199,7 @@ export default function SearchTabs() {
               type="text"
               value={addrLocation}
               onChange={(e) => setAddrLocation(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="City, State"
               className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
             />
