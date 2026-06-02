@@ -13,14 +13,17 @@ export default function Footer() {
           tenant screening, employment decisions, or credit determinations.
         </p>
         <div className="flex flex-wrap gap-x-6 gap-y-2">
-          <Link href="/privacy" className="hover:text-white transition-colors">
+          <Link href="/about" className="hover:text-white transition-colors">
+            About
+          </Link>
+          <Link href="/privacy-policy" className="hover:text-white transition-colors">
             Privacy Policy
+          </Link>
+          <Link href="/opt-out" className="hover:text-white transition-colors">
+            Opt Out / Remove My Info
           </Link>
           <Link href="/terms" className="hover:text-white transition-colors">
             Terms of Service
-          </Link>
-          <Link href="/remove" className="hover:text-white transition-colors">
-            Remove My Info
           </Link>
           <Link href="/contact" className="hover:text-white transition-colors">
             Contact

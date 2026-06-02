@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
+import ImageResultsPanel from "@/components/ImageResultsPanel";
 import { createServerClient } from "@/lib/supabase";
 
 type SearchParams = {
@@ -32,6 +33,7 @@ function queryLabel(params: SearchParams): string {
     return name || "Name Search";
   }
   if (type === "phone") return q || "Phone Search";
+  if (type === "image") return "Image Search";
   if (type === "address") {
     const addr = [street, location].filter(Boolean).join(", ");
     return addr || "Address Search";
@@ -47,6 +49,24 @@ export default async function ResultsPage({
 }) {
   const params = await searchParams;
   const label = queryLabel(params);
+
+  if (params.type === "image") {
+    return (
+      <div className="bg-gray-50 flex-1">
+        <ResultsSearchBar
+          initialType="image"
+          initialFirst={params.first}
+          initialLast={params.last}
+          initialLocation={params.location}
+          initialPhone={params.q}
+          initialStreet={params.street}
+        />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+          <ImageResultsPanel />
+        </div>
+      </div>
+    );
+  }
 
   const supabase = createServerClient();
   let query = supabase.from("people").select("*").limit(20);
@@ -176,9 +196,7 @@ export default async function ResultsPage({
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href={`/profile/${encodeURIComponent(
-                      person.full_name.toLowerCase().replace(/\s+/g, "-")
-                    )}`}
+                    href={`/profile/${person.id}`}
                     className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
                   >
                     View Full Profile

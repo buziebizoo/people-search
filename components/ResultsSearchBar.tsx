@@ -3,13 +3,13 @@
 import { useState, useRef, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-type Tab = "name" | "phone" | "address" | "screenshot";
+type Tab = "name" | "phone" | "address" | "image";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "name", label: "Name" },
   { id: "phone", label: "Phone" },
   { id: "address", label: "Address" },
-  { id: "screenshot", label: "Screenshot" },
+  { id: "image", label: "Image" },
 ];
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 };
 
 function toTab(type: string): Tab {
-  if (type === "phone" || type === "address" || type === "screenshot") return type;
+  if (type === "phone" || type === "address" || type === "image") return type;
   return "name";
 }
 
@@ -46,6 +46,20 @@ export default function ResultsSearchBar({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  function handleImageSearch(file: File | null) {
+    window.open("https://lens.google.com", "_blank");
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        sessionStorage.setItem("imagePreview", reader.result as string);
+        router.push("/results?type=image");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      router.push("/results?type=image");
+    }
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (active === "name") {
@@ -61,8 +75,8 @@ export default function ResultsSearchBar({
       if (street) params.set("street", street);
       if (addrLocation) params.set("location", addrLocation);
       router.push(`/results?${params}`);
-    } else if (active === "screenshot") {
-      router.push("/results?type=screenshot");
+    } else if (active === "image") {
+      handleImageSearch(selectedFile);
     }
   }
 
@@ -115,7 +129,7 @@ export default function ResultsSearchBar({
               <button type="submit" className={submitClass}>Search</button>
             </div>
           )}
-          {active === "screenshot" && (
+          {active === "image" && (
             <div className="flex flex-row gap-2 items-center">
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)} />
               <span className="flex-1 text-sm text-gray-400 italic">
@@ -124,7 +138,7 @@ export default function ResultsSearchBar({
               <button type="button" onClick={() => fileInputRef.current?.click()} className="border border-gray-300 text-gray-600 rounded-lg px-3 py-2 text-sm hover:border-teal-500 hover:text-teal-600 transition-colors shrink-0">
                 Choose Photo
               </button>
-              {selectedFile && <button type="submit" className={submitClass}>Search</button>}
+              <button type="submit" className={submitClass}>Search</button>
             </div>
           )}
         </form>

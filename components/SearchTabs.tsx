@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, FormEvent, DragEvent } from "react";
 import { useRouter } from "next/navigation";
 
-type Tab = "name" | "phone" | "address" | "screenshot";
+type Tab = "name" | "phone" | "address" | "image";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "name", label: "Name" },
   { id: "phone", label: "Phone" },
   { id: "address", label: "Address" },
-  { id: "screenshot", label: "Screenshot" },
+  { id: "image", label: "Image" },
 ];
 
 const CameraIcon = () => (
@@ -41,7 +41,39 @@ export default function SearchTabs() {
   const [addrLocation, setAddrLocation] = useState("");
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleDragOver(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setIsDragging(false);
+  }
+
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) setSelectedFile(file);
+  }
+
+  function handleImageSearch(file: File | null) {
+    window.open("https://lens.google.com", "_blank");
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        sessionStorage.setItem("imagePreview", reader.result as string);
+        router.push("/results?type=image");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      router.push("/results?type=image");
+    }
+  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -58,8 +90,8 @@ export default function SearchTabs() {
       if (street) params.set("street", street);
       if (addrLocation) params.set("location", addrLocation);
       router.push(`/results?${params}`);
-    } else if (active === "screenshot") {
-      router.push("/results?type=screenshot");
+    } else if (active === "image") {
+      handleImageSearch(selectedFile);
     }
   }
 
@@ -163,7 +195,7 @@ export default function SearchTabs() {
           </div>
         )}
 
-        {active === "screenshot" && (
+        {active === "image" && (
           <div className="flex flex-col items-center gap-4 py-2">
             {/* Hidden file input */}
             <input
@@ -174,38 +206,32 @@ export default function SearchTabs() {
               onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
             />
 
-            {/* Dashed upload area */}
-            <div className="w-full border-2 border-dashed border-gray-300 rounded-xl py-8 px-6 flex flex-col items-center gap-3">
+            {/* Drag-and-drop upload zone */}
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`w-full border-2 border-dashed rounded-xl py-8 px-6 flex flex-col items-center gap-3 cursor-pointer transition-colors ${
+                isDragging
+                  ? "border-teal-500 bg-teal-50"
+                  : "border-gray-300 hover:border-teal-400 hover:bg-gray-50"
+              }`}
+            >
               <CameraIcon />
               <p className="text-sm font-medium text-gray-600">
-                Upload a dating app screenshot
+                {selectedFile
+                  ? selectedFile.name
+                  : "Drop a photo or click to upload"}
               </p>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="border border-gray-300 text-gray-600 rounded-lg px-4 py-2 text-sm hover:border-teal-500 hover:text-teal-600 transition-colors"
-              >
-                Choose Photo
-              </button>
             </div>
 
-            <p className="text-xs text-gray-400">
-              We&apos;ll extract the name automatically
-            </p>
-
-            {selectedFile && (
-              <>
-                <p className="text-sm text-gray-600 truncate max-w-xs">
-                  {selectedFile.name}
-                </p>
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors"
-                >
-                  Search
-                </button>
-              </>
-            )}
+            <button
+              type="submit"
+              className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors"
+            >
+              Search
+            </button>
           </div>
         )}
       </form>
