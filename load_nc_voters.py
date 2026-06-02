@@ -117,18 +117,25 @@ def build_full_name(first: str, middle: str, last: str, suffix: str) -> str:
 def parse_row(row: dict) -> Optional[dict]:
     """Map a DictReader row to the Supabase people schema. Returns None to skip."""
     def get(key: str) -> str:
-        return (row.get(key) or "").strip()
+        # Strip BOM, surrounding whitespace, and null bytes that appear in some rows
+        val = row.get(key) or ""
+        return val.strip().lstrip("﻿").replace("\x00", "")
 
     first = get("first_name")
     last  = get("last_name")
     if not first and not last:
         return None
 
-    age_raw = get("birth_age")
+    # Field renamed from birth_age to age_at_year_end on 02/09/2022
+    age_raw = get("age_at_year_end")
     try:
         age = int(age_raw) if age_raw else None
     except ValueError:
         age = None
+
+    # area_cd no longer exists; full_phone_number contains the full number (e.g. 9195551234)
+    phone = get("full_phone_number").replace("-", "").replace(".", "").replace(" ", "")
+    phone_prefix = phone[:3] if len(phone) >= 10 else None
 
     zip_raw = get("zip_code")
 
@@ -141,7 +148,7 @@ def parse_row(row: dict) -> Optional[dict]:
         "city":         get("res_city_desc") or None,
         "state":        get("state_cd") or "NC",
         "zip":          zip_raw[:10] or None,
-        "phone_prefix": get("area_cd") or None,
+        "phone_prefix": phone_prefix,
         "relatives":    None,
     }
 
