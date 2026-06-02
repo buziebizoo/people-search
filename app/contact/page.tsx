@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createBrowserClient } from "@/lib/supabase";
 
 const SUBJECTS = [
   "General question",
@@ -13,6 +14,8 @@ const SUBJECTS = [
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -26,8 +29,27 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    const supabase = createBrowserClient();
+    const { error: dbError } = await supabase
+      .from("contact_submissions")
+      .insert({
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        message: form.message,
+      });
+
+    if (dbError) {
+      setError("Something went wrong sending your message. Please try again.");
+      setSubmitting(false);
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -163,11 +185,18 @@ export default function ContactPage() {
           />
         </div>
 
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+            {error}
+          </p>
+        )}
+
         <button
           type="submit"
-          className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          disabled={submitting}
+          className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Send Message
+          {submitting ? "Sending…" : "Send Message"}
         </button>
       </form>
     </div>

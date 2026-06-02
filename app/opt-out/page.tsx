@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createBrowserClient } from "@/lib/supabase";
 
 const US_STATES = [
   "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
@@ -19,6 +20,8 @@ const REMOVAL_REASONS = [
 
 export default function OptOutPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     fullName: "",
     address: "",
@@ -35,8 +38,30 @@ export default function OptOutPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    const supabase = createBrowserClient();
+    const { error: dbError } = await supabase
+      .from("opt_out_requests")
+      .insert({
+        full_name: form.fullName,
+        address: form.address,
+        city: form.city,
+        state: form.state,
+        zip: form.zip,
+        email: form.email,
+        reason: form.reason,
+      });
+
+    if (dbError) {
+      setError("Something went wrong submitting your request. Please try again.");
+      setSubmitting(false);
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -238,11 +263,18 @@ export default function OptOutPage() {
           </select>
         </div>
 
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+            {error}
+          </p>
+        )}
+
         <button
           type="submit"
-          className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          disabled={submitting}
+          className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Submit Opt-Out Request
+          {submitting ? "Submitting…" : "Submit Opt-Out Request"}
         </button>
 
         <p className="text-xs text-gray-400 text-center leading-relaxed">
