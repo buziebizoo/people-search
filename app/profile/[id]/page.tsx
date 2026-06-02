@@ -2,6 +2,7 @@ import { cache } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase";
+import ResultsSearchBar from "@/components/ResultsSearchBar";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -193,9 +194,9 @@ export default async function ProfilePage({ params }: Props) {
   if (!person) {
     return (
       <div className="bg-gray-50 min-h-screen">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-24 text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
           <svg
-            className="mx-auto mb-5 h-14 w-14 text-teal-400"
+            className="mx-auto mb-5 h-12 w-12 text-teal-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -208,10 +209,9 @@ export default async function ProfilePage({ params }: Props) {
             />
           </svg>
           <p className="text-gray-700 text-xl font-medium">Oops! This person&rsquo;s record is no longer available.</p>
-          <Link href="/" className="mt-5 inline-block text-teal-600 hover:underline text-sm font-medium">
-            ← Back to Search
-          </Link>
+          <p className="text-gray-500 mt-2">Search for someone else below.</p>
         </div>
+        <ResultsSearchBar initialType="name" />
       </div>
     );
   }

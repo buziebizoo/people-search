@@ -162,6 +162,38 @@ export default async function ResultsPage({
 
   const people = (results ?? []) as Person[];
 
+  if (people.length === 0) {
+    return (
+      <div className="bg-gray-50 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <svg
+            className="mx-auto mb-5 h-12 w-12 text-teal-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803a7.5 7.5 0 0 0 10.607 0Z"
+            />
+          </svg>
+          <p className="text-gray-700 text-xl font-medium">Oops! We couldn&rsquo;t find anyone matching that name.</p>
+          <p className="text-gray-500 mt-2">Try a different spelling or location.</p>
+        </div>
+        <ResultsSearchBar
+          initialType={params.type ?? "name"}
+          initialFirst={params.first}
+          initialLast={params.last}
+          initialLocation={params.location}
+          initialPhone={params.q}
+          initialStreet={params.street}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 flex-1">
       {/* Condensed search bar */}
@@ -188,33 +220,8 @@ export default async function ResultsPage({
           Advertisement
         </div>
 
-        {/* Empty state */}
-        {people.length === 0 && (
-          <div className="text-center py-16">
-            <svg
-              className="mx-auto mb-5 h-12 w-12 text-teal-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803a7.5 7.5 0 0 0 10.607 0Z"
-              />
-            </svg>
-            <p className="text-gray-700 text-xl font-medium">Oops! We couldn&rsquo;t find anyone matching that name.</p>
-            <p className="text-gray-500 mt-2">Try a different spelling or location.</p>
-            <Link href="/" className="mt-5 inline-block text-teal-600 hover:underline text-sm font-medium">
-              ← Try a new search
-            </Link>
-          </div>
-        )}
-
         {/* Result cards */}
-        {people.length > 0 && (
-          <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
             {people.map((person) => (
               <div
                 key={person.id}
@@ -286,8 +293,7 @@ export default async function ResultsPage({
                 </div>
               </div>
             ))}
-          </div>
-        )}
+        </div>
 
         {/* Inline FCRA disclaimer */}
         <p className="text-xs text-gray-400 border-t border-gray-100 pt-6 mt-8 leading-relaxed">
