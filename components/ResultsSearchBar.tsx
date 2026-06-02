@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, FormEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 type Tab = "name" | "phone" | "address" | "image";
@@ -84,7 +84,7 @@ export default function ResultsSearchBar({
     doSearch();
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
       e.preventDefault();
       doSearch();
