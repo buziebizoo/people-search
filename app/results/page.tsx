@@ -88,7 +88,7 @@ export default async function ResultsPage({
       if (city) query = query.ilike("city", `%${city}%`);
     }
   } else if (params.type === "phone") {
-    if (params.q) query = query.ilike("phone_prefix", `%${params.q}%`);
+    if (params.q) query = query.ilike("phone", `%${params.q}%`);
   } else if (params.type === "address") {
     if (params.street) query = query.ilike("address", `%${params.street}%`);
     if (params.location) {
