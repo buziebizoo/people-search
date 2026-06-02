@@ -93,7 +93,7 @@ def parse_row(row: dict) -> Optional[dict]:
         return None
 
     phone = re.sub(r"\D", "", get("PHONE"))
-    phone_prefix = phone[:3] if len(phone) >= 10 else None
+    phone = phone if len(phone) >= 10 else None
 
     zip_raw = get("RESIDENTIAL_ZIP")
 
@@ -106,7 +106,7 @@ def parse_row(row: dict) -> Optional[dict]:
         "city":         get("RESIDENTIAL_CITY") or None,
         "state":        get("RESIDENTIAL_STATE") or "OH",
         "zip":          zip_raw[:10] or None,
-        "phone_prefix": phone_prefix,
+        "phone": phone,
         "relatives":    None,
     }
 
