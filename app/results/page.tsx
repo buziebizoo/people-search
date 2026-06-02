@@ -1,6 +1,5 @@
 import Link from "next/link";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
-import ImageResultsPanel from "@/components/ImageResultsPanel";
 import { createServerClient } from "@/lib/supabase";
 
 type SearchParams = {
@@ -68,24 +67,6 @@ export default async function ResultsPage({
             />
           </svg>
           <p className="text-gray-700 text-xl font-medium">Enter a name to begin your search</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (params.type === "image") {
-    return (
-      <div className="bg-gray-50 flex-1">
-        <ResultsSearchBar
-          initialType="image"
-          initialFirst={params.first}
-          initialLast={params.last}
-          initialLocation={params.location}
-          initialPhone={params.q}
-          initialStreet={params.street}
-        />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <ImageResultsPanel />
         </div>
       </div>
     );

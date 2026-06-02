@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   const upstreamParams = new URLSearchParams({ first_name: firstName, last_name: lastName });
   if (location) upstreamParams.set("location", location);
 
-  const upstreamUrl = `https://nubela.io/proxycurl/api/v2/search/person?${upstreamParams}`;
+  const upstreamUrl = `https://enrichlayer.com/api/v2/search/person?${upstreamParams}`;
   console.log("[linkedin-search] calling upstream URL:", upstreamUrl);
 
   try {
