@@ -204,8 +204,8 @@ export default async function ResultsPage({
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803a7.5 7.5 0 0 0 10.607 0Z"
               />
             </svg>
-            <p className="text-gray-700 text-xl font-medium">No records found for &ldquo;{label}&rdquo;.</p>
-            <p className="text-gray-500 mt-2">Try a different name, spelling, or location.</p>
+            <p className="text-gray-700 text-xl font-medium">Oops! We couldn&rsquo;t find anyone matching that name.</p>
+            <p className="text-gray-500 mt-2">Try a different spelling or location.</p>
             <Link href="/" className="mt-5 inline-block text-teal-600 hover:underline text-sm font-medium">
               ← Try a new search
             </Link>
