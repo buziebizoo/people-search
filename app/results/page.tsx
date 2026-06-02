@@ -69,6 +69,15 @@ export default async function ResultsPage({
   }
 
   const supabase = createServerClient();
+  if (!supabase) {
+    return (
+      <div className="bg-gray-50 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <p className="text-red-500">Search is temporarily unavailable. Please try again shortly.</p>
+        </div>
+      </div>
+    );
+  }
   let query = supabase.from("people").select("*").limit(20);
 
   if (params.type === "name") {

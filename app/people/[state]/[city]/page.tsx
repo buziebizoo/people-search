@@ -134,24 +134,29 @@ export default async function CityPage({ params, searchParams }: Props) {
 
   const supabase = createServerClient();
 
-  const [countResult, dataResult] = await Promise.all([
-    supabase
-      .from("people")
-      .select("*", { count: "exact", head: true })
-      .eq("state", stateInfo.code)
-      .ilike("city", cityQuery),
-    supabase
-      .from("people")
-      .select("id, first_name, last_name, age, address, city, zip")
-      .eq("state", stateInfo.code)
-      .ilike("city", cityQuery)
-      .order("last_name", { ascending: true })
-      .order("first_name", { ascending: true })
-      .range(start, end),
-  ]);
+  let totalCount = 0;
+  let people: { id: string; first_name: string | null; last_name: string | null; age: number | null; address: string | null; city: string | null; zip: string | null }[] = [];
 
-  const totalCount = countResult.count ?? 0;
-  const people = dataResult.data ?? [];
+  if (supabase) {
+    const [countResult, dataResult] = await Promise.all([
+      supabase
+        .from("people")
+        .select("*", { count: "exact", head: true })
+        .eq("state", stateInfo.code)
+        .ilike("city", cityQuery),
+      supabase
+        .from("people")
+        .select("id, first_name, last_name, age, address, city, zip")
+        .eq("state", stateInfo.code)
+        .ilike("city", cityQuery)
+        .order("last_name", { ascending: true })
+        .order("first_name", { ascending: true })
+        .range(start, end),
+    ]);
+    totalCount = countResult.count ?? 0;
+    people = dataResult.data ?? [];
+  }
+
   const totalPages = totalCount > 0 ? Math.ceil(totalCount / PAGE_SIZE) : 0;
 
   const baseHref = `/people/${stateSlug}/${citySlug}`;

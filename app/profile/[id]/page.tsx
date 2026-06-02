@@ -32,6 +32,7 @@ type Props = {
 
 const getPerson = cache(async (id: string): Promise<Person | null> => {
   const supabase = createServerClient();
+  if (!supabase) return null;
   const { data } = await supabase
     .from("people")
     .select("*")

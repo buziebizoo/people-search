@@ -7,10 +7,6 @@ import StateSearchBar from "@/components/StateSearchBar";
 
 type Props = { params: Promise<{ state: string }> };
 
-export async function generateStaticParams() {
-  return STATES.map((s) => ({ state: s.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { state: slug } = await params;
   const info = SLUG_TO_STATE.get(slug);
@@ -45,21 +41,24 @@ export default async function StatePage({ params }: Props) {
 
   const supabase = createServerClient();
 
-  // Run count and data sample in parallel
-  const [countResult, sampleResult] = await Promise.all([
-    supabase
-      .from("people")
-      .select("*", { count: "exact", head: true })
-      .eq("state", info.code),
-    supabase
-      .from("people")
-      .select("city, first_name, last_name")
-      .eq("state", info.code)
-      .limit(3000),
-  ]);
+  let totalCount = 0;
+  let sample: { city: string | null; first_name: string | null; last_name: string | null }[] = [];
 
-  const totalCount = countResult.count ?? sampleResult.data?.length ?? 0;
-  const sample = sampleResult.data ?? [];
+  if (supabase) {
+    const [countResult, sampleResult] = await Promise.all([
+      supabase
+        .from("people")
+        .select("*", { count: "exact", head: true })
+        .eq("state", info.code),
+      supabase
+        .from("people")
+        .select("city, first_name, last_name")
+        .eq("state", info.code)
+        .limit(3000),
+    ]);
+    totalCount = countResult.count ?? sampleResult.data?.length ?? 0;
+    sample = sampleResult.data ?? [];
+  }
 
   const topCities = countBy(sample, (r) => r.city ?? "")
     .filter(([c]) => c.length > 0)
