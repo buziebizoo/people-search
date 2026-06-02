@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
+import ProfessionalInfo from "@/components/ProfessionalInfo";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -284,7 +285,14 @@ export default async function ProfilePage({ params }: Props) {
           </dl>
         </SectionCard>
 
-        {/* ── 3. RELATIVES ── */}
+        {/* ── 3. PROFESSIONAL INFORMATION ── */}
+        <ProfessionalInfo
+          firstName={person.first_name}
+          lastName={person.last_name}
+          location={location}
+        />
+
+        {/* ── 4. RELATIVES ── */}
         <SectionCard>
           <SectionTitle>Possible Relatives</SectionTitle>
           {person.relatives && person.relatives.length > 0 ? (
