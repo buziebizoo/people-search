@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createBrowserClient } from "@/lib/supabase";
 
 const US_STATES = [
   "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
@@ -43,20 +42,21 @@ export default function OptOutPage() {
     setSubmitting(true);
     setError(null);
 
-    const supabase = createBrowserClient();
-    const { error: dbError } = await supabase
-      .from("opt_out_requests")
-      .insert({
-        full_name: form.fullName,
+    const res = await fetch("/api/opt-out", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullName: form.fullName,
         address: form.address,
         city: form.city,
         state: form.state,
         zip: form.zip,
         email: form.email,
         reason: form.reason,
-      });
+      }),
+    });
 
-    if (dbError) {
+    if (!res.ok) {
       setError("Something went wrong submitting your request. Please try again.");
       setSubmitting(false);
       return;
