@@ -15,7 +15,7 @@ export default function Header() {
             About
           </Link>
           <Link
-            href="/remove"
+            href="/opt-out"
             className="hover:text-teal-600 transition-colors"
           >
             Remove My Info
