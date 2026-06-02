@@ -50,6 +50,29 @@ export default async function ResultsPage({
   const params = await searchParams;
   const label = queryLabel(params);
 
+  if (!params.type) {
+    return (
+      <div className="bg-gray-50 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <svg
+            className="mx-auto mb-5 h-14 w-14 text-teal-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803a7.5 7.5 0 0 0 10.607 0Z"
+            />
+          </svg>
+          <p className="text-gray-700 text-xl font-medium">Enter a name to begin your search</p>
+        </div>
+      </div>
+    );
+  }
+
   if (params.type === "image") {
     return (
       <div className="bg-gray-50 flex-1">
@@ -72,8 +95,22 @@ export default async function ResultsPage({
   if (!supabase) {
     return (
       <div className="bg-gray-50 flex-1">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
-          <p className="text-red-500">Search is temporarily unavailable. Please try again shortly.</p>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <svg
+            className="mx-auto mb-5 h-14 w-14 text-teal-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+            />
+          </svg>
+          <p className="text-gray-700 text-xl font-medium">Search temporarily unavailable.</p>
+          <p className="text-gray-500 mt-2">Please try again shortly.</p>
         </div>
       </div>
     );
@@ -102,8 +139,22 @@ export default async function ResultsPage({
   if (error) {
     return (
       <div className="bg-gray-50 flex-1">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
-          <p className="text-red-500">Error loading results. Please try again.</p>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <svg
+            className="mx-auto mb-5 h-14 w-14 text-teal-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+            />
+          </svg>
+          <p className="text-gray-700 text-xl font-medium">Search temporarily unavailable.</p>
+          <p className="text-gray-500 mt-2">Please try again shortly.</p>
         </div>
       </div>
     );
@@ -140,8 +191,22 @@ export default async function ResultsPage({
         {/* Empty state */}
         {people.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-gray-500 text-lg">No results found for &ldquo;{label}&rdquo;.</p>
-            <Link href="/" className="mt-4 inline-block text-teal-600 hover:underline text-sm">
+            <svg
+              className="mx-auto mb-5 h-12 w-12 text-teal-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803a7.5 7.5 0 0 0 10.607 0Z"
+              />
+            </svg>
+            <p className="text-gray-700 text-xl font-medium">No records found for &ldquo;{label}&rdquo;.</p>
+            <p className="text-gray-500 mt-2">Try a different name, spelling, or location.</p>
+            <Link href="/" className="mt-5 inline-block text-teal-600 hover:underline text-sm font-medium">
               ← Try a new search
             </Link>
           </div>
