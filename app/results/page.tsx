@@ -145,18 +145,31 @@ export default async function ResultsPage({
                   )}
                 </div>
 
-                {/* Relatives */}
-                {person.relatives?.length > 0 && (
-                  <p className="text-sm text-gray-600 mb-2">
-                    <span className="font-medium">Possible relatives:</span>{" "}
-                    {person.relatives.join(" · ")}
+                {/* Address */}
+                {person.address && (
+                  <p className="text-sm text-gray-400 mb-2">
+                    {[
+                      person.address,
+                      person.city,
+                      [person.state, person.zip].filter(Boolean).join(" "),
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
                   </p>
                 )}
 
                 {/* Phone teaser */}
                 {person.phone_prefix && (
-                  <p className="text-sm text-gray-400 italic mb-4">
+                  <p className="text-sm text-gray-400 italic mb-2">
                     Phone: {person.phone_prefix}-***-****
+                  </p>
+                )}
+
+                {/* Relatives */}
+                {person.relatives?.length > 0 && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    <span className="font-medium">Possible relatives:</span>{" "}
+                    {person.relatives.join(" · ")}
                   </p>
                 )}
 
