@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createBrowserClient } from "@/lib/supabase";
 
 const SUBJECTS = [
   "General question",
@@ -34,18 +33,15 @@ export default function ContactPage() {
     setSubmitting(true);
     setError(null);
 
-    const supabase = createBrowserClient();
-    const { error: dbError } = await supabase
-      .from("contact_submissions")
-      .insert({
-        name: form.name,
-        email: form.email,
-        subject: form.subject,
-        message: form.message,
-      });
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+    const data = await res.json();
 
-    if (dbError) {
-      setError("Something went wrong sending your message. Please try again.");
+    if (!res.ok || data.error) {
+      setError(data.error ?? "Something went wrong. Please try again.");
       setSubmitting(false);
       return;
     }
