@@ -22,7 +22,6 @@ export default function QuickSearch({
   }
 
   const linkedinUrl = `https://www.google.com/search?q=${buildQuery("site:linkedin.com")}`;
-  const googleUrl   = `https://www.google.com/search?q=${buildQuery()}`;
 
   return (
     <div className="bg-white border border-teal-200 rounded-xl shadow-sm overflow-hidden">
@@ -67,7 +66,7 @@ export default function QuickSearch({
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div>
           <a
             href={linkedinUrl}
             target="_blank"
@@ -75,14 +74,6 @@ export default function QuickSearch({
             className="inline-flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
           >
             Search LinkedIn →
-          </a>
-          <a
-            href={googleUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 border border-teal-600 text-teal-700 hover:bg-teal-50 text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-          >
-            Search on Google →
           </a>
         </div>
       </div>
