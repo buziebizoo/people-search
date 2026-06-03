@@ -8,11 +8,20 @@ export type BlocklistEntry = {
 
 export async function fetchBlocklist(): Promise<BlocklistEntry[]> {
   const supabase = createServerClient();
-  if (!supabase) return [];
-  const { data } = await supabase
+  if (!supabase) {
+    console.error("[blocklist] fetchBlocklist: Supabase client unavailable — missing env vars");
+    return [];
+  }
+  const { data, error } = await supabase
     .from("opt_out_blocklist")
     .select("first_name, last_name, address");
-  return (data ?? []) as BlocklistEntry[];
+  if (error) {
+    console.error("[blocklist] fetchBlocklist query failed:", error.message, error.details, error.hint);
+    return [];
+  }
+  const entries = (data ?? []) as BlocklistEntry[];
+  console.log(`[blocklist] fetchBlocklist: ${entries.length} entries`, entries.map(e => `${e.first_name} ${e.last_name}`));
+  return entries;
 }
 
 function norm(s: string | null | undefined): string {
@@ -40,10 +49,15 @@ export function isBlocklisted(
 ): boolean {
   const fn = norm(firstName);
   const ln = norm(lastName);
-  return blocklist.some(
+  const matched = blocklist.some(
     (e) =>
       norm(e.first_name) === fn &&
       norm(e.last_name)  === ln &&
       addressMatches(e.address, address),
   );
+  console.log(
+    `[blocklist] isBlocklisted("${fn}", "${ln}", addr="${address ?? "null"}") → ${matched}`,
+    blocklist.length === 0 ? "(blocklist is EMPTY)" : "",
+  );
+  return matched;
 }

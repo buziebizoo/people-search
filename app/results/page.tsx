@@ -387,7 +387,12 @@ export default async function ResultsPage({
     console.log(`[results] Supabase 0 — Enformion name fallback: first="${params.first}" last="${params.last}" page=${page}`);
     const enf = await searchByName(params.first ?? "", params.last ?? "", city, state, page, PAGE_SIZE);
     console.log(`[results] Enformion returned ${enf.length} results`);
-    display = sortByLocation(notBlocked(enf).map(fromEnformion), city, state);
+    enf.forEach((p, i) =>
+      console.log(`[results] enf[${i}] first_name="${p.first_name}" last_name="${p.last_name}" address="${p.address ?? "null"}"`),
+    );
+    const filtered = notBlocked(enf);
+    console.log(`[results] after blocklist filter: ${filtered.length} of ${enf.length} remain`);
+    display = sortByLocation(filtered.map(fromEnformion), city, state);
   } else if (params.type === "address") {
     const parts = (params.location ?? "").split(",");
     const city  = parts[0]?.trim() ?? "";
