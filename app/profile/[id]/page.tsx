@@ -294,6 +294,7 @@ export default async function ProfilePage({ params }: Props) {
         <ProfessionalInfo
           firstName={person.first_name}
           lastName={person.last_name}
+          city={person.city ?? ""}
           state={person.state ?? ""}
         />
 
