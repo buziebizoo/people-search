@@ -3,50 +3,54 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const firstName = searchParams.get("first_name") ?? "";
-  const lastName = searchParams.get("last_name") ?? "";
-  const location = searchParams.get("location") ?? "";
-
-  console.log("[linkedin-search] incoming params:", { firstName, lastName, location });
+  const lastName  = searchParams.get("last_name")  ?? "";
+  const location  = searchParams.get("location")   ?? "";
 
   if (!firstName || !lastName) {
-    console.log("[linkedin-search] missing name params — returning 400");
     return NextResponse.json({ error: "Missing name params" }, { status: 400 });
   }
 
   const apiKey = process.env.ENRICHLAYER_API_KEY;
-  console.log("[linkedin-search] API key present:", !!apiKey, "| key prefix:", apiKey?.slice(0, 6));
   if (!apiKey) {
     return NextResponse.json({ error: "API key not configured" }, { status: 503 });
   }
 
-  const upstreamParams = new URLSearchParams({ first_name: firstName, last_name: lastName });
-  if (location) upstreamParams.set("location", location);
+  const params = new URLSearchParams({
+    first_name:        firstName,
+    last_name:         lastName,
+    enrich_profile:    "enrich",
+    similarity_checks: "skip",
+  });
+  if (location) params.set("location", location);
 
-  const upstreamUrl = `https://enrichlayer.com/api/v2/search/person?${upstreamParams}`;
-  console.log("[linkedin-search] calling upstream URL:", upstreamUrl);
+  const url = `https://enrichlayer.com/api/v2/profile/resolve?${params}`;
+  console.log("[linkedin-search] GET", url);
 
   try {
-    const res = await fetch(upstreamUrl, {
+    const res = await fetch(url, {
       headers: { Authorization: `Bearer ${apiKey}` },
     });
 
-    console.log("[linkedin-search] upstream status:", res.status, res.statusText);
-
+    console.log("[linkedin-search] status:", res.status, res.statusText);
     const rawText = await res.text();
-    console.log("[linkedin-search] upstream raw response:", rawText.slice(0, 1000));
+    console.log("[linkedin-search] raw response:", rawText.slice(0, 500));
 
     if (!res.ok) {
-      return NextResponse.json(
-        { error: "Upstream error", status: res.status, body: rawText },
-        { status: res.status }
-      );
+      return NextResponse.json({ error: "No match", status: res.status }, { status: res.status });
     }
 
     const data = JSON.parse(rawText);
-    console.log("[linkedin-search] parsed result count:", data?.results?.length ?? 0);
-    return NextResponse.json(data);
+    const profile = data?.profile ?? data;
+
+    return NextResponse.json({
+      title:         profile?.occupation   ?? null,
+      employer:      profile?.company      ?? null,
+      school:        profile?.education?.[0]?.school?.name ?? null,
+      profilePicUrl: profile?.profile_pic_url ?? null,
+      linkedinUrl:   profile?.linkedin_url    ?? null,
+    });
   } catch (err) {
-    console.error("[linkedin-search] fetch error:", err);
+    console.error("[linkedin-search] error:", err);
     return NextResponse.json({ error: "Network error" }, { status: 500 });
   }
 }
