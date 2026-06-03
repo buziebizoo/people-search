@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createServerClient } from "@/lib/supabase";
 import { STATES, CODE_TO_STATE } from "@/lib/states";
+import { buildSupabaseSlug } from "@/lib/profile-slug";
 
 const BASE_URL = "https://whoismy.date";
 
@@ -59,18 +60,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Profile pages
+  // Profile pages — use clean slug URLs
   const profileUrls: MetadataRoute.Sitemap = [];
   from = 0;
   while (true) {
     const { data, error } = await supabase
       .from("people")
-      .select("id")
+      .select("id, first_name, last_name, city, state")
       .range(from, from + 999);
     if (error || !data || data.length === 0) break;
     for (const row of data) {
+      const slug = buildSupabaseSlug(
+        row.first_name ?? "",
+        row.last_name ?? "",
+        row.city,
+        row.state,
+        row.id,
+      );
       profileUrls.push({
-        url: `${BASE_URL}/profile/${row.id}`,
+        url: `${BASE_URL}/profile/${slug}`,
         changeFrequency: "monthly",
         priority: 0.5,
       });

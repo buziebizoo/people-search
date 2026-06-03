@@ -106,51 +106,15 @@ def resolve_input_file(local_file: Optional[str], tmp_dir: str,
 # Parsing
 # ---------------------------------------------------------------------------
 
+CURRENT_YEAR = 2026
+
+
 def build_full_name(first: str, middle: str, last: str, suffix: str) -> str:
     parts = [p.strip() for p in [first, middle, last] if p.strip()]
     name = " ".join(parts)
     if suffix.strip():
         name += f", {suffix.strip()}"
     return name
-
-
-def parse_row(row: dict) -> Optional[dict]:
-    """Map a DictReader row to the Supabase people schema. Returns None to skip."""
-    def get(key: str) -> str:
-        # Strip BOM, surrounding whitespace, and null bytes that appear in some rows
-        val = row.get(key) or ""
-        return val.strip().lstrip("﻿").replace("\x00", "")
-
-    first = get("first_name")
-    last  = get("last_name")
-    if not first and not last:
-        return None
-
-    # Field renamed from birth_age to age_at_year_end on 02/09/2022
-    age_raw = get("age_at_year_end")
-    try:
-        age = int(age_raw) if age_raw else None
-    except ValueError:
-        age = None
-
-    # area_cd no longer exists; full_phone_number contains the full number (e.g. 9195551234)
-    phone = get("full_phone_number").replace("-", "").replace(".", "").replace(" ", "")
-    phone_prefix = phone[:3] if len(phone) >= 10 else None
-
-    zip_raw = get("zip_code")
-
-    return {
-        "first_name":   first or None,
-        "last_name":    last or None,
-        "full_name":    build_full_name(first, get("middle_name"), last, get("name_suffix_lbl")) or None,
-        "age":          age,
-        "address":      get("res_street_address") or None,
-        "city":         get("res_city_desc") or None,
-        "state":        get("state_cd") or "NC",
-        "zip":          zip_raw[:10] or None,
-        "phone_prefix": phone_prefix,
-        "relatives":    None,
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -178,15 +142,57 @@ def insert_batch(batch: list, client, line_num: int):
 # ---------------------------------------------------------------------------
 
 def load_file(txt_path: Path, client, limit: Optional[int]) -> dict:
-    stats = {"attempted": 0, "inserted": 0, "failed": 0}
+    stats = {"attempted": 0, "inserted": 0, "failed": 0, "skipped": 0}
     batch = []
 
     with open(txt_path, encoding="latin-1", newline="") as f:
-        reader = csv.DictReader(f, delimiter="\t")
+        reader = csv.reader(f, delimiter="\t", quotechar='"')
+
+        # Build column index from header; strip BOM from first field
+        raw_header = next(reader)
+        raw_header[0] = raw_header[0].lstrip("﻿").lstrip("﻿")
+        col = {name.strip(): idx for idx, name in enumerate(raw_header)}
+
+        def get(row: list, key: str) -> str:
+            idx = col.get(key)
+            if idx is None or idx >= len(row):
+                return ""
+            return row[idx].strip().replace("\x00", "")
+
         for line_num, row in enumerate(reader, start=2):
-            record = parse_row(row)
-            if record is None:
+            # Active voters only
+            if get(row, "status_cd") != "A":
+                stats["skipped"] += 1
                 continue
+
+            first = get(row, "first_name")
+            last  = get(row, "last_name")
+            if not first and not last:
+                continue
+
+            birth_year_raw = get(row, "birth_year")
+            try:
+                age = CURRENT_YEAR - int(birth_year_raw) if birth_year_raw else None
+            except ValueError:
+                age = None
+
+            phone = get(row, "full_phone_number").replace("-", "").replace(".", "").replace(" ", "")
+            phone_prefix = phone[:3] if len(phone) >= 10 else None
+
+            zip_raw = get(row, "zip_code")
+
+            record = {
+                "first_name":   first or None,
+                "last_name":    last or None,
+                "full_name":    build_full_name(first, get(row, "middle_name"), last, get(row, "name_suffix_lbl")) or None,
+                "age":          age,
+                "address":      get(row, "res_street_address") or None,
+                "city":         get(row, "res_city_desc") or None,
+                "state":        get(row, "state_cd") or "NC",
+                "zip":          zip_raw[:10] or None,
+                "phone_prefix": phone_prefix,
+                "relatives":    None,
+            }
 
             batch.append(record)
             stats["attempted"] += 1
@@ -197,9 +203,9 @@ def load_file(txt_path: Path, client, limit: Optional[int]) -> dict:
                 stats["failed"]   += fail
                 batch = []
 
-                if stats["attempted"] % 10_000 == 0:
-                    print(f"  Progress: {stats['attempted']:,} rows processed, "
-                          f"{stats['inserted']:,} inserted, {stats['failed']:,} failed")
+            if stats["attempted"] % 10_000 == 0:
+                print(f"  Progress: {stats['attempted']:,} rows processed, "
+                      f"{stats['inserted']:,} inserted, {stats['failed']:,} failed", flush=True)
 
             if limit and stats["attempted"] >= limit:
                 break
@@ -217,6 +223,7 @@ def load_file(txt_path: Path, client, limit: Optional[int]) -> dict:
 # ---------------------------------------------------------------------------
 
 def main():
+    print("NC Voter Loader — starting up...", flush=True)
     parser = argparse.ArgumentParser(description="Load NC voter registration data into Supabase")
     parser.add_argument("--file", metavar="PATH",
                         help="Path to a manually downloaded .zip or .txt voter file")
@@ -238,7 +245,8 @@ def main():
         stats = load_file(txt_path, client, args.limit)
 
     print(f"\nDone — attempted: {stats['attempted']:,}, "
-          f"inserted: {stats['inserted']:,}, failed: {stats['failed']:,}")
+          f"inserted: {stats['inserted']:,}, failed: {stats['failed']:,}, "
+          f"skipped (inactive): {stats['skipped']:,}")
 
 
 if __name__ == "__main__":

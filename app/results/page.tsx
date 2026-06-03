@@ -9,6 +9,7 @@ import {
   enformionProfileHref,
   type EnformionPerson,
 } from "@/lib/enformion";
+import { buildSupabaseSlug } from "@/lib/profile-slug";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -66,7 +67,7 @@ function fromSupabase(p: SupabasePerson): DisplayPerson {
     address:      p.address ?? null,
     phone_teaser: p.phone_prefix ? `${p.phone_prefix}-***-****` : null,
     relatives:    p.relatives ?? [],
-    profileHref:  `/profile/${p.id}`,
+    profileHref:  `/profile/${buildSupabaseSlug(p.first_name, p.last_name, p.city, p.state, p.id)}`,
   };
 }
 

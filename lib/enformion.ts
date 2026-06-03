@@ -1,5 +1,7 @@
 // Server-side only — never import this from a client component.
 
+import { buildEnformionSlug } from "@/lib/profile-slug";
+
 const BASE_URL = "https://devapi.enformion.com";
 
 // ---------------------------------------------------------------------------
@@ -266,18 +268,7 @@ export async function searchByAddress(
   }
 }
 
-/** Build the URL for an Enformion-sourced profile page. */
+/** Build the clean slug URL for an Enformion-sourced profile page. */
 export function enformionProfileHref(p: EnformionPerson): string {
-  const sp = new URLSearchParams();
-  sp.set("first", p.first_name);
-  sp.set("last",  p.last_name);
-  if (p.age)                sp.set("age",       String(p.age));
-  if (p.address)            sp.set("address",   p.address);
-  if (p.city)               sp.set("city",      p.city);
-  if (p.state)              sp.set("state",     p.state);
-  if (p.zip)                sp.set("zip",       p.zip);
-  if (p.phones.length)      sp.set("phones",    p.phones.join(","));
-  if (p.emails.length)      sp.set("emails",    p.emails.join(","));
-  if (p.relatives.length)   sp.set("relatives", p.relatives.join("|"));
-  return `/profile/enformion?${sp}`;
+  return `/profile/${buildEnformionSlug(p.first_name, p.last_name, p.city, p.state)}`;
 }

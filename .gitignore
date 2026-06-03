@@ -40,5 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# large voter data files
+# large voter data files and logs
 data/*.txt
+data/**/*.txt
+data/*.zip
+data/*.log
