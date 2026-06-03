@@ -234,6 +234,47 @@ export const BLOG_POSTS: BlogPost[] = [
 `,
   },
   {
+    slug: "check-sex-offender-registry-before-date",
+    title: "How to Check the Sex Offender Registry Before a First Date",
+    date: "2026-06-03",
+    category: "Background Checks",
+    excerpt:
+      "Before meeting someone from a dating app, learn how to quickly search the national and state sex offender registries — for free — in under five minutes.",
+    content: `
+<p>Most people never think to check the sex offender registry before a first date. It takes about three minutes, it's completely free, and it's one of the most concrete safety steps you can take before meeting a stranger from a dating app. Here's exactly how to do it — and what to make of the results.</p>
+
+<h2>Why the registry exists and who's on it</h2>
+<p>The National Sex Offender Public Website (NSOPW) is a federally coordinated database that links the public sex offender registries of all 50 states, Washington D.C., U.S. territories, and tribal governments. Anyone convicted of a qualifying sex offense is legally required to register and keep their address current. The registry is public because lawmakers determined the public safety benefit outweighs any privacy concern. If someone is on it, you have a right to know.</p>
+
+<h2>Search the national registry first</h2>
+<p>Go to nsopw.gov and enter your match's first name, last name, and state. The search is free and requires no account. If a result comes back, you'll see a photo, age, address, and a brief description of the offense and conviction date. Because the registry pulls from all participating jurisdictions simultaneously, a single national search is usually sufficient — but if you know your match has lived in multiple states, it's worth running the search for each one.</p>
+
+<h2>Check your state's registry directly</h2>
+<p>Every state also maintains its own public registry with the most up-to-date information. State sites sometimes include more detail — additional photos, a more complete offense history, or registration compliance status. A quick search for "[your state] sex offender registry" will take you to the official government site. Common examples include Megan's Law in California (meganslaw.ca.gov) and the Florida Department of Law Enforcement registry (offender.fdle.state.fl.us). Most state sites allow searches by name, city, or ZIP code.</p>
+
+<h2>What to do with a name mismatch</h2>
+<p>A common obstacle is that you only have your match's first name. Before searching the registry, try to confirm their full name — ask naturally, mention that you like to know who you're meeting, or check whether they've connected a social profile to their dating account. Even a partial last name helps narrow results dramatically. If your match is unwilling to share a last name before meeting in person, that reluctance is itself a reason to pause.</p>
+
+<h2>Understand what a clean result means — and doesn't mean</h2>
+<p>Not finding someone on the registry is reassuring, but it doesn't mean a person has no criminal history at all. The registry only covers sex offense convictions where registration was required. Other serious offenses — assault, fraud, domestic violence — don't appear there. For a broader picture, you can run a general public records or background check search, which surfaces court records, criminal filings, and other publicly available information. Think of the registry check as one layer of a safety routine, not the whole thing.</p>
+
+<h2>What to do if you find a match</h2>
+<p>If a search returns a result that matches your date's name and approximate age, don't panic yet — confirm before acting. Compare the photo carefully. Registry entries include an address, which you can cross-reference against what your match has told you about where they live. If the details align — name, age, photo, city — you have information you need to act on. There is no obligation to continue contact. You can simply stop responding, and you don't owe anyone an explanation.</p>
+
+<h2>Build it into your routine</h2>
+<p>The registry check pairs naturally with the other verification steps you should run before a first date: a public records search to confirm identity and address, a reverse image search to rule out stolen photos, and a reverse phone lookup to match the name on the number. Together these take less than fifteen minutes and give you a meaningful baseline of confidence before you walk into a coffee shop to meet a stranger.</p>
+
+<h2>Resources</h2>
+<ul>
+<li><strong>National registry:</strong> nsopw.gov — searches all states at once</li>
+<li><strong>FTC romance scam reporting:</strong> reportfraud.ftc.gov</li>
+<li><strong>FBI internet crime complaints:</strong> ic3.gov</li>
+</ul>
+
+<p>Dating app profiles are self-reported, which means they're only as accurate as the person filling them out. Public registries are government-maintained and legally enforced. Taking three minutes to cross-check one against the other is one of the simplest and most effective safety habits you can add to your dating life.</p>
+`,
+  },
+  {
     slug: "how-to-check-if-someone-is-married",
     title: "How to Check If Someone Is Married Before Your First Date",
     date: "2026-06-07",
