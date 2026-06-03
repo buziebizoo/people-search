@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import ProfessionalInfo from "@/components/ProfessionalInfo";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -158,6 +159,13 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
             )}
           </dl>
         </SectionCard>
+
+        {/* ── PROFESSIONAL INFORMATION ── */}
+        <ProfessionalInfo
+          firstName={firstName}
+          lastName={lastName}
+          location={location}
+        />
 
         {/* ── RELATIVES ── */}
         <SectionCard>
