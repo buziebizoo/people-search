@@ -52,11 +52,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!person) return { title: "Person Not Found | Who Is My Date?" };
 
   const location = [person.city, person.state].filter(Boolean).join(", ");
-  const agePart = person.age ? ` Age ${person.age}` : "";
+  const title = `${person.first_name} ${person.last_name}${location ? ` - ${location}` : ""} | Who Is My Date?`;
+  const description = `Find information about ${person.first_name} ${person.last_name}${location ? ` from ${location}` : ""}. View address history, possible relatives, and background check options on Who Is My Date.`;
 
   return {
-    title: `${person.full_name} -${agePart}${location ? ` - ${location}` : ""} | Who Is My Date?`,
-    description: `Find information about ${person.full_name}${location ? ` from ${location}` : ""}. View address, phone number, relatives and more on Who Is My Date?.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
   };
 }
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
 import { createServerClient } from "@/lib/supabase";
@@ -179,6 +180,26 @@ function ErrorState() {
       </div>
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Metadata
+// ---------------------------------------------------------------------------
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const query = queryLabel(params);
+  const title = `Results for ${query} | Who Is My Date?`;
+  const description = `Find people named ${query} on Who Is My Date - free public records search.`;
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+  };
 }
 
 // ---------------------------------------------------------------------------
