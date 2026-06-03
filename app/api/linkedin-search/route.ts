@@ -16,14 +16,13 @@ export async function GET(req: NextRequest) {
   }
 
   const params = new URLSearchParams({
-    first_name:        firstName,
-    last_name:         lastName,
-    enrich_profile:    "enrich",
-    similarity_checks: "skip",
+    first_name: firstName,
+    last_name:  lastName,
+    page_size:  "1",
   });
   if (location) params.set("location", location);
 
-  const url = `https://enrichlayer.com/api/v2/profile/resolve?${params}`;
+  const url = `https://enrichlayer.com/api/v2/search/person?${params}`;
   console.log("[linkedin-search] GET", url);
 
   try {
@@ -40,14 +39,18 @@ export async function GET(req: NextRequest) {
     }
 
     const data = JSON.parse(rawText);
-    const profile = data?.profile ?? data;
+    const r = data?.results?.[0];
+
+    if (!r) {
+      return NextResponse.json({ error: "No results" }, { status: 404 });
+    }
 
     return NextResponse.json({
-      title:         profile?.occupation   ?? null,
-      employer:      profile?.company      ?? null,
-      school:        profile?.education?.[0]?.school?.name ?? null,
-      profilePicUrl: profile?.profile_pic_url ?? null,
-      linkedinUrl:   profile?.linkedin_url    ?? null,
+      title:         r.occupation        ?? null,
+      employer:      r.company           ?? null,
+      school:        r.education?.[0]?.school?.name ?? null,
+      profilePicUrl: r.profile_pic_url   ?? null,
+      linkedinUrl:   r.linkedin_profile_url ?? null,
     });
   } catch (err) {
     console.error("[linkedin-search] error:", err);
