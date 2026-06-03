@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
-import ProfessionalInfo from "@/components/ProfessionalInfo";
+import QuickSearch from "@/components/QuickSearch";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -286,10 +286,10 @@ export default async function ProfilePage({ params }: Props) {
         </SectionCard>
 
         {/* ── 3. PROFESSIONAL INFORMATION ── */}
-        <ProfessionalInfo
+        <QuickSearch
           firstName={person.first_name}
           lastName={person.last_name}
-          location={location}
+          city={person.city ?? ""}
         />
 
         {/* ── 4. RELATIVES ── */}
