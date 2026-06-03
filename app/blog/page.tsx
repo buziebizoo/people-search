@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import BannerAd from "@/components/BannerAd";
 import {
   getAllPosts,
   formatPostDate,
@@ -127,6 +128,10 @@ export default async function BlogIndexPage({ searchParams }: Props) {
       {posts.length === 0 && (
         <p className="text-gray-500 text-center py-12">No posts in this category yet.</p>
       )}
+
+      <div className="flex justify-center my-8">
+        <BannerAd size="300x250" seed={Date.now()} page="blog-index" />
+      </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
