@@ -9,6 +9,7 @@ import ResultsSearchBar from "@/components/ResultsSearchBar";
 import { parseProfileSlug } from "@/lib/profile-slug";
 import { pickAffiliate } from "@/lib/affiliates";
 import BannerAd from "@/components/BannerAd";
+import LockedReport from "@/components/LockedReport";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -183,16 +184,6 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
-      strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  );
-}
-
 function PinIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
@@ -200,32 +191,6 @@ function PinIcon() {
       <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
       <circle cx="12" cy="10" r="3" />
     </svg>
-  );
-}
-
-function LockedSection({
-  title,
-  teaser,
-  href,
-  buttonLabel = "Unlock Records",
-}: {
-  title: string;
-  teaser: string;
-  href: string;
-  buttonLabel?: string;
-}) {
-  return (
-    <SectionCard>
-      <div className="flex items-center gap-2 mb-1">
-        <LockIcon />
-        <h3 className="font-semibold text-gray-800 text-sm">{title}</h3>
-      </div>
-      <p className="text-sm text-gray-500">{teaser}</p>
-      <a href={href} target="_blank" rel="noopener noreferrer"
-        className="mt-3 inline-flex items-center min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors">
-        {buttonLabel}
-      </a>
-    </SectionCard>
   );
 }
 
@@ -368,16 +333,10 @@ function SupabaseProfile({ person, seed }: { person: SupabasePerson; seed: numbe
           </a>
         </SectionCard>
 
-        <LockedSection title="Criminal Records" teaser="This person may have criminal records on file"
-          href={pickAffiliate("background", seed + 2)} />
-        <LockedSection title="Arrest Records" teaser="Possible arrest records found"
-          href={pickAffiliate("background", seed + 3)} />
-        <LockedSection title="Sex Offender Check" teaser="Run a sex offender check on this person"
-          href={pickAffiliate("background", seed + 4)} buttonLabel="Run Check" />
-        <LockedSection title="Bankruptcies & Liens" teaser="Financial records may be available"
-          href={pickAffiliate("background", seed + 5)} />
-        <LockedSection title="Traffic Violations" teaser="Possible traffic violations on file"
-          href={pickAffiliate("background", seed + 6)} />
+        <LockedReport type="criminal" seed={seed + 2} title="Criminal Records" />
+        <LockedReport type="vehicle" seed={seed + 3} title="Vehicle Registration" />
+        <LockedReport type="property" seed={seed + 4} title="Property Records" />
+        <LockedReport type="debt" seed={seed + 5} title="Debt & Liens" />
 
         <div>
           <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
