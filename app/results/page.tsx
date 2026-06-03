@@ -334,7 +334,7 @@ export default async function ResultsPage({
   if (!supabase) return <ErrorState />;
 
   // Build the base Supabase query (filters only — range applied below)
-  let baseQuery = supabase.from("people").select("*", { count: "exact" });
+  let baseQuery = supabase.from("people").select("*", { count: "exact" }).eq("opted_out", false);
 
   if (params.type === "name") {
     if (params.first)    baseQuery = baseQuery.ilike("first_name", `%${params.first}%`);

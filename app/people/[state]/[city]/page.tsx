@@ -143,12 +143,14 @@ export default async function CityPage({ params, searchParams }: Props) {
         .from("people")
         .select("*", { count: "exact", head: true })
         .eq("state", stateInfo.code)
-        .ilike("city", cityQuery),
+        .ilike("city", cityQuery)
+        .eq("opted_out", false),
       supabase
         .from("people")
         .select("id, first_name, last_name, age, address, city, zip")
         .eq("state", stateInfo.code)
         .ilike("city", cityQuery)
+        .eq("opted_out", false)
         .order("last_name", { ascending: true })
         .order("first_name", { ascending: true })
         .range(start, end),

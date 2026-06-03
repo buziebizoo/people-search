@@ -27,14 +27,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  // Validate required fields
   for (const field of REQUIRED) {
     if (!body[field] || typeof body[field] !== "string" || !(body[field] as string).trim()) {
       return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
     }
   }
 
-  // Sanitize and enforce length limits
   const fullName = sanitize(body.fullName, MAX_LENGTHS.fullName);
   const address  = sanitize(body.address,  MAX_LENGTHS.address);
   const city     = sanitize(body.city,     MAX_LENGTHS.city);
@@ -48,28 +46,39 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createServerClient();
-  if (!supabase) {
-    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
-  }
+  if (!supabase) return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
 
-  const { error: insertError } = await supabase
+  // 1. Record the opt-out request and capture the generated ID
+  const { data: requestRow, error: insertError } = await supabase
     .from("opt_out_requests")
-    .insert({ full_name: fullName, address, city, state, zip, email, reason });
+    .insert({ full_name: fullName, address, city, state, zip, email, reason })
+    .select("id")
+    .single();
 
-  if (insertError) {
+  if (insertError || !requestRow) {
     return NextResponse.json({ error: "Failed to submit request" }, { status: 500 });
   }
 
-  // Delete matching records from public.people (best-effort, logged above)
-  const [firstName, ...rest] = fullName.trim().split(" ");
-  const lastName = rest.join(" ");
+  const referenceNumber = (requestRow.id as string).split("-")[0].toUpperCase();
+
+  // Parse first/last name
+  const nameParts = fullName.trim().split(/\s+/);
+  const firstName = nameParts[0] ?? "";
+  const lastName  = nameParts.slice(1).join(" ");
+
   if (firstName && lastName) {
+    // 2. Add to blocklist (durable record in case people table is reloaded)
+    await supabase
+      .from("opt_out_blocklist")
+      .insert({ first_name: firstName, last_name: lastName, address, email });
+
+    // 3. Mark matching people records as opted out
     await supabase
       .from("people")
-      .delete()
+      .update({ opted_out: true })
       .ilike("first_name", firstName)
       .ilike("last_name", lastName);
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, referenceNumber });
 }

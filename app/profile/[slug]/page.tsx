@@ -47,7 +47,7 @@ const fetchBySlugParts = cache(async (
   const supabase = createServerClient();
   if (!supabase) return null;
 
-  let query = supabase.from("people").select("*");
+  let query = supabase.from("people").select("*").eq("opted_out", false);
   if (first) query = query.ilike("first_name", first);
   if (last)  query = query.ilike("last_name",  last);
   if (city)  query = query.ilike("city",  city);
@@ -64,7 +64,8 @@ const fetchBySlugParts = cache(async (
 const fetchByUUID = cache(async (id: string): Promise<SupabasePerson | null> => {
   const supabase = createServerClient();
   if (!supabase) return null;
-  const { data } = await supabase.from("people").select("*").eq("id", id).single();
+  const { data } = await supabase
+    .from("people").select("*").eq("id", id).eq("opted_out", false).maybeSingle();
   return (data as SupabasePerson) ?? null;
 });
 

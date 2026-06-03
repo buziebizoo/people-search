@@ -49,11 +49,13 @@ export default async function StatePage({ params }: Props) {
       supabase
         .from("people")
         .select("*", { count: "exact", head: true })
-        .eq("state", info.code),
+        .eq("state", info.code)
+        .eq("opted_out", false),
       supabase
         .from("people")
         .select("city, first_name, last_name")
         .eq("state", info.code)
+        .eq("opted_out", false)
         .limit(3000),
     ]);
     totalCount = countResult.count ?? sampleResult.data?.length ?? 0;

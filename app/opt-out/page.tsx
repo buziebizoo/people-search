@@ -21,6 +21,7 @@ export default function OptOutPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [referenceNumber, setReferenceNumber] = useState<string>("");
   const [form, setForm] = useState({
     fullName: "",
     address: "",
@@ -62,6 +63,8 @@ export default function OptOutPage() {
       return;
     }
 
+    const data = await res.json();
+    setReferenceNumber(data.referenceNumber ?? "");
     setSubmitted(true);
   }
 
@@ -82,6 +85,12 @@ export default function OptOutPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-3">
           Request Received
         </h1>
+        {referenceNumber && (
+          <div className="inline-block bg-gray-100 border border-gray-200 rounded-lg px-4 py-2 mb-4">
+            <p className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">Reference Number</p>
+            <p className="text-lg font-mono font-bold text-gray-900">{referenceNumber}</p>
+          </div>
+        )}
         <p className="text-lg text-gray-600 mb-4">
           Your opt-out and removal request has been submitted. We will process
           your request and remove your information within{" "}
@@ -89,7 +98,7 @@ export default function OptOutPage() {
         </p>
         <p className="text-sm text-gray-500">
           A confirmation will be sent to <strong>{form.email}</strong> once
-          processing is complete.
+          processing is complete. Please keep your reference number for your records.
         </p>
       </div>
     );
