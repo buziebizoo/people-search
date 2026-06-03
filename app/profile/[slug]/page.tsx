@@ -218,9 +218,9 @@ function LockedSection({
         <LockIcon />
         <h3 className="font-semibold text-gray-800 text-sm">{title}</h3>
       </div>
-      <p className="text-sm text-gray-500 mb-3 ml-6">{teaser}</p>
+      <p className="text-sm text-gray-500">{teaser}</p>
       <a href={href} target="_blank" rel="noopener noreferrer"
-        className="ml-6 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+        className="mt-3 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
         {buttonLabel}
       </a>
     </SectionCard>
@@ -346,18 +346,18 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
 
         <SectionCard>
           <SectionTitle>Previous Addresses</SectionTitle>
-          <p className="text-sm text-gray-500 mb-3">Previous addresses may be on file</p>
+          <p className="text-sm text-gray-500">Previous addresses may be on file</p>
           <a href="https://www.truthfinder.com/?utm_source=whoismy.date" target="_blank" rel="noopener noreferrer"
-            className="inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+            className="mt-3 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
             Unlock Full History
           </a>
         </SectionCard>
 
         <SectionCard>
           <SectionTitle>Known Associates</SectionTitle>
-          <p className="text-sm text-gray-500 mb-3">Known associates may be on file</p>
+          <p className="text-sm text-gray-500">Known associates may be on file</p>
           <a href="https://www.beenverified.com/?utm_source=whoismy.date" target="_blank" rel="noopener noreferrer"
-            className="inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+            className="mt-3 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
             View Associates
           </a>
         </SectionCard>
