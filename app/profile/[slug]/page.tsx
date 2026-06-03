@@ -213,14 +213,6 @@ function AffiliateCard({ name, description, href }: { name: string; description:
   );
 }
 
-function AdPlaceholder() {
-  return (
-    <div className="w-full max-w-[728px] mx-auto h-[90px] bg-gray-200 rounded flex items-center justify-center text-gray-400 text-sm">
-      Advertisement
-    </div>
-  );
-}
-
 function FcraDisclaimer() {
   return (
     <div className="text-xs text-gray-400 border-t border-gray-200 pt-5 leading-relaxed flex flex-col gap-2">
@@ -320,8 +312,6 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
           )}
         </SectionCard>
 
-        <AdPlaceholder />
-
         <SectionCard>
           <SectionTitle>Previous Addresses</SectionTitle>
           <p className="text-sm text-gray-500 mb-3">Previous addresses may be on file</p>
@@ -351,8 +341,6 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
         <LockedSection title="Traffic Violations" teaser="Possible traffic violations on file"
           href="https://www.spokeo.com/?utm_source=whoismy.date" />
 
-        <AdPlaceholder />
-
         <div>
           <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
           <div className="flex flex-col gap-3">
@@ -371,7 +359,6 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
           </div>
         </div>
 
-        <AdPlaceholder />
         <FcraDisclaimer />
       </div>
     </div>
