@@ -11,6 +11,7 @@ import {
 } from "@/lib/enformion";
 import { buildSupabaseSlug } from "@/lib/profile-slug";
 import { fetchBlocklist, isBlocklisted } from "@/lib/blocklist";
+import { CODE_TO_STATE } from "@/lib/states";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -284,11 +285,13 @@ export async function generateMetadata({
   const params = await searchParams;
   const name = [params.first, params.last].filter(Boolean).join(" ").trim();
   const { state } = parseLocation(params.location ?? "");
+  // parseLocation uppercases the state; map a 2-letter code to its full name
+  const stateName = CODE_TO_STATE.get(state)?.name ?? state;
 
   let title: string;
   let description: string;
   if (name) {
-    title = `People named ${name}${state ? ` in ${state}` : ""} | Who Is My Date?`;
+    title = `People named ${name}${stateName ? ` in ${stateName}` : ""} | Who Is My Date?`;
     description = `Search results for ${name} on Who Is My Date. Browse public records including addresses, phone numbers and background information.`;
   } else {
     const query = queryLabel(params);
