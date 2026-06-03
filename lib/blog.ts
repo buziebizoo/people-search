@@ -233,6 +233,49 @@ export const BLOG_POSTS: BlogPost[] = [
 <p>Being catfished is not a reflection of your intelligence; these schemes are engineered to exploit trust and empathy, and they fool plenty of careful people. The lesson isn't to stop trusting — it's to verify early and protect yourself. A few minutes of checking identity up front can save you months of heartache later.</p>
 `,
   },
+  {
+    slug: "how-to-check-if-someone-is-married",
+    title: "How to Check If Someone Is Married Before Your First Date",
+    date: "2026-06-07",
+    category: "Background Checks",
+    excerpt:
+      "Worried your new match might already be taken? Here's how to check someone's marital status using free public records before you get attached.",
+    content: `
+<p>You've been chatting with someone for two weeks. The conversation is great, the photos check out, and you're ready to meet. But something keeps nagging at you — they're vague about their home life, they only text during business hours, and they've never once mentioned family or roommates. Before you invest any more time or emotion, it's worth finding out if the person you're talking to is already married.</p>
+
+<p>This isn't paranoia. Married people on dating apps are a real and documented phenomenon, and the signs are often subtle enough to miss until you're already emotionally involved. A quick records check can save you a lot of heartbreak.</p>
+
+<h2>Why marriage records are public</h2>
+<p>In the United States, marriage is a legal contract registered with the government, which means marriage licenses are public records maintained at the county or state level. This isn't a loophole — it's how the system is designed. Anyone can request or search these records, and many counties have digitized them and made them available for free online.</p>
+
+<h2>How to search marriage records</h2>
+<p>The most direct method is to search the vital records or county clerk database for the state and county where you believe the person lives or grew up. Searches typically require a first name, last name, and approximate year range. If your match has told you their hometown or city, start there. Many state vital records offices have online portals; a quick search for "[state name] marriage records search" will usually find the right government site.</p>
+
+<p>A people search tool can also surface this information. Running someone's name and location through a public records search often returns relationship status indicators along with address history and relatives — which can also reveal a spouse's name if the records include it.</p>
+
+<h2>What to look for in the results</h2>
+<p>A marriage record will show the names of both parties, the county, and the date. If you find a marriage record and no corresponding divorce record, the person may still be married. Divorce records are also public in most states and can be searched through the same court systems. The absence of a divorce filing after a marriage record is worth a conversation.</p>
+
+<h2>Check for a divorce record too</h2>
+<p>Someone who was married and then divorced is not a red flag — but someone who was married and has no record of a divorce filing is. Search the same county court system for divorce decrees using the person's name. Divorce proceedings create public filings that are typically searchable online through the county court's civil records portal.</p>
+
+<h2>Other signals to watch for</h2>
+<ul>
+<li><strong>They only communicate at unusual hours</strong> — early morning, late at night, or only on weekdays during work hours.</li>
+<li><strong>They're vague about living arrangements</strong> — they've never mentioned a roommate or explained who they share space with.</li>
+<li><strong>They won't let you call</strong> — texts only, with explanations about why calling "doesn't work" for them.</li>
+<li><strong>They suggest meeting far from their neighborhood</strong> — avoiding places where they might be recognized.</li>
+<li><strong>Social media is private or sparse</strong> — no public photos, no check-ins, a suspiciously minimal digital footprint.</li>
+<li><strong>A ring tan line</strong> — if you do meet in person and notice a lighter band of skin on their ring finger, ask about it directly.</li>
+</ul>
+
+<h2>Have the direct conversation</h2>
+<p>Records are a verification tool, not a replacement for honest communication. Before the first date — or at least early in the relationship — it is completely reasonable to ask: "Are you currently married or in a serious relationship?" A genuine person won't be offended by the question. Evasiveness, anger, or a subject change in response to a simple yes-or-no question is itself information worth having.</p>
+
+<h2>If you find a marriage record</h2>
+<p>Finding a record doesn't automatically mean deception — they could be separated, legally separated, or in the middle of a divorce that hasn't finalized yet. But it does mean you deserve a direct and complete explanation before you go any further. If they've presented themselves as single and there's a marriage on the books with no corresponding divorce, you have every right to walk away. Your time and emotional investment belong with someone who's actually available.</p>
+`,
+  },
 ];
 
 // ---------------------------------------------------------------------------
