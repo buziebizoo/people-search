@@ -174,9 +174,14 @@ export default async function BlogPostPage({ params }: Props) {
       />
 
       {splitIdx >= 0 && (
-        <div className="my-6 justify-center hidden sm:flex">
-          <BannerAd size="728x90" seed={seed} page="blog" />
-        </div>
+        <>
+          <div className="my-6 flex justify-center sm:hidden">
+            <BannerAd size="300x250" seed={seed} page="blog-mobile" />
+          </div>
+          <div className="my-6 justify-center hidden sm:flex">
+            <BannerAd size="728x90" seed={seed} page="blog-desktop" />
+          </div>
+        </>
       )}
 
       <div
