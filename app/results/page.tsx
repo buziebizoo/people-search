@@ -199,6 +199,7 @@ export default async function ResultsPage({
   if (error) return <ErrorState />;
 
   const supabaseHits = (rows ?? []) as SupabasePerson[];
+  console.log(`[results] Supabase returned ${supabaseHits.length} rows for type=${params.type}`);
 
   if (supabaseHits.length > 0) {
     display = supabaseHits.map(fromSupabase);
@@ -208,13 +209,17 @@ export default async function ResultsPage({
       const parts = (params.location ?? "").split(",");
       const city  = parts[0]?.trim() ?? "";
       const state = parts[1]?.trim() ?? "";
+      console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
       const enf   = await searchByName(params.first ?? "", params.last ?? "", city, state);
+      console.log(`[results] Enformion name fallback returned ${enf.length} results`);
       display = enf.map(fromEnformion);
     } else if (params.type === "address") {
       const parts = (params.location ?? "").split(",");
       const city  = parts[0]?.trim() ?? "";
       const state = parts[1]?.trim() ?? "";
+      console.log(`[results] Supabase 0 results — triggering Enformion address fallback: street="${params.street}" city="${city}" state="${state}"`);
       const enf   = await searchByAddress(params.street ?? "", city, state, "");
+      console.log(`[results] Enformion address fallback returned ${enf.length} results`);
       display = enf.map(fromEnformion);
     }
   }

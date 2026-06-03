@@ -131,11 +131,16 @@ export async function searchByName(
   if (cached) return cached;
 
   try {
-    const body: Record<string, unknown> = { firstName, lastName };
-    if (city)  body.city  = city;
-    if (state) body.state = state;
+    const body: Record<string, unknown> = {
+      FirstName: firstName,
+      LastName:  lastName,
+      Page:      1,
+      ResultsPerPage: 10,
+    };
+    if (city)  body.City  = city;
+    if (state) body.State = state;
     const result = extractPersons(
-      await post("/ContactEnrichment/api/ContactEnrichment", body, "DevAPIContactEnrich")
+      await post("/contact/enrich", body, "DevAPIContactEnrich")
     );
     cacheSet(key, result);
     return result;
