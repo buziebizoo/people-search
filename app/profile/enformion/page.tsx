@@ -85,7 +85,7 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
   const location    = [city, state].filter(Boolean).join(", ");
   const fullAddress = [address, city, [state, zip].filter(Boolean).join(" ")].filter(Boolean).join(", ");
 
-  const googleQuery = encodeURIComponent([fullName, location].filter(Boolean).join(" "));
+
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -216,18 +216,6 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
               href={`https://www.spokeo.com/?utm_source=whoismy.date`}
             />
           </div>
-        </div>
-
-        {/* ── GOOGLE SEARCH ── */}
-        <div className="text-center">
-          <a
-            href={`https://www.google.com/search?q=${googleQuery}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-teal-600 hover:underline"
-          >
-            Search &ldquo;{fullName}&rdquo; on Google →
-          </a>
         </div>
 
         {/* ── FCRA DISCLAIMER ── */}
