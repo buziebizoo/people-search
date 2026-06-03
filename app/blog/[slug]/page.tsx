@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { pickAffiliate } from "@/lib/affiliates";
+import BannerAd from "@/components/BannerAd";
 import {
   getPostBySlug,
   getRelatedPosts,
@@ -125,6 +126,10 @@ export default async function BlogPostPage({ params }: Props) {
 
   const related = getRelatedPosts(post);
 
+  const splitIdx = post.content.indexOf("</p>");
+  const contentBefore = splitIdx >= 0 ? post.content.slice(0, splitIdx + 4) : "";
+  const contentAfter  = splitIdx >= 0 ? post.content.slice(splitIdx + 4) : post.content;
+
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
       <ArticleJsonLd title={post.title} description={post.excerpt} date={post.date} />
@@ -165,7 +170,25 @@ export default async function BlogPostPage({ params }: Props) {
           [&>ul>li]:text-gray-700
           [&_strong]:text-gray-900 [&_strong]:font-semibold
         "
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        dangerouslySetInnerHTML={{ __html: contentBefore }}
+      />
+
+      {splitIdx >= 0 && (
+        <div className="my-6 justify-center hidden sm:flex">
+          <BannerAd size="728x90" seed={seed} page="blog" />
+        </div>
+      )}
+
+      <div
+        className="
+          text-gray-700 leading-relaxed
+          [&>p]:mb-5
+          [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-10 [&>h2]:mb-3
+          [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-5 [&>ul]:space-y-2
+          [&>ul>li]:text-gray-700
+          [&_strong]:text-gray-900 [&_strong]:font-semibold
+        "
+        dangerouslySetInnerHTML={{ __html: contentAfter }}
       />
 
       {/* CTA */}
