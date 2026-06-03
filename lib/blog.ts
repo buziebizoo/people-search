@@ -275,6 +275,50 @@ export const BLOG_POSTS: BlogPost[] = [
 `,
   },
   {
+    slug: "how-to-verify-bumble-date",
+    title: "How to Verify Someone You Met on Bumble Before Your First Date",
+    date: "2026-06-03",
+    category: "Dating Safety",
+    excerpt:
+      "Bumble puts women in charge of the first message, but it can't verify who's on the other side of the screen. Here's how to confirm your Bumble match is who they claim to be before you meet.",
+    content: `
+<p>Bumble's design gives women control of the first message, which filters out a lot of noise. But it can't verify that the person behind a profile is using their real name, real photos, or an honest backstory. Before you meet your Bumble match in person, a few quick checks can confirm you're dealing with someone genuine — and they take less time than picking an outfit for the date.</p>
+
+<h2>Why Bumble profiles aren't the same as verified identities</h2>
+<p>Bumble does offer a photo verification badge — a small checkmark that confirms the account holder has taken a selfie matching their profile pictures. That's a useful filter against completely stolen photos, but it doesn't confirm a real name, a real location, or the absence of a criminal history. A person can pass photo verification and still be using a nickname, lying about their age, or hiding a significant past. Verification badges are a floor, not a ceiling.</p>
+
+<h2>Get their full name before you search</h2>
+<p>Bumble profiles typically show only a first name. That's not enough to run a meaningful background check, so you'll want a last name before you meet. Asking is completely normal — something like "I like to know who I'm actually meeting; mind if I get your last name?" is polite and direct. Anyone genuine won't be bothered by it. If they deflect, invent a reason not to share, or get defensive, note that reaction carefully.</p>
+
+<h2>Run a public records search</h2>
+<p>Once you have a full name and their stated city, search it through a public records tool. You're looking to confirm three things: that a real person by that name exists in or near that city, that their approximate age matches the profile, and that their general story is consistent with the public record. This step catches a surprisingly large number of misrepresentations — fake names, wrong cities, and profiles where the listed age is off by a decade or more.</p>
+
+<h2>Do a reverse image search on their photos</h2>
+<p>Save one or two of their profile photos and run them through a reverse image search. If the same images appear elsewhere under a different name, or on stock-photo or modeling sites, you're looking at a stolen-photo profile — Bumble's verification badge notwithstanding, since the verification selfie only has to resemble the profile photos, not prove identity. A genuine person's photos will typically show up only on their own social accounts, if anywhere at all.</p>
+
+<h2>Look them up on LinkedIn or Instagram</h2>
+<p>Bumble lets users link their Instagram and Spotify accounts. If they've done that, check it — a real, active Instagram with a history of photos across multiple years is a strong authenticity signal. If they haven't linked anything, a quick LinkedIn search for their name and employer can confirm whether the job they mentioned is real and whether their career history lines up. You're not investigating their character, just confirming the basics.</p>
+
+<h2>Run a reverse phone lookup once you're texting</h2>
+<p>Most Bumble conversations move to texting before a date. Once you have a number, a reverse phone lookup takes about thirty seconds and tells you the name registered to that line. If the name attached to the number is completely different from what your match told you, ask about it — people do use other people's phones, have numbers in a family member's name, or use work lines. But a clear mismatch with no explanation is a reason to pause.</p>
+
+<h2>Red flags specific to Bumble matches</h2>
+<ul>
+<li><strong>They want to move off the app immediately</strong> — pressure to text or use WhatsApp before any meaningful conversation has happened is a scammer tactic.</li>
+<li><strong>Their profile was created very recently</strong> — check the "joined" date if visible. A brand-new profile on an older account holder can indicate someone who was previously banned.</li>
+<li><strong>They avoid specifics about their job or neighborhood</strong> — vagueness about verifiable details often means those details won't hold up to scrutiny.</li>
+<li><strong>They escalate emotionally very fast</strong> — intense declarations of connection within days are a manipulation technique, not a sign of chemistry.</li>
+<li><strong>They dodge video calls</strong> — one short video call before a first meeting is a perfectly reasonable request and something any genuine person will agree to.</li>
+</ul>
+
+<h2>The video call test</h2>
+<p>Before committing to a first date location and time, suggest a brief video call. Keep it casual — "Want to do a quick FaceTime before we meet?" is normal and friendly. The purpose is simple: confirm the person on screen looks like their photos and seems like a real, grounded human. A catfish, a scammer, or someone using significantly old photos will find a reason to skip it. A genuine person will say sure.</p>
+
+<h2>Put it all together</h2>
+<p>Bumble's matching mechanics are good, but identity verification is still your job. A full name search, a reverse image check, a LinkedIn glance, and one video call add up to maybe fifteen minutes of effort. In exchange, you walk into that first coffee date knowing the person across from you is who they say they are — which means you can spend the time actually getting to know them instead of quietly wondering.</p>
+`,
+  },
+  {
     slug: "how-to-check-if-someone-is-married",
     title: "How to Check If Someone Is Married Before Your First Date",
     date: "2026-06-07",
