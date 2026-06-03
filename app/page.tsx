@@ -19,7 +19,7 @@ function IncludedSection() {
   return (
     <section className="bg-teal-950 text-white py-16 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-12">
+        <h2 className="text-white text-2xl font-bold text-center mb-10">
           What&apos;s included in every search
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
