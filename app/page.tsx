@@ -35,7 +35,7 @@ function IncludedSection() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
           {includedItems.map((item) => (
             <div key={item.label} className="flex flex-col items-center gap-2">
-              <span className="text-2xl leading-none">{item.emoji}</span>
+              <span className="text-3xl leading-none">{item.emoji}</span>
               <span className="text-sm font-medium text-teal-100">{item.label}</span>
             </div>
           ))}

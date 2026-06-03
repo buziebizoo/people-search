@@ -1,5 +1,5 @@
 const stats = [
-  { headline: "100M+", label: "Public Records" },
+  { headline: "1M+", label: "Public Records" },
   { headline: "All 50 States", label: "Nationwide Coverage" },
   { headline: "Always Free", label: "No Hidden Fees" },
   { headline: "Instant", label: "Search Results" },
