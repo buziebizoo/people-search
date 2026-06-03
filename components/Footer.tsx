@@ -1,21 +1,8 @@
 import Link from "next/link";
 import { createServerClient } from "@/lib/supabase";
+import { CODE_TO_STATE, type StateInfo } from "@/lib/states";
 
-const STATE_NAMES: Record<string, string> = {
-  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
-  CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
-  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
-  KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
-  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi",
-  MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire",
-  NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina",
-  ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania",
-  RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee",
-  TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington",
-  WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming", DC: "District of Columbia",
-};
-
-async function getStates(): Promise<string[]> {
+async function getStatesWithData(): Promise<StateInfo[]> {
   const supabase = createServerClient();
   if (!supabase) return [];
   const seen = new Set<string>();
@@ -30,11 +17,16 @@ async function getStates(): Promise<string[]> {
     if (data.length < 1000) break;
     from += 1000;
   }
-  return [...seen].sort();
+  return [...seen]
+    .sort()
+    .flatMap((code) => {
+      const s = CODE_TO_STATE.get(code);
+      return s ? [s] : [];
+    });
 }
 
 export default async function Footer() {
-  const states = await getStates();
+  const states = await getStatesWithData();
 
   return (
     <footer className="bg-gray-900 text-gray-400 text-sm">
@@ -54,13 +46,13 @@ export default async function Footer() {
               Browse by State
             </p>
             <div className="flex flex-wrap gap-x-4 gap-y-2">
-              {states.map((code) => (
+              {states.map((s) => (
                 <Link
-                  key={code}
-                  href={`/people/${code}`}
+                  key={s.code}
+                  href={`/people/${s.slug}`}
                   className="hover:text-white transition-colors"
                 >
-                  {STATE_NAMES[code] ?? code}
+                  {s.name}
                 </Link>
               ))}
             </div>

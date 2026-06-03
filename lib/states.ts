@@ -55,6 +55,7 @@ export const STATES: StateInfo[] = [
   { name: "West Virginia", code: "WV", slug: "west-virginia" },
   { name: "Wisconsin", code: "WI", slug: "wisconsin" },
   { name: "Wyoming", code: "WY", slug: "wyoming" },
+  { name: "Washington D.C.", code: "DC", slug: "washington-dc" },
 ];
 
 export const SLUG_TO_STATE = new Map(STATES.map((s) => [s.slug, s]));
