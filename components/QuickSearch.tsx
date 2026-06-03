@@ -17,7 +17,7 @@ export default function QuickSearch({
   function buildQuery(extra?: string): string {
     const parts = [firstName, lastName, city, jobTitle.trim(), school.trim(), extra]
       .filter(Boolean)
-      .map(encodeURIComponent);
+      .map(v => encodeURIComponent(v as string));
     return parts.join("+");
   }
 
