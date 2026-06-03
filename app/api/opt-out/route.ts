@@ -46,9 +46,13 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createServerClient();
-  if (!supabase) return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  if (!supabase) {
+    console.error("[opt-out] Supabase client unavailable — missing env vars");
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
 
   // 1. Record the opt-out request and capture the generated ID
+  console.log(`[opt-out] Inserting opt_out_requests for "${fullName}" <${email}>`);
   const { data: requestRow, error: insertError } = await supabase
     .from("opt_out_requests")
     .insert({ full_name: fullName, address, city, state, zip, email, reason })
@@ -56,8 +60,10 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (insertError || !requestRow) {
+    console.error("[opt-out] opt_out_requests insert failed:", insertError?.message, insertError?.details);
     return NextResponse.json({ error: "Failed to submit request" }, { status: 500 });
   }
+  console.log(`[opt-out] opt_out_requests insert OK, id=${requestRow.id}`);
 
   const referenceNumber = (requestRow.id as string).split("-")[0].toUpperCase();
 
@@ -66,19 +72,37 @@ export async function POST(req: NextRequest) {
   const firstName = nameParts[0] ?? "";
   const lastName  = nameParts.slice(1).join(" ");
 
+  console.log(`[opt-out] Parsed name: firstName="${firstName}" lastName="${lastName}"`);
+
   if (firstName && lastName) {
     // 2. Add to blocklist (durable record in case people table is reloaded)
-    await supabase
+    console.log(`[opt-out] Inserting opt_out_blocklist for "${firstName} ${lastName}"`);
+    const { error: blocklistError } = await supabase
       .from("opt_out_blocklist")
       .insert({ first_name: firstName, last_name: lastName, address, email });
 
+    if (blocklistError) {
+      console.error("[opt-out] opt_out_blocklist insert FAILED:", blocklistError.message, blocklistError.details, blocklistError.hint);
+    } else {
+      console.log("[opt-out] opt_out_blocklist insert OK");
+    }
+
     // 3. Mark matching people records as opted out (name + address for precision)
-    await supabase
+    console.log(`[opt-out] Updating people.opted_out for "${firstName} ${lastName}" address="${address}"`);
+    const { count: updatedCount, error: updateError } = await supabase
       .from("people")
       .update({ opted_out: true })
       .ilike("first_name", firstName)
       .ilike("last_name",  lastName)
       .ilike("address",    `%${address}%`);
+
+    if (updateError) {
+      console.error("[opt-out] people opted_out update FAILED:", updateError.message);
+    } else {
+      console.log(`[opt-out] people opted_out update OK, rows affected=${updatedCount ?? "unknown"}`);
+    }
+  } else {
+    console.warn(`[opt-out] Skipping blocklist/people update — could not parse both first and last name from "${fullName}"`);
   }
 
   return NextResponse.json({ success: true, referenceNumber });
