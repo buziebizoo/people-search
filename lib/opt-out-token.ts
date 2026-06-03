@@ -7,7 +7,6 @@ import { createHmac } from "crypto";
 const TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 function secret(): string {
-  // Use the service role key as the HMAC secret — it's already a long random value.
   return (
     process.env.SUPABASE_SERVICE_ROLE_KEY ??
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
@@ -19,14 +18,22 @@ function sign(payload: string): string {
   return createHmac("sha256", secret()).update(payload).digest("base64url");
 }
 
-/** Create a token that expires in 24 h. */
-export function createOptOutToken(personId: string, email: string): string {
-  const exp = Date.now() + TTL_MS;
-  const payload = Buffer.from(JSON.stringify({ pid: personId, em: email, exp })).toString("base64url");
-  return `${payload}_${sign(payload)}`;
-}
+export type TokenPayload = {
+  source:    "supabase" | "enformion";
+  personId:  string | null;  // supabase row id; null for enformion results
+  firstName: string;
+  lastName:  string;
+  email:     string;
+};
 
-export type TokenPayload = { personId: string; email: string };
+/** Create a token that expires in 24 h. */
+export function createOptOutToken(payload: TokenPayload): string {
+  const exp  = Date.now() + TTL_MS;
+  const data = Buffer.from(
+    JSON.stringify({ src: payload.source, pid: payload.personId, fn: payload.firstName, ln: payload.lastName, em: payload.email, exp }),
+  ).toString("base64url");
+  return `${data}_${sign(data)}`;
+}
 
 /**
  * Verify signature and expiry.
@@ -36,19 +43,27 @@ export function verifyOptOutToken(token: string): TokenPayload | null {
   const sep = token.lastIndexOf("_");
   if (sep === -1) return null;
 
-  const payload = token.slice(0, sep);
-  const sig     = token.slice(sep + 1);
-  if (sign(payload) !== sig) return null;
+  const data = token.slice(0, sep);
+  const sig  = token.slice(sep + 1);
+  if (sign(data) !== sig) return null;
 
   try {
-    const data = JSON.parse(Buffer.from(payload, "base64url").toString());
+    const d = JSON.parse(Buffer.from(data, "base64url").toString());
     if (
-      typeof data.pid !== "string" ||
-      typeof data.em  !== "string" ||
-      typeof data.exp !== "number"
+      (d.src !== "supabase" && d.src !== "enformion") ||
+      typeof d.fn  !== "string" ||
+      typeof d.ln  !== "string" ||
+      typeof d.em  !== "string" ||
+      typeof d.exp !== "number"
     ) return null;
-    if (Date.now() > data.exp) return null; // expired
-    return { personId: data.pid, email: data.em };
+    if (Date.now() > d.exp) return null;
+    return {
+      source:    d.src,
+      personId:  typeof d.pid === "string" ? d.pid : null,
+      firstName: d.fn,
+      lastName:  d.ln,
+      email:     d.em,
+    };
   } catch {
     return null;
   }

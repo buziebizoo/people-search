@@ -20,11 +20,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const personId = String(body.personId ?? "").trim().slice(0, 100);
-  const email    = String(body.email    ?? "").trim().slice(0, 254);
+  const source    = String(body.source    ?? "").trim();
+  const personId  = String(body.personId  ?? "").trim().slice(0, 100);
+  const firstName = String(body.firstName ?? "").trim().slice(0, 100);
+  const lastName  = String(body.lastName  ?? "").trim().slice(0, 100);
+  const email     = String(body.email     ?? "").trim().slice(0, 254);
 
-  if (!personId) {
-    return NextResponse.json({ error: "Missing person ID" }, { status: 400 });
+  if (source !== "supabase" && source !== "enformion") {
+    return NextResponse.json({ error: "Invalid source" }, { status: 400 });
+  }
+  if (!firstName || !lastName) {
+    return NextResponse.json({ error: "Missing name" }, { status: 400 });
   }
   if (!email || !isValidEmail(email)) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
@@ -35,35 +41,42 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 
-  // Confirm the record exists and hasn't already been removed
-  const { data: person, error: personError } = await supabase
-    .from("people")
-    .select("id, first_name, last_name")
-    .eq("id", personId)
-    .eq("opted_out", false)
-    .single();
+  // For Supabase records, verify the person still exists and isn't already removed
+  if (source === "supabase") {
+    if (!personId) {
+      return NextResponse.json({ error: "Missing person ID" }, { status: 400 });
+    }
+    const { data: person } = await supabase
+      .from("people")
+      .select("id")
+      .eq("id", personId)
+      .eq("opted_out", false)
+      .single();
 
-  if (personError || !person) {
-    console.log(`[opt-out] person not found or already opted out: ${personId}`);
-    // Return success anyway to avoid leaking which IDs exist
-    return NextResponse.json({ success: true });
+    if (!person) {
+      console.log(`[opt-out] supabase person not found or already opted out: ${personId}`);
+      // Return success to avoid leaking which IDs exist
+      return NextResponse.json({ success: true });
+    }
   }
 
-  const token = createOptOutToken(personId, email);
-  const origin = req.headers.get("origin") ?? req.nextUrl.origin;
+  const token = createOptOutToken({
+    source:    source as "supabase" | "enformion",
+    personId:  source === "supabase" ? personId : null,
+    firstName,
+    lastName,
+    email,
+  });
+
+  const origin     = req.headers.get("origin") ?? req.nextUrl.origin;
   const confirmUrl = `${origin}/api/opt-out/confirm/${token}`;
 
-  console.log(`[opt-out] confirmation token for ${person.first_name} ${person.last_name} <${email}>`);
+  console.log(`[opt-out] token for ${firstName} ${lastName} <${email}> (source=${source})`);
   console.log(`[opt-out] confirm URL: ${confirmUrl}`);
 
   if (process.env.RESEND_API_KEY) {
-    // TODO: send email via Resend
-    // import { Resend } from "resend";
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // await resend.emails.send({ from: "...", to: email, subject: "Confirm your removal request", html: `...` });
-    console.log("[opt-out] RESEND_API_KEY present but email sending not yet wired up");
-  } else {
-    console.log("[opt-out] No RESEND_API_KEY — token logged above for manual testing");
+    // TODO: send via Resend
+    console.log("[opt-out] RESEND_API_KEY present — email sending not yet wired up");
   }
 
   return NextResponse.json({ success: true });

@@ -10,6 +10,7 @@ import Link from "next/link";
 
 type SearchResult = {
   id: string;
+  source: "supabase" | "enformion";
   full_name: string;
   first_name: string;
   last_name: string;
@@ -20,6 +21,13 @@ type SearchResult = {
 };
 
 type Step = "search" | "results" | "email" | "sent";
+
+const US_STATES = [
+  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
+  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
+  "VA","WA","WV","WI","WY","DC",
+];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -47,6 +55,8 @@ function OptOutPageInner() {
   const [step, setStep]                   = useState<Step>("search");
   const [firstName, setFirstName]         = useState("");
   const [lastName, setLastName]           = useState("");
+  const [city, setCity]                   = useState("");
+  const [state, setState]                 = useState("");
   const [results, setResults]             = useState<SearchResult[]>([]);
   const [selected, setSelected]           = useState<SearchResult | null>(null);
   const [email, setEmail]                 = useState("");
@@ -150,7 +160,13 @@ function OptOutPageInner() {
         res = await fetch("/api/opt-out", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ personId: selected.id, email }),
+          body: JSON.stringify({
+          personId:  selected.id,
+          source:    selected.source,
+          firstName: selected.first_name,
+          lastName:  selected.last_name,
+          email,
+        }),
         });
       } catch {
         setSubmitting(false);
@@ -269,19 +285,25 @@ function OptOutPageInner() {
           <div className="flex flex-col gap-4">
             {results.map((person) => (
               <div key={person.id} className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
-                  <div>
-                    <p className="text-lg font-bold text-gray-900">{person.full_name}</p>
-                    {person.age && (
-                      <p className="text-sm text-gray-500">Age {person.age}</p>
-                    )}
-                  </div>
+                <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+                  <p className="text-lg font-bold text-gray-900">{person.full_name}</p>
                   {(person.city || person.state) && (
                     <span className="text-sm text-gray-500">
                       {[person.city, person.state].filter(Boolean).join(", ")}
                     </span>
                   )}
                 </div>
+                {(person.age || person.address) && (
+                  <div className="text-sm text-gray-500 mb-3 space-y-0.5">
+                    {person.age    && <p>Age {person.age}</p>}
+                    {person.address && (
+                      <p>
+                        {[person.address, person.city, person.state]
+                          .filter(Boolean).join(", ")}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <button
                   onClick={() => {
                     setSelected(person);
@@ -319,9 +341,10 @@ function OptOutPageInner() {
 
     let res: Response;
     try {
-      res = await fetch(
-        `/api/opt-out/search?first=${encodeURIComponent(firstName)}&last=${encodeURIComponent(lastName)}`,
-      );
+      const qs = new URLSearchParams({ first: firstName, last: lastName });
+      if (city.trim())  qs.set("city",  city.trim());
+      if (state.trim()) qs.set("state", state.trim());
+      res = await fetch(`/api/opt-out/search?${qs}`);
     } catch {
       setSearching(false);
       setError("Network error — please check your connection and try again.");
@@ -360,7 +383,7 @@ function OptOutPageInner() {
         </div>
       </div>
 
-      <form onSubmit={handleSearch} className="space-y-5">
+      <form onSubmit={handleSearch} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
@@ -389,6 +412,38 @@ function OptOutPageInner() {
               onChange={(e) => setLastName(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
             />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-2">
+            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+              City <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <input
+              id="city"
+              type="text"
+              placeholder="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
+              State <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <select
+              id="state"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+            >
+              <option value="">Any</option>
+              {US_STATES.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
           </div>
         </div>
 
