@@ -268,6 +268,10 @@ function PaginationBar({
   );
 }
 
+// Force dynamic rendering — prevents Next.js / Vercel edge caching the page,
+// which would skip server-side execution (and therefore blocklist filtering).
+export const dynamic = "force-dynamic";
+
 // ---------------------------------------------------------------------------
 // Metadata
 // ---------------------------------------------------------------------------
@@ -297,6 +301,8 @@ export default async function ResultsPage({
   const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
   const start = (page - 1) * PAGE_SIZE;
   const end   = start + PAGE_SIZE - 1;
+
+  console.log(`[results] ResultsPage executing: type=${params.type} first="${params.first}" last="${params.last}" page=${page}`);
 
   if (!params.type) {
     return (
