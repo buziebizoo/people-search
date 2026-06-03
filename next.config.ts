@@ -20,7 +20,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https:",
+      "img-src 'self' data: https: https://lduhtrp.net https://awltovhc.com https://tqlkg.com https://ftjcfx.com",
       "font-src 'self'",
       "connect-src 'self'",
       "frame-ancestors 'self'",

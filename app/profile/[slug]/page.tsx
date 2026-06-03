@@ -8,6 +8,7 @@ import ProfessionalInfo from "@/components/ProfessionalInfo";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
 import { parseProfileSlug } from "@/lib/profile-slug";
 import { pickAffiliate } from "@/lib/affiliates";
+import BannerAd from "@/components/BannerAd";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -318,6 +319,10 @@ function SupabaseProfile({ person, seed }: { person: SupabasePerson; seed: numbe
           </dl>
         </SectionCard>
 
+        <div className="flex justify-center my-4">
+          <BannerAd size="300x250" seed={seed + 99} page="profile" />
+        </div>
+
         <ProfessionalInfo
           firstName={person.first_name}
           lastName={person.last_name}
@@ -378,17 +383,11 @@ function SupabaseProfile({ person, seed }: { person: SupabasePerson; seed: numbe
           <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
           <div className="flex flex-col gap-3">
             <AffiliateCard name="PeopleFinders"
-              description="Get a full background report including criminal records, contact info, and more"
-              href={pickAffiliate("background", seed + 7)} />
+              description="Get a full background report including criminal records, addresses, phone numbers, and more."
+              href={pickAffiliate("dating", seed)} />
             <AffiliateCard name="PeopleFinders"
-              description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href={pickAffiliate("background", seed + 8)} />
-            <AffiliateCard name="PeopleFinders"
-              description="Find contact info, social profiles, photos and more"
-              href={pickAffiliate("background", seed + 9)} />
-            <AffiliateCard name="PeopleFinders"
-              description="Run a complete background check including arrest records and court documents"
-              href={pickAffiliate("background", seed + 10)} />
+              description="Run a reverse phone lookup to find out who's really calling or texting."
+              href={pickAffiliate("phone", seed + 1)} />
           </div>
         </div>
 
@@ -484,6 +483,10 @@ function EnformionProfile({ person, seed }: { person: EnformionPerson; seed: num
           </dl>
         </SectionCard>
 
+        <div className="flex justify-center my-4">
+          <BannerAd size="300x250" seed={seed + 99} page="profile" />
+        </div>
+
         <ProfessionalInfo
           firstName={person.first_name}
           lastName={person.last_name}
@@ -520,14 +523,11 @@ function EnformionProfile({ person, seed }: { person: EnformionPerson; seed: num
           <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
           <div className="flex flex-col gap-3">
             <AffiliateCard name="PeopleFinders"
-              description="Get a full background report including criminal records, contact info, and more"
-              href={pickAffiliate("background", seed)} />
+              description="Get a full background report including criminal records, addresses, phone numbers, and more."
+              href={pickAffiliate("dating", seed)} />
             <AffiliateCard name="PeopleFinders"
-              description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href={pickAffiliate("background", seed + 1)} />
-            <AffiliateCard name="PeopleFinders"
-              description="Find contact info, social profiles, photos and more"
-              href={pickAffiliate("background", seed + 2)} />
+              description="Run a reverse phone lookup to find out who's really calling or texting."
+              href={pickAffiliate("phone", seed + 1)} />
           </div>
         </div>
 

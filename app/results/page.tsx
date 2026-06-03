@@ -14,6 +14,7 @@ import { fetchBlocklist, isBlocklisted } from "@/lib/blocklist";
 import { CODE_TO_STATE } from "@/lib/states";
 import { sanitizeSearchInput } from "@/lib/sanitize";
 import { pickAffiliate } from "@/lib/affiliates";
+import BannerAd from "@/components/BannerAd";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -571,15 +572,9 @@ function ResultsList({
             if ((idx + 1) % 5 === 0 && idx < people.length - 1) {
               return [
                 card,
-                <a
-                  key={`aff-${idx}`}
-                  href={pickAffiliate("background", idx + 100)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-center text-sm text-teal-600 hover:text-teal-700 hover:underline py-2 transition-colors"
-                >
-                  → Run a full background check on this person with PeopleFinders
-                </a>,
+                <div key={`aff-${idx}`} className="justify-center my-3 hidden sm:flex">
+                  <BannerAd size="468x60" seed={idx} page="results" />
+                </div>,
               ];
             }
             return [card];
