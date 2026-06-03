@@ -6,36 +6,52 @@ import { useRouter } from "next/navigation";
 type Tab = "name" | "phone" | "address";
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: "name", label: "Name" },
-  { id: "phone", label: "Phone" },
+  { id: "name",    label: "Name"    },
+  { id: "phone",   label: "Phone"   },
   { id: "address", label: "Address" },
 ];
+
+const US_STATES = [
+  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
+  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
+  "VA","WA","WV","WI","WY","DC",
+];
+
+const inputClass =
+  "flex-1 min-w-[110px] border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400";
+const selectClass =
+  "w-24 shrink-0 border border-gray-200 rounded-lg px-2 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 bg-white";
+const btnClass =
+  "px-5 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap shrink-0";
 
 export default function SearchTabs() {
   const router = useRouter();
   const [active, setActive] = useState<Tab>("name");
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [nameLocation, setNameLocation] = useState("");
+  const [firstName,     setFirstName]     = useState("");
+  const [lastName,      setLastName]      = useState("");
+  const [nameCity,      setNameCity]      = useState("");
+  const [nameState,     setNameState]     = useState("");
 
   const [phone, setPhone] = useState("");
 
-  const [street, setStreet] = useState("");
+  const [street,       setStreet]       = useState("");
   const [addrLocation, setAddrLocation] = useState("");
 
   function doSearch() {
     if (active === "name") {
       const params = new URLSearchParams({ type: "name" });
       if (firstName) params.set("first", firstName);
-      if (lastName) params.set("last", lastName);
-      if (nameLocation) params.set("location", nameLocation);
+      if (lastName)  params.set("last",  lastName);
+      const location = [nameCity.trim(), nameState].filter(Boolean).join(", ");
+      if (location)  params.set("location", location);
       router.push(`/results?${params}`);
     } else if (active === "phone") {
       router.push(`/results?type=phone&q=${encodeURIComponent(phone)}`);
     } else if (active === "address") {
       const params = new URLSearchParams({ type: "address" });
-      if (street) params.set("street", street);
+      if (street)      params.set("street",   street);
       if (addrLocation) params.set("location", addrLocation);
       router.push(`/results?${params}`);
     }
@@ -74,19 +90,16 @@ export default function SearchTabs() {
       </div>
 
       {/* Input card */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-b-xl px-5 py-5 shadow-xl"
-      >
+      <form onSubmit={handleSubmit} className="bg-white rounded-b-xl px-5 py-5 shadow-xl">
         {active === "name" && (
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex flex-wrap gap-2 items-center">
             <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="First Name"
-              className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
+              className={inputClass}
             />
             <input
               type="text"
@@ -94,53 +107,53 @@ export default function SearchTabs() {
               onChange={(e) => setLastName(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Last Name"
-              className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
+              className={inputClass}
             />
             <input
               type="text"
-              value={nameLocation}
-              onChange={(e) => setNameLocation(e.target.value)}
+              value={nameCity}
+              onChange={(e) => setNameCity(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="City, State"
-              className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
+              placeholder="City"
+              className={inputClass}
             />
-            <button
-              type="submit"
-              className="px-5 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap shrink-0"
+            <select
+              value={nameState}
+              onChange={(e) => setNameState(e.target.value)}
+              className={selectClass}
             >
-              Search
-            </button>
+              <option value="">State</option>
+              {US_STATES.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <button type="submit" className={btnClass}>Search</button>
           </div>
         )}
 
         {active === "phone" && (
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex flex-wrap gap-2 items-center">
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Phone Number"
-              className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
+              className={inputClass}
             />
-            <button
-              type="submit"
-              className="px-5 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap shrink-0"
-            >
-              Search
-            </button>
+            <button type="submit" className={btnClass}>Search</button>
           </div>
         )}
 
         {active === "address" && (
-          <div className="flex flex-row gap-2 items-center">
+          <div className="flex flex-wrap gap-2 items-center">
             <input
               type="text"
               value={street}
               onChange={(e) => setStreet(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Street Address"
-              className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
+              className={inputClass}
             />
             <input
               type="text"
@@ -148,14 +161,9 @@ export default function SearchTabs() {
               onChange={(e) => setAddrLocation(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="City, State"
-              className="flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400"
+              className={inputClass}
             />
-            <button
-              type="submit"
-              className="px-5 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap shrink-0"
-            >
-              Search
-            </button>
+            <button type="submit" className={btnClass}>Search</button>
           </div>
         )}
       </form>
