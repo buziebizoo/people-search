@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 type Props = { searchParams: Promise<{ category?: string; page?: string }> };
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 6;
 
 const CATEGORY_STYLES: Record<BlogCategory, string> = {
   "Dating Safety": "bg-rose-100 text-rose-700",
