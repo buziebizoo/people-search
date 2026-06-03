@@ -145,6 +145,31 @@ function parseLocation(raw: string): { city: string; state: string } {
   return { city, state };
 }
 
+const ABBREV_PAIRS: [string, string][] = [
+  ["st",   "street"],
+  ["ave",  "avenue"],
+  ["blvd", "boulevard"],
+  ["dr",   "drive"],
+  ["rd",   "road"],
+  ["ln",   "lane"],
+  ["ct",   "court"],
+  ["pl",   "place"],
+  ["pkwy", "parkway"],
+  ["hwy",  "highway"],
+];
+
+function streetVariants(input: string): string[] {
+  const s = input.trim().toLowerCase();
+  const variants = new Set([s]);
+  for (const [abbrev, full] of ABBREV_PAIRS) {
+    if (new RegExp(`\\b${abbrev}\\b`).test(s))
+      variants.add(s.replace(new RegExp(`\\b${abbrev}\\b`), full));
+    if (new RegExp(`\\b${full}\\b`).test(s))
+      variants.add(s.replace(new RegExp(`\\b${full}\\b`), abbrev));
+  }
+  return Array.from(variants);
+}
+
 // Shared empty-state UI
 function EmptyState({ params }: { params: SearchParams }) {
   return (
@@ -256,10 +281,15 @@ export default async function ResultsPage({
       if (city) query = query.ilike("city", `%${city}%`);
     }
   } else if (params.type === "address") {
-    if (params.street) query = query.ilike("address", `%${params.street}%`);
+    if (params.street) {
+      const variants = streetVariants(params.street);
+      const orFilter = variants.map((v) => `address.ilike.%${v}%`).join(",");
+      query = query.or(orFilter);
+    }
     if (params.location) {
-      const { city } = parseLocation(params.location);
-      if (city) query = query.ilike("city", `%${city}%`);
+      const { city, state } = parseLocation(params.location);
+      if (city)                    query = query.ilike("city",  `%${city}%`);
+      if (state && state.length === 2) query = query.eq("state", state);
     }
   }
 
