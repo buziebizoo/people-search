@@ -363,6 +363,45 @@ export const BLOG_POSTS: BlogPost[] = [
 `,
   },
   {
+    slug: "background-check-texas-date",
+    title: "How to Run a Background Check in Texas Before a First Date",
+    date: "2026-06-03",
+    category: "Background Checks",
+    excerpt:
+      "Texas has some of the most accessible public records in the country. Here's how to verify your date's identity, criminal history, and more using free Texas government resources.",
+    content: `
+<p>Texas has some of the most accessible public records in the country. If you're dating someone in Houston, Dallas, Austin, San Antonio, or anywhere else in the Lone Star State, you can confirm their identity, check their criminal history, and verify their address using free government resources — often in under fifteen minutes.</p>
+
+<h2>Why Texas makes verification easier than most states</h2>
+<p>Texas is an open-records state under the Texas Public Information Act. That means a wide range of government records — court filings, property ownership, sex offender registry entries, and more — are available to the public without a special request or a court order. For someone who wants to verify a date's identity before meeting in person, that legal framework is a genuine advantage.</p>
+
+<h2>Step 1: Confirm their identity with a people search</h2>
+<p>Start with the basics. Enter their full name and city into a people-search tool to confirm that a real person by that name lives where they say they do and is approximately the age listed on their profile. Texas's large population means common names return many results, so use every detail you have — age, neighborhood, or employer — to narrow things down.</p>
+
+<h2>Step 2: Check Texas court records</h2>
+<p>Texas courts maintain a public case-search portal at search.txcourts.gov that covers hundreds of courts statewide. Enter your match's name to search for any civil or criminal filings. The results include case type, filing date, and court location. For more detailed county-level searches, visit the district clerk's website for the relevant county directly — Harris County (Houston), Dallas County, Travis County (Austin), and Bexar County (San Antonio) all have free online portals with searchable records.</p>
+
+<h2>Step 3: Search the Texas sex offender registry</h2>
+<p>The Texas Department of Public Safety maintains the state's sex offender registry. You can search by name, city, or ZIP code through the DPS website. Texas also participates in the national registry at nsopw.gov, so a single national search covers Texas registrants. If you know your match lives in a specific county or city, a targeted state-level search will give you the most current information, including registration compliance status.</p>
+
+<h2>Step 4: Look up property records</h2>
+<p>If your match claims to own a home, county appraisal district records confirm it. Texas appraisal districts publish property ownership online; most county sites have a free search tool. Finding a property registered to your match's name at the address they've given you is a strong identity confirmation. The Texas Association of Appraisal Districts links to every county's portal if you're not sure where to start.</p>
+
+<h2>Step 5: Check Texas vital records for marital status</h2>
+<p>Marriage records in Texas are maintained at the county level by the county clerk. For most counties, basic marriage index searches are available online at no cost. Texas also has a statewide vital statistics index through the Texas DSHS for marriages from 1966 onward. If your match says they're divorced, you can cross-check by searching for divorce decrees through the county district court records — these are public civil filings.</p>
+
+<h2>Red flags that make verification more urgent</h2>
+<ul>
+<li><strong>They're vague about which Texas city they live in.</strong> Houston, Dallas, Austin, and San Antonio are massive cities; someone genuinely from one of them can usually name a neighborhood, a major cross-street, or a local landmark. Vagueness about basic geography is worth noting.</li>
+<li><strong>They claim to work in oil and gas, tech, or the military.</strong> These are common cover stories in Texas dating scams precisely because they're plausible and hard to verify without specific details.</li>
+<li><strong>They say they travel frequently for work.</strong> A constant reason for being out of town is a classic romance-scammer setup for why they can't meet in person.</li>
+</ul>
+
+<h2>Put it all together</h2>
+<p>A Texas background check before a first date doesn't require paid services or special access — it requires knowing where to look. A people search confirms the basics, Texas court records surface any criminal or civil history, the DPS registry covers the most serious concerns, and county property records confirm they live where they claim. Together, these free steps give you a meaningful picture of who you're meeting in under twenty minutes. Use them, meet somewhere public, and enjoy the date.</p>
+`,
+  },
+  {
     slug: "how-to-check-if-someone-is-married",
     title: "How to Check If Someone Is Married Before Your First Date",
     date: "2026-06-07",
