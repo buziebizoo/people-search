@@ -2,18 +2,26 @@ import type { MetadataRoute } from "next";
 import { createServerClient } from "@/lib/supabase";
 import { STATES, CODE_TO_STATE } from "@/lib/states";
 import { buildSupabaseSlug } from "@/lib/profile-slug";
+import { getAllPosts } from "@/lib/blog";
 
 const BASE_URL = "https://whoismy.date";
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: `${BASE_URL}/`,              changeFrequency: "daily",   priority: 1 },
   { url: `${BASE_URL}/about`,         changeFrequency: "monthly", priority: 0.6 },
+  { url: `${BASE_URL}/blog`,          changeFrequency: "weekly",  priority: 0.7 },
   { url: `${BASE_URL}/privacy-policy`,changeFrequency: "yearly",  priority: 0.3 },
   { url: `${BASE_URL}/terms`,         changeFrequency: "yearly",  priority: 0.3 },
   { url: `${BASE_URL}/opt-out`,       changeFrequency: "yearly",  priority: 0.4 },
   { url: `${BASE_URL}/contact`,       changeFrequency: "yearly",  priority: 0.4 },
   { url: `${BASE_URL}/people`,        changeFrequency: "weekly",  priority: 0.7 },
 ];
+
+const BLOG_PAGES: MetadataRoute.Sitemap = getAllPosts().map((p) => ({
+  url: `${BASE_URL}/blog/${p.slug}`,
+  changeFrequency: "weekly",
+  priority: 0.7,
+}));
 
 const STATE_PAGES: MetadataRoute.Sitemap = STATES.map((s) => ({
   url: `${BASE_URL}/people/${s.slug}`,
@@ -25,7 +33,7 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createServerClient();
-  if (!supabase) return [...STATIC_PAGES, ...STATE_PAGES];
+  if (!supabase) return [...STATIC_PAGES, ...BLOG_PAGES, ...STATE_PAGES];
 
   // Collect distinct state+city combos for city browse pages
   const citySet = new Map<string, Set<string>>(); // code → Set<citySlug>
@@ -87,5 +95,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     from += 1000;
   }
 
-  return [...STATIC_PAGES, ...STATE_PAGES, ...cityPages, ...profileUrls];
+  return [...STATIC_PAGES, ...BLOG_PAGES, ...STATE_PAGES, ...cityPages, ...profileUrls];
 }
