@@ -326,7 +326,7 @@ export default async function ProfilePage({ params }: Props) {
           <SectionTitle>Previous Addresses</SectionTitle>
           <p className="text-sm text-gray-500 mb-3">Previous addresses may be on file</p>
           <a
-            href="https://www.truthfinder.com/?utm_source=peoplefind"
+            href="https://www.truthfinder.com/?utm_source=whoismy.date"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
@@ -340,7 +340,7 @@ export default async function ProfilePage({ params }: Props) {
           <SectionTitle>Known Associates</SectionTitle>
           <p className="text-sm text-gray-500 mb-3">Known associates may be on file</p>
           <a
-            href="https://www.beenverified.com/?utm_source=peoplefind"
+            href="https://www.beenverified.com/?utm_source=whoismy.date"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
@@ -353,28 +353,28 @@ export default async function ProfilePage({ params }: Props) {
         <LockedSection
           title="Criminal Records"
           teaser="This person may have criminal records on file"
-          href="https://www.truthfinder.com/?utm_source=peoplefind"
+          href="https://www.truthfinder.com/?utm_source=whoismy.date"
         />
         <LockedSection
           title="Arrest Records"
           teaser="Possible arrest records found"
-          href="https://www.instantcheckmate.com/?utm_source=peoplefind"
+          href="https://www.instantcheckmate.com/?utm_source=whoismy.date"
         />
         <LockedSection
           title="Sex Offender Check"
           teaser="Run a sex offender check on this person"
-          href="https://www.truthfinder.com/?utm_source=peoplefind"
+          href="https://www.truthfinder.com/?utm_source=whoismy.date"
           buttonLabel="Run Check"
         />
         <LockedSection
           title="Bankruptcies & Liens"
           teaser="Financial records may be available"
-          href="https://www.beenverified.com/?utm_source=peoplefind"
+          href="https://www.beenverified.com/?utm_source=whoismy.date"
         />
         <LockedSection
           title="Traffic Violations"
           teaser="Possible traffic violations on file"
-          href="https://www.spokeo.com/?utm_source=peoplefind"
+          href="https://www.spokeo.com/?utm_source=whoismy.date"
         />
 
         <AdPlaceholder />
@@ -388,22 +388,22 @@ export default async function ProfilePage({ params }: Props) {
             <AffiliateCard
               name="TruthFinder"
               description="Get a full background report including criminal records, contact info, and more"
-              href="https://www.truthfinder.com/?utm_source=peoplefind"
+              href="https://www.truthfinder.com/?utm_source=whoismy.date"
             />
             <AffiliateCard
               name="BeenVerified"
               description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href="https://www.beenverified.com/?utm_source=peoplefind"
+              href="https://www.beenverified.com/?utm_source=whoismy.date"
             />
             <AffiliateCard
               name="Spokeo"
               description="Find contact info, social profiles, photos and more"
-              href="https://www.spokeo.com/?utm_source=peoplefind"
+              href="https://www.spokeo.com/?utm_source=whoismy.date"
             />
             <AffiliateCard
               name="Instant Checkmate"
               description="Run a complete background check including arrest records and court documents"
-              href="https://www.instantcheckmate.com/?utm_source=peoplefind"
+              href="https://www.instantcheckmate.com/?utm_source=whoismy.date"
             />
           </div>
         </div>

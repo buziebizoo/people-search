@@ -156,7 +156,7 @@ export default function TermsPage() {
             8. Limitation of Liability
           </h2>
           <p>
-            TO THE FULLEST EXTENT PERMITTED BY LAW, PEOPLEFIND AND ITS
+            TO THE FULLEST EXTENT PERMITTED BY LAW, WHO IS MY DATE? AND ITS
             OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR
             ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE
             DAMAGES ARISING FROM YOUR USE OF OR INABILITY TO USE THE SERVICE,
@@ -232,10 +232,10 @@ export default function TermsPage() {
             <p>
               Email:{" "}
               <a
-                href="mailto:legal@peoplefind.com"
+                href="mailto:legal@whoismy.date"
                 className="text-teal-600 hover:underline"
               >
-                legal@peoplefind.com
+                legal@whoismy.date
               </a>
             </p>
             <p>

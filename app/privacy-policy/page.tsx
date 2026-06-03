@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <p>
             Who Is My Date? (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates a free public
-            records search engine at peoplefind.com (the &ldquo;Service&rdquo;). This
+            records search engine at whoismy.date (the &ldquo;Service&rdquo;). This
             Privacy Policy describes how we collect, use, disclose, and protect
             information in connection with your use of the Service. By accessing
             or using the Service you agree to the practices described in this
@@ -221,10 +221,10 @@ export default function PrivacyPolicyPage() {
           <p>
             To exercise any of these rights, contact us at{" "}
             <a
-              href="mailto:privacy@peoplefind.com"
+              href="mailto:privacy@whoismy.date"
               className="text-teal-600 hover:underline"
             >
-              privacy@peoplefind.com
+              privacy@whoismy.date
             </a>
             .
           </p>
@@ -258,10 +258,10 @@ export default function PrivacyPolicyPage() {
             believe a child has submitted information to us, please contact us
             at{" "}
             <a
-              href="mailto:privacy@peoplefind.com"
+              href="mailto:privacy@whoismy.date"
               className="text-teal-600 hover:underline"
             >
-              privacy@peoplefind.com
+              privacy@whoismy.date
             </a>{" "}
             and we will delete it promptly.
           </p>
@@ -292,10 +292,10 @@ export default function PrivacyPolicyPage() {
             <p>
               Email:{" "}
               <a
-                href="mailto:privacy@peoplefind.com"
+                href="mailto:privacy@whoismy.date"
                 className="text-teal-600 hover:underline"
               >
-                privacy@peoplefind.com
+                privacy@whoismy.date
               </a>
             </p>
             <p>Response time: within 5 business days</p>

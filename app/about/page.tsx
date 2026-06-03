@@ -136,10 +136,10 @@ export default function AboutPage() {
           <p>
             Questions, concerns, or feedback can be directed to our team at{" "}
             <a
-              href="mailto:privacy@peoplefind.com"
+              href="mailto:privacy@whoismy.date"
               className="text-teal-600 hover:underline"
             >
-              privacy@peoplefind.com
+              privacy@whoismy.date
             </a>
             . We aim to respond within 5 business days.
           </p>

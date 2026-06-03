@@ -202,17 +202,17 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
             <AffiliateCard
               name="TruthFinder"
               description="Get a full background report including criminal records, contact info, and more"
-              href={`https://www.truthfinder.com/?utm_source=peoplefind`}
+              href={`https://www.truthfinder.com/?utm_source=whoismy.date`}
             />
             <AffiliateCard
               name="BeenVerified"
               description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href={`https://www.beenverified.com/?utm_source=peoplefind`}
+              href={`https://www.beenverified.com/?utm_source=whoismy.date`}
             />
             <AffiliateCard
               name="Spokeo"
               description="Find contact info, social profiles, photos and more"
-              href={`https://www.spokeo.com/?utm_source=peoplefind`}
+              href={`https://www.spokeo.com/?utm_source=whoismy.date`}
             />
           </div>
         </div>
