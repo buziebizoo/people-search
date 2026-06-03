@@ -87,13 +87,13 @@ function SearchCta({ affiliateUrl }: { affiliateUrl: string }) {
           name="first"
           placeholder="First name"
           aria-label="First name"
-          className="flex-1 rounded-lg px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+          className="flex-1 rounded-lg px-4 py-3 text-sm text-gray-900 placeholder-gray-400 border border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
         />
         <input
           name="last"
           placeholder="Last name"
           aria-label="Last name"
-          className="flex-1 rounded-lg px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+          className="flex-1 rounded-lg px-4 py-3 text-sm text-gray-900 placeholder-gray-400 border border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
         />
         <button
           type="submit"
