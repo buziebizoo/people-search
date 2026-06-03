@@ -3,7 +3,7 @@ import Link from "next/link";
 import { STATES } from "@/lib/states";
 
 export const metadata: Metadata = {
-  title: "Find People by State - Free Public Records Search | PeopleFind",
+  title: "Find People by State - Free Public Records Search | Who Is My Date?",
   description:
     "Browse public records by state. Search voter registration and government records to find people across all 50 states.",
 };
@@ -61,9 +61,9 @@ export default function PeoplePage() {
       </div>
 
       <p className="mt-10 text-xs text-gray-400 leading-relaxed border-t border-gray-100 pt-6">
-        PeopleFind aggregates publicly available government records including
+        Who Is My Date? aggregates publicly available government records including
         voter registration data. Information is provided for informational
-        purposes only. PeopleFind is not a consumer reporting agency and may not
+        purposes only. Who Is My Date? is not a consumer reporting agency and may not
         be used for any purpose regulated by the FCRA.
       </p>
     </div>

@@ -1,2 +1,91 @@
+Starting load at Tue Jun  2 15:52:13 PDT 2026
 /Users/brandon/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
   warnings.warn(
+Found 1 file(s) to process
+  SWVF_1_22.txt
+
+[1/1] SWVF_1_22.txt
+
+  WARN: batch insert failed near line 201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(TOM, CROSS, 45697) already exists.'}
+
+  WARN: batch insert failed near line 401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(TROY, DOTSON, 45679) already exists.'}
+
+  WARN: batch insert failed near line 601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(PAMELA, CAMPBELL, 45679) already exists.'}
+Found 1 file(s) to process — limit: 500,000 total rows
+  SWVF_1_22.txt
+
+[1/1] SWVF_1_22.txt
+
+  WARN: batch insert failed near line 601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JAMES, DRUMMOND, 45616) already exists.'}
+
+  WARN: batch insert failed near line 1001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(ROBERT, SHIPLEY, 45697) already exists.'}
+
+  WARN: batch insert failed near line 1201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(PATRICIA, ROADES, 45697) already exists.'}
+
+  WARN: batch insert failed near line 1401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(KENNETH, GROOMS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 1601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(BARBARA, GROOMS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 1801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(ANTHONY, CRAWFORD, 45693) already exists.'}
+
+  WARN: batch insert failed near line 2001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JAMES, WORKMAN, 45660) already exists.'}
+
+  WARN: batch insert failed near line 2201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(VELMA, POTTS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 2401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(MARY, MCMURRAY, 45697) already exists.'}
+
+  WARN: batch insert failed near line 2601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(WILLIAM, NICHOLS, 45660) already exists.'}
+
+  WARN: batch insert failed near line 2801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(BERNARD, BROWN, 45660) already exists.'}
+
+  WARN: batch insert failed near line 3001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(WANDA, DAVIS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 3201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(PAMELA, GROOMS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 3401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(DONALD, GROOMS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 3601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JASON, GROOMS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 3801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(STANLEY, HARPER, 45697) already exists.'}
+
+  WARN: batch insert failed near line 4001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(TERRY, YOUNG, 45693) already exists.'}
+
+  WARN: batch insert failed near line 4201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(WILLIAM, KNAUFF, 45693) already exists.'}
+
+  WARN: batch insert failed near line 4401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JAMES, JONES, 45660) already exists.'}
+
+  WARN: batch insert failed near line 4601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(EDISON, JOHNSON, 45657) already exists.'}
+
+  WARN: batch insert failed near line 4801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JEREMY, LEWIS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 5001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(LARRY, CONAWAY, 45660) already exists.'}
+
+  WARN: batch insert failed near line 5201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(WILLIAM, BALDWIN, 45693) already exists.'}
+
+  WARN: batch insert failed near line 5401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JOHN, HENDRIX, 45693) already exists.'}
+
+  WARN: batch insert failed near line 5601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(DAVID, SOUDER, 45693) already exists.'}
+
+  WARN: batch insert failed near line 5801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(WILLIAM, BOLDMAN, 45657) already exists.'}
+
+  WARN: batch insert failed near line 6001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(ROBERT, RAINES, 45679) already exists.'}
+
+  WARN: batch insert failed near line 6201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(STEPHEN, LEWIS, 45144) already exists.'}
+
+  WARN: batch insert failed near line 6401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(MICHAEL, COOPER, 45693) already exists.'}
+
+  WARN: batch insert failed near line 6601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JEFFREY, SWAYNE, 45660) already exists.'}
+
+  WARN: batch insert failed near line 6801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JEFFREY, EDWARDS, 45660) already exists.'}
+
+  WARN: batch insert failed near line 7001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(ANGELA, HAYSLIP, 45693) already exists.'}
+
+  WARN: batch insert failed near line 7201: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(JAMES, FRANCIS, 45693) already exists.'}
+
+  WARN: batch insert failed near line 7401: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(ROBERT, CONLEY, 45693) already exists.'}
+
+  WARN: batch insert failed near line 7601: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(AARON, SENIOR, 45693) already exists.'}
+
+  WARN: batch insert failed near line 7801: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(STEPHEN, DICK, 45660) already exists.'}
+
+  WARN: batch insert failed near line 8001: {'message': 'duplicate key value violates unique constraint "people_name_zip_uniq"', 'code': '23505', 'hint': None, 'details': 'Key (first_name, last_name, zip)=(TIMOTHY, WILLIAMS, 45616) already exists.'}

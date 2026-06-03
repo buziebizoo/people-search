@@ -373,7 +373,7 @@ function ResultsList({
 
         {/* FCRA disclaimer */}
         <p className="text-xs text-gray-400 border-t border-gray-100 pt-6 mt-8 leading-relaxed">
-          PeopleFind is not a consumer reporting agency as defined by the Fair Credit
+          Who Is My Date? is not a consumer reporting agency as defined by the Fair Credit
           Reporting Act (FCRA). The information available on this site may not be used
           for any purpose covered by the FCRA, including tenant screening, employment
           decisions, or credit determinations. Use of this site signifies your agreement

@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
-import QuickSearch from "@/components/QuickSearch";
+import ProfessionalInfo from "@/components/ProfessionalInfo";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -49,14 +49,14 @@ const getPerson = cache(async (id: string): Promise<Person | null> => {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const person = await getPerson(id);
-  if (!person) return { title: "Person Not Found | PeopleFind" };
+  if (!person) return { title: "Person Not Found | Who Is My Date?" };
 
   const location = [person.city, person.state].filter(Boolean).join(", ");
   const agePart = person.age ? ` Age ${person.age}` : "";
 
   return {
-    title: `${person.full_name} -${agePart}${location ? ` - ${location}` : ""} | PeopleFind`,
-    description: `Find information about ${person.full_name}${location ? ` from ${location}` : ""}. View address, phone number, relatives and more on PeopleFind.`,
+    title: `${person.full_name} -${agePart}${location ? ` - ${location}` : ""} | Who Is My Date?`,
+    description: `Find information about ${person.full_name}${location ? ` from ${location}` : ""}. View address, phone number, relatives and more on Who Is My Date?.`,
   };
 }
 
@@ -286,7 +286,7 @@ export default async function ProfilePage({ params }: Props) {
         </SectionCard>
 
         {/* ── 3. PROFESSIONAL INFORMATION ── */}
-        <QuickSearch
+        <ProfessionalInfo
           firstName={person.first_name}
           lastName={person.last_name}
           city={person.city ?? ""}
@@ -414,7 +414,7 @@ export default async function ProfilePage({ params }: Props) {
         {/* ── 9. FOOTER DISCLAIMER ── */}
         <div className="text-xs text-gray-400 border-t border-gray-200 pt-5 leading-relaxed flex flex-col gap-2">
           <p>
-            PeopleFind is not a consumer reporting agency as defined by the Fair
+            Who Is My Date? is not a consumer reporting agency as defined by the Fair
             Credit Reporting Act (FCRA). This information may not be used for
             employment, housing, credit, or tenant screening purposes.
           </p>

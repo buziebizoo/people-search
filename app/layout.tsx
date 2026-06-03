@@ -10,7 +10,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "PeopleFind — Search Public Records",
+  title: "Who Is My Date? — Search Public Records",
   description:
     "Search public records by name, phone number, or address. Find contact details and background information instantly.",
 };

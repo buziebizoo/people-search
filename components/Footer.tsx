@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-400 text-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
         <p className="mb-6 leading-relaxed text-gray-500">
-          <strong className="text-gray-300">Legal Disclaimer:</strong> PeopleFind
+          <strong className="text-gray-300">Legal Disclaimer:</strong> Who Is My Date?
           aggregates publicly available information from government records,
           public databases, and other lawful sources. We are not a consumer
           reporting agency as defined by the Fair Credit Reporting Act (FCRA) and
@@ -30,7 +30,7 @@ export default function Footer() {
           </Link>
         </div>
         <p className="mt-6 text-xs text-gray-600">
-          © {new Date().getFullYear()} PeopleFind. All rights reserved.
+          © {new Date().getFullYear()} Who Is My Date?. All rights reserved.
         </p>
       </div>
     </footer>

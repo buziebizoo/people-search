@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — PeopleFind",
+  title: "Privacy Policy — Who Is My Date?",
   description:
-    "PeopleFind privacy policy covering data collection, cookies, FCRA compliance, and your opt-out rights.",
+    "Who Is My Date? privacy policy covering data collection, cookies, FCRA compliance, and your opt-out rights.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
       <div className="space-y-10 text-gray-700 leading-relaxed">
         <section>
           <p>
-            PeopleFind (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates a free public
+            Who Is My Date? (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates a free public
             records search engine at peoplefind.com (the &ldquo;Service&rdquo;). This
             Privacy Policy describes how we collect, use, disclose, and protect
             information in connection with your use of the Service. By accessing
@@ -77,7 +77,7 @@ export default function PrivacyPolicyPage() {
             information compiled from publicly available government sources,
             including voter registration rolls, property records, court filings,
             business registrations, and similar official datasets. This data was
-            originally collected and published by government agencies; PeopleFind
+            originally collected and published by government agencies; Who Is My Date?
             aggregates and indexes it to make searching easier.
           </p>
           <p>
@@ -170,7 +170,7 @@ export default function PrivacyPolicyPage() {
             6. FCRA Compliance
           </h2>
           <p className="mb-3">
-            PeopleFind is not a consumer reporting agency as defined by the Fair
+            Who Is My Date? is not a consumer reporting agency as defined by the Fair
             Credit Reporting Act, 15 U.S.C. § 1681 et seq. (&ldquo;FCRA&rdquo;). The
             information available through the Service may not be used as a
             factor in determining a consumer&apos;s eligibility for:
@@ -288,7 +288,7 @@ export default function PrivacyPolicyPage() {
             us:
           </p>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
-            <p className="font-medium text-gray-900">PeopleFind Privacy Team</p>
+            <p className="font-medium text-gray-900">Who Is My Date? Privacy Team</p>
             <p>
               Email:{" "}
               <a

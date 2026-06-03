@@ -5,7 +5,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="text-xl font-bold text-teal-600 tracking-tight">
-          PeopleFind
+          Who Is My Date?
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-gray-600">
           <Link href="/" className="hover:text-teal-600 transition-colors">

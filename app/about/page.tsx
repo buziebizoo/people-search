@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About PeopleFind — Free Public Records Search",
+  title: "About Who Is My Date? — Free Public Records Search",
   description:
-    "Learn about PeopleFind, a free public records search engine powered by government and publicly available data sources.",
+    "Learn about Who Is My Date?, a free public records search engine powered by government and publicly available data sources.",
 };
 
 export default function AboutPage() {
@@ -11,10 +11,10 @@ export default function AboutPage() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
       <div className="mb-10">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          About <span className="text-teal-600">PeopleFind</span>
+          About <span className="text-teal-600">Who Is My Date?</span>
         </h1>
         <p className="text-lg text-gray-600 leading-relaxed">
-          PeopleFind is a free public records search engine that helps you
+          Who Is My Date? is a free public records search engine that helps you
           locate individuals using information drawn entirely from government and
           publicly available sources.
         </p>
@@ -27,7 +27,7 @@ export default function AboutPage() {
           </h2>
           <p>
             We believe access to public records should be straightforward and
-            free. PeopleFind was built to make it easy for anyone to search the
+            free. Who Is My Date? was built to make it easy for anyone to search the
             same government databases that have always been publicly available —
             without the paywalls or confusing interfaces common on other
             platforms.
@@ -39,7 +39,7 @@ export default function AboutPage() {
             Where Our Data Comes From
           </h2>
           <p className="mb-3">
-            Every record displayed on PeopleFind originates from a legitimate
+            Every record displayed on Who Is My Date? originates from a legitimate
             public source. Our dataset is compiled from:
           </p>
           <ul className="list-disc list-inside space-y-2 ml-2 text-gray-600">
@@ -74,12 +74,12 @@ export default function AboutPage() {
 
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">
-            How PeopleFind Works
+            How Who Is My Date? Works
           </h2>
           <p>
             Our search indexes are built by ingesting and normalizing public
             record datasets from across the country. When you enter a name,
-            address, or phone number, PeopleFind queries this index and returns
+            address, or phone number, Who Is My Date? queries this index and returns
             matching entries in a clean, readable format. We regularly update
             our datasets to reflect newly released government records.
           </p>
@@ -90,7 +90,7 @@ export default function AboutPage() {
             Responsible Use
           </h2>
           <p className="mb-3">
-            PeopleFind is intended for lawful personal use — reconnecting with
+            Who Is My Date? is intended for lawful personal use — reconnecting with
             family, verifying contact information, or conducting general
             research. It is{" "}
             <strong>not</strong> a consumer reporting agency and may not be used
@@ -104,7 +104,7 @@ export default function AboutPage() {
             <li>Any purpose requiring a consumer report</li>
           </ul>
           <p className="mt-3">
-            Use of PeopleFind for any prohibited purpose is a violation of our
+            Use of Who Is My Date? for any prohibited purpose is a violation of our
             Terms of Service and may be unlawful.
           </p>
         </section>

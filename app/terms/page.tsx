@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — PeopleFind",
+  title: "Terms of Service — Who Is My Date?",
   description:
-    "Terms of service for PeopleFind, a free public records search engine.",
+    "Terms of service for Who Is My Date?, a free public records search engine.",
 };
 
 export default function TermsPage() {
@@ -20,8 +20,8 @@ export default function TermsPage() {
         <section>
           <p>
             These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of
-            the PeopleFind website and services (collectively, the
-            &ldquo;Service&rdquo;) operated by PeopleFind (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;).
+            the Who Is My Date? website and services (collectively, the
+            &ldquo;Service&rdquo;) operated by Who Is My Date? (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;).
             By accessing or using the Service, you agree to be bound by these
             Terms. If you do not agree, do not use the Service.
           </p>
@@ -43,7 +43,7 @@ export default function TermsPage() {
             2. Description of Service
           </h2>
           <p>
-            PeopleFind provides access to an index of publicly available
+            Who Is My Date? provides access to an index of publicly available
             government records, including but not limited to voter registration
             data, property records, court filings, and business registrations.
             The Service is provided for informational purposes only. We do not
@@ -57,7 +57,7 @@ export default function TermsPage() {
             3. FCRA Notice — Prohibited Uses
           </h2>
           <p className="mb-3">
-            PeopleFind is <strong>not</strong> a consumer reporting agency as
+            Who Is My Date? is <strong>not</strong> a consumer reporting agency as
             defined by the Fair Credit Reporting Act, 15 U.S.C. § 1681 et seq.
             (&ldquo;FCRA&rdquo;). You expressly agree that you will not use the Service,
             or any information obtained through it, as a factor in:
@@ -127,7 +127,7 @@ export default function TermsPage() {
           </h2>
           <p>
             The Service, including its design, software, and compilation of
-            data, is the property of PeopleFind and is protected by applicable
+            data, is the property of Who Is My Date? and is protected by applicable
             intellectual property laws. The underlying public records data
             originates from government sources and is not claimed as our
             proprietary content, but the manner in which it is indexed,
@@ -171,7 +171,7 @@ export default function TermsPage() {
             9. Indemnification
           </h2>
           <p>
-            You agree to indemnify, defend, and hold harmless PeopleFind and
+            You agree to indemnify, defend, and hold harmless Who Is My Date? and
             its affiliates, officers, directors, employees, and agents from any
             claims, liabilities, damages, losses, or expenses (including
             reasonable attorneys&apos; fees) arising out of or related to your use
@@ -211,7 +211,7 @@ export default function TermsPage() {
           </h2>
           <p>
             These Terms are governed by the laws of the United States and the
-            state in which PeopleFind is incorporated, without regard to
+            state in which Who Is My Date? is incorporated, without regard to
             conflict of law principles. Any dispute arising from these Terms
             shall be resolved through binding arbitration on an individual basis
             (not as part of a class action) under the rules of the American
@@ -228,7 +228,7 @@ export default function TermsPage() {
             Questions about these Terms can be directed to:
           </p>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
-            <p className="font-medium text-gray-900">PeopleFind Legal</p>
+            <p className="font-medium text-gray-900">Who Is My Date? Legal</p>
             <p>
               Email:{" "}
               <a

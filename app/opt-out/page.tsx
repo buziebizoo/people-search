@@ -103,14 +103,14 @@ export default function OptOutPage() {
         </h1>
         <p className="text-gray-600 leading-relaxed">
           You have the right to request removal of your personal information
-          from PeopleFind&apos;s search results. Fill out the form below and we will
+          from Who Is My Date?&apos;s search results. Fill out the form below and we will
           process your request within <strong>30 days</strong>.
         </p>
         <div className="mt-4 bg-teal-50 border border-teal-200 rounded-lg px-4 py-3 text-sm text-teal-800">
           <strong>Required by law:</strong> Under applicable state and federal
           privacy laws, including the California Consumer Privacy Act (CCPA) and
           similar state statutes, you are entitled to request deletion of your
-          personal information at no charge. PeopleFind is required to honor
+          personal information at no charge. Who Is My Date? is required to honor
           these requests within 30 days.
         </div>
       </div>

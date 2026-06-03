@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const info = SLUG_TO_STATE.get(slug);
   if (!info) return {};
   return {
-    title: `Find People in ${info.name} - Free Public Records Search | PeopleFind`,
+    title: `Find People in ${info.name} - Free Public Records Search | Who Is My Date?`,
     description: `Search public records for people in ${info.name}. Find addresses, phone numbers and more.`,
   };
 }
@@ -212,7 +212,7 @@ export default async function StatePage({ params }: Props) {
 
       {/* FCRA disclaimer */}
       <p className="mt-12 text-xs text-gray-400 border-t border-gray-100 pt-6 leading-relaxed">
-        PeopleFind is not a consumer reporting agency as defined by the FCRA.
+        Who Is My Date? is not a consumer reporting agency as defined by the FCRA.
         Information is sourced from publicly available government records and is
         provided for informational purposes only. Use of this site signifies your
         agreement to our{" "}

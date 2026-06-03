@@ -38,7 +38,7 @@ from supabase import create_client
 # Configuration
 # ---------------------------------------------------------------------------
 
-BATCH_SIZE = 500
+BATCH_SIZE = 200
 
 
 # ---------------------------------------------------------------------------
@@ -116,36 +116,19 @@ def parse_row(row: dict) -> Optional[dict]:
 # ---------------------------------------------------------------------------
 
 def upsert_batch(batch: list, client, line_num: int) -> tuple:
-    """
-    Upsert a batch, ignoring rows that conflict on (first_name, last_name, zip).
-    Requires the unique index: people_name_zip_uniq on (first_name, last_name, zip).
-    """
     try:
-        result = client.table("people").upsert(
-            batch,
-            ignore_duplicates=True,
-            on_conflict="first_name,last_name,zip"
-        ).execute()
-        inserted = len(result.data) if result.data else 0
-        skipped  = len(batch) - inserted
-        return inserted, skipped, 0
+        client.table("people").insert(batch).execute()
+        return len(batch), 0, 0
     except Exception as e:
-        print(f"\n  WARN: batch upsert failed near line {line_num}: {e}")
-        inserted = skipped = failed = 0
+        print(f"\n  WARN: batch insert failed near line {line_num}: {e}", flush=True)
+        inserted = failed = 0
         for row in batch:
             try:
-                res = client.table("people").upsert(
-                    row,
-                    ignore_duplicates=True,
-                    on_conflict="first_name,last_name,zip"
-                ).execute()
-                if res.data:
-                    inserted += 1
-                else:
-                    skipped += 1
+                client.table("people").insert(row).execute()
+                inserted += 1
             except Exception:
                 failed += 1
-        return inserted, skipped, failed
+        return inserted, 0, failed
 
 
 # ---------------------------------------------------------------------------
@@ -235,6 +218,8 @@ def main():
         txt_files = sorted(d.glob("*.txt"))
         if not txt_files:
             sys.exit(f"ERROR: No .txt files found in {args.dir}")
+
+    sys.stdout.reconfigure(line_buffering=True)
 
     print(f"Found {len(txt_files)} file(s) to process"
           + (f" — limit: {args.limit:,} total rows" if args.limit else ""))

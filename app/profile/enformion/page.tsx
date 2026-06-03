@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import QuickSearch from "@/components/QuickSearch";
+import ProfessionalInfo from "@/components/ProfessionalInfo";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -25,8 +25,8 @@ export async function generateMetadata({ searchParams }: { searchParams: SP }): 
   const name = [str(sp.first), str(sp.last)].filter(Boolean).join(" ");
   const loc  = [str(sp.city), str(sp.state)].filter(Boolean).join(", ");
   return {
-    title: `${name || "Person"}${loc ? ` - ${loc}` : ""} | PeopleFind`,
-    description: `Find information about ${name}${loc ? ` from ${loc}` : ""} on PeopleFind.`,
+    title: `${name || "Person"}${loc ? ` - ${loc}` : ""} | Who Is My Date?`,
+    description: `Find information about ${name}${loc ? ` from ${loc}` : ""} on Who Is My Date?.`,
   };
 }
 
@@ -161,7 +161,7 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
         </SectionCard>
 
         {/* ── PROFESSIONAL INFORMATION ── */}
-        <QuickSearch
+        <ProfessionalInfo
           firstName={firstName}
           lastName={lastName}
           city={city}
@@ -231,7 +231,7 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
 
         {/* ── FCRA DISCLAIMER ── */}
         <p className="text-xs text-gray-400 border-t border-gray-200 pt-5 leading-relaxed">
-          PeopleFind is not a consumer reporting agency as defined by the Fair Credit
+          Who Is My Date? is not a consumer reporting agency as defined by the Fair Credit
           Reporting Act (FCRA). This information may not be used for employment, housing,
           credit, or tenant screening purposes.{" "}
           <Link href="/opt-out" className="underline hover:text-gray-600">Opt Out</Link>
