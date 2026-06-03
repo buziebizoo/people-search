@@ -444,6 +444,49 @@ export const BLOG_POSTS: BlogPost[] = [
 <p>Finding a record doesn't automatically mean deception — they could be separated, legally separated, or in the middle of a divorce that hasn't finalized yet. But it does mean you deserve a direct and complete explanation before you go any further. If they've presented themselves as single and there's a marriage on the books with no corresponding divorce, you have every right to walk away. Your time and emotional investment belong with someone who's actually available.</p>
 `,
   },
+  {
+    slug: "find-secret-dating-profile",
+    title: "How to Find Out If Someone Has a Secret Dating Profile",
+    date: "2026-06-03",
+    category: "People Search",
+    excerpt:
+      "Suspect your partner is on Tinder, Bumble, or another dating app behind your back? Here's how to find hidden dating profiles using free tools — no hacking required.",
+    content: `
+<p>The suspicion that your partner might have a secret dating profile is one of the more gut-wrenching feelings in a relationship. Before you spiral, or before you confront someone on nothing but a hunch, there are legitimate ways to find out — using free, publicly available tools that don't require any special access or technical skills.</p>
+
+<h2>Why people maintain hidden dating profiles</h2>
+<p>Not everyone with an active dating profile is actively cheating. Some people forget to delete old accounts; others keep profiles as a passive "escape hatch" while telling themselves they'd never act on it. But some are actively using apps to meet other people while in a committed relationship. Whatever the reason, you deserve to know what's actually going on before you make any decisions about the relationship.</p>
+
+<h2>Search by email address</h2>
+<p>Most dating apps require an email address to create an account. If you know your partner's email address — or even a secondary one they use — you can test whether it's associated with a dating profile in a couple of ways. First, go to the dating app's login page and enter the email in the "forgot password" field. If the site says it will send a reset link, that email is registered on the platform. If it says no account exists, the email isn't tied to one. This works on Tinder, Bumble, Hinge, OkCupid, and most other major apps without requiring you to log in or create an account yourself.</p>
+
+<h2>Search by username</h2>
+<p>If your partner uses a consistent username across platforms — a gaming handle, an old email prefix, a nickname — search for it on dating sites directly or run it through a username search tool. People often recycle usernames out of habit, which makes a secret profile easier to find than they'd expect. A username that appears on a dating platform is a strong signal worth investigating further.</p>
+
+<h2>Run a people search</h2>
+<p>A people search can surface email addresses, phone numbers, and usernames associated with a person's name and location. If your partner has created a dating profile under their real name, a people search may surface it alongside their other public digital footprint. This is particularly useful if they've used a profile that's indexed or linked from a public-facing social account.</p>
+
+<h2>Search their phone number</h2>
+<p>Many dating apps allow users to sign up or log in with a phone number instead of an email. A reverse phone lookup can tell you what names and accounts are associated with a number. If the same number is registered to a profile under a different name or an unfamiliar username, that's a discrepancy worth understanding. Some people-search tools also cross-reference phone numbers with social and dating accounts in their aggregated results.</p>
+
+<h2>Check their digital footprint manually</h2>
+<p>Open a private or incognito browser window and search your partner's name, nickname, city, and any usernames you know they use. Add the word "profile" or the name of a specific dating app to narrow results. Dating profiles are sometimes indexed by search engines, particularly on platforms with less aggressive privacy settings or when someone hasn't set their profile to hidden. A result that links to a dating app profile is difficult to explain away.</p>
+
+<h2>Look for app icons on their phone</h2>
+<p>This one requires physical proximity but no technical skill. Dating apps have recognizable icons — Tinder's flame, Bumble's yellow hexagon, Hinge's logo. People who want to hide apps will sometimes move them into unmarked folders, rename them, or use lesser-known apps specifically because they're harder to recognize. If you notice an unfamiliar app you can't identify, a quick search of the app's name will tell you what it does.</p>
+
+<h2>Check app usage history</h2>
+<p>On many phones, app usage history is visible without unlocking anything sensitive. On Android, you can often access recent notification history through the settings menu. On iPhone, checking Screen Time under Settings shows app usage by day, including apps opened recently. High usage of an unfamiliar app — especially late at night — is worth a conversation.</p>
+
+<h2>What to do with what you find</h2>
+<p>Finding a dating profile doesn't automatically tell you the full story. Before you react, consider what you actually know: Is the profile active? When was it last used? Does it post-date your relationship, or could it be an old forgotten account? Screenshot everything before you bring it up — app profiles can be deleted quickly once someone knows they've been found.</p>
+
+<p>If the profile is clearly active and recent, you have enough to have a direct conversation. Come in with the evidence, not just a feeling, and give the other person a chance to explain before you decide what to do next. If the explanation doesn't add up, trust what the evidence is telling you.</p>
+
+<h2>Your gut is also data</h2>
+<p>The fact that you're searching at all usually means something has already changed in the relationship — a shift in attention, unexplained late nights, a phone that's suddenly always face-down. The tools above can confirm or rule out a specific suspicion, but they can't fix an underlying problem in the relationship. Whether or not you find a profile, if trust is already broken, that conversation needs to happen regardless of what the search turns up.</p>
+`,
+  },
 ];
 
 // ---------------------------------------------------------------------------
