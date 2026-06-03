@@ -204,8 +204,11 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Related posts */}
       {related.length > 0 && (
         <section className="mt-14 border-t border-gray-200 pt-10">
-          <div className="flex justify-center my-8">
-            <BannerAd size="300x250" seed={seed + 50} page="blog-bottom" />
+          <div className="flex justify-center gap-4 my-8">
+            <BannerAd size="300x250" seed={seed + 50} page="blog-bottom-1" />
+            <div className="hidden md:block">
+              <BannerAd size="300x250" seed={seed + 51} page="blog-bottom-2" />
+            </div>
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-6">Related Articles</h2>
           <div className="grid grid-cols-2 gap-5">
