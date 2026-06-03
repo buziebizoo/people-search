@@ -22,7 +22,16 @@ function basicAuth(): string {
   return "Basic " + Buffer.from(`${key}:${pass}`).toString("base64");
 }
 
-async function post(path: string, body: Record<string, string>): Promise<unknown> {
+/** Strip non-digits and remove a leading country code 1 to yield a 10-digit US number. */
+function cleanPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  return digits.length === 11 && digits[0] === "1" ? digits.slice(1) : digits;
+}
+
+async function post(path: string, body: Record<string, unknown>): Promise<unknown> {
+  console.log(`[enformion] POST ${BASE_URL}${path}`);
+  console.log(`[enformion] request body:`, JSON.stringify(body));
+
   const res = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
     headers: {
@@ -32,11 +41,21 @@ async function post(path: string, body: Record<string, string>): Promise<unknown
     body: JSON.stringify(body),
     cache: "no-store",
   });
+
+  const rawText = await res.text();
+  console.log(`[enformion] response status:`, res.status, res.statusText);
+  console.log(`[enformion] raw response:`, rawText.slice(0, 1000));
+
   if (!res.ok) {
-    console.error(`[enformion] ${path} → ${res.status} ${res.statusText}`);
     return null;
   }
-  return res.json();
+
+  try {
+    return JSON.parse(rawText);
+  } catch {
+    console.error(`[enformion] ${path} — failed to parse JSON`);
+    return null;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,7 +106,7 @@ export async function searchByName(
   state: string,
 ): Promise<EnformionPerson[]> {
   try {
-    const body: Record<string, string> = { firstName, lastName };
+    const body: Record<string, unknown> = { firstName, lastName };
     if (city)  body.city  = city;
     if (state) body.state = state;
     return extractPersons(await post("/ContactEnrichment/api/ContactEnrichment", body));
@@ -99,8 +118,12 @@ export async function searchByName(
 
 export async function searchByPhone(phoneNumber: string): Promise<EnformionPerson[]> {
   try {
-    const cleaned = phoneNumber.replace(/\D/g, "");
-    return extractPersons(await post("/CallerId/api/CallerId", { phoneNumber: cleaned }));
+    const cleaned = cleanPhone(phoneNumber);
+    console.log(`[enformion] searchByPhone: raw="${phoneNumber}" cleaned="${cleaned}"`);
+    // Caller ID endpoint expects phone nested as { phone: { phoneNumber: "..." } }
+    return extractPersons(
+      await post("/CallerId/api/CallerId", { phone: { phoneNumber: cleaned } })
+    );
   } catch (err) {
     console.error("[enformion] searchByPhone error:", err);
     return [];
@@ -114,7 +137,7 @@ export async function searchByAddress(
   zip: string,
 ): Promise<EnformionPerson[]> {
   try {
-    const body: Record<string, string> = {};
+    const body: Record<string, unknown> = {};
     if (address) body.address = address;
     if (city)    body.city    = city;
     if (state)   body.state   = state;
