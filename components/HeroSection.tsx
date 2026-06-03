@@ -6,7 +6,7 @@ export default function HeroSection() {
       {/* Background image */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1600"
+        src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1600"
         alt=""
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover"
