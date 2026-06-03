@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { pickAffiliate } from "@/lib/affiliates";
 import {
   getPostBySlug,
   getRelatedPosts,
@@ -68,7 +69,7 @@ function ArticleJsonLd({
 // CTA — plain GET form to /results (no client JS needed)
 // ---------------------------------------------------------------------------
 
-function SearchCta() {
+function SearchCta({ affiliateUrl }: { affiliateUrl: string }) {
   return (
     <section className="bg-teal-950 rounded-2xl px-6 py-10 text-center">
       <h2 className="text-2xl font-bold text-white mb-2">Ready to search?</h2>
@@ -78,7 +79,7 @@ function SearchCta() {
       <form
         action="/results"
         method="get"
-        className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto"
+        className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-4"
       >
         <input type="hidden" name="type" value="name" />
         <input
@@ -100,6 +101,14 @@ function SearchCta() {
           Search →
         </button>
       </form>
+      <a
+        href={affiliateUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 text-sm text-teal-300 hover:text-white transition-colors"
+      >
+        Or run a full background check with PeopleFinders →
+      </a>
     </section>
   );
 }
@@ -112,6 +121,7 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) notFound();
+  const seed = slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
 
   const related = getRelatedPosts(post);
 
@@ -160,7 +170,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* CTA */}
       <div className="mt-14">
-        <SearchCta />
+        <SearchCta affiliateUrl={pickAffiliate("dating", seed)} />
       </div>
 
       {/* Related posts */}

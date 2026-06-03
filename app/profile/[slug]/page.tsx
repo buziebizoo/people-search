@@ -7,6 +7,7 @@ import { searchByName, type EnformionPerson } from "@/lib/enformion";
 import ProfessionalInfo from "@/components/ProfessionalInfo";
 import ResultsSearchBar from "@/components/ResultsSearchBar";
 import { parseProfileSlug } from "@/lib/profile-slug";
+import { pickAffiliate } from "@/lib/affiliates";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -264,7 +265,7 @@ function FcraDisclaimer() {
 // Supabase profile renderer
 // ---------------------------------------------------------------------------
 
-function SupabaseProfile({ person }: { person: SupabasePerson }) {
+function SupabaseProfile({ person, seed }: { person: SupabasePerson; seed: number }) {
   const location = [person.city, person.state].filter(Boolean).join(", ");
   const fullAddress = [
     person.address,
@@ -347,8 +348,8 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
         <SectionCard>
           <SectionTitle>Previous Addresses</SectionTitle>
           <p className="text-sm text-gray-500">Previous addresses may be on file</p>
-          <a href="https://www.truthfinder.com/?utm_source=whoismy.date" target="_blank" rel="noopener noreferrer"
-            className="mt-3 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+          <a href={pickAffiliate("background", seed)} target="_blank" rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors">
             Unlock Full History
           </a>
         </SectionCard>
@@ -356,38 +357,38 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
         <SectionCard>
           <SectionTitle>Known Associates</SectionTitle>
           <p className="text-sm text-gray-500">Known associates may be on file</p>
-          <a href="https://www.beenverified.com/?utm_source=whoismy.date" target="_blank" rel="noopener noreferrer"
-            className="mt-3 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+          <a href={pickAffiliate("background", seed + 1)} target="_blank" rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors">
             View Associates
           </a>
         </SectionCard>
 
         <LockedSection title="Criminal Records" teaser="This person may have criminal records on file"
-          href="https://www.truthfinder.com/?utm_source=whoismy.date" />
+          href={pickAffiliate("background", seed + 2)} />
         <LockedSection title="Arrest Records" teaser="Possible arrest records found"
-          href="https://www.instantcheckmate.com/?utm_source=whoismy.date" />
+          href={pickAffiliate("background", seed + 3)} />
         <LockedSection title="Sex Offender Check" teaser="Run a sex offender check on this person"
-          href="https://www.truthfinder.com/?utm_source=whoismy.date" buttonLabel="Run Check" />
+          href={pickAffiliate("background", seed + 4)} buttonLabel="Run Check" />
         <LockedSection title="Bankruptcies & Liens" teaser="Financial records may be available"
-          href="https://www.beenverified.com/?utm_source=whoismy.date" />
+          href={pickAffiliate("background", seed + 5)} />
         <LockedSection title="Traffic Violations" teaser="Possible traffic violations on file"
-          href="https://www.spokeo.com/?utm_source=whoismy.date" />
+          href={pickAffiliate("background", seed + 6)} />
 
         <div>
           <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
           <div className="flex flex-col gap-3">
-            <AffiliateCard name="TruthFinder"
+            <AffiliateCard name="PeopleFinders"
               description="Get a full background report including criminal records, contact info, and more"
-              href="https://www.truthfinder.com/?utm_source=whoismy.date" />
-            <AffiliateCard name="BeenVerified"
+              href={pickAffiliate("background", seed + 7)} />
+            <AffiliateCard name="PeopleFinders"
               description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href="https://www.beenverified.com/?utm_source=whoismy.date" />
-            <AffiliateCard name="Spokeo"
+              href={pickAffiliate("background", seed + 8)} />
+            <AffiliateCard name="PeopleFinders"
               description="Find contact info, social profiles, photos and more"
-              href="https://www.spokeo.com/?utm_source=whoismy.date" />
-            <AffiliateCard name="Instant Checkmate"
+              href={pickAffiliate("background", seed + 9)} />
+            <AffiliateCard name="PeopleFinders"
               description="Run a complete background check including arrest records and court documents"
-              href="https://www.instantcheckmate.com/?utm_source=whoismy.date" />
+              href={pickAffiliate("background", seed + 10)} />
           </div>
         </div>
 
@@ -408,7 +409,7 @@ function formatPhone(raw: string): string {
   return raw;
 }
 
-function EnformionProfile({ person }: { person: EnformionPerson }) {
+function EnformionProfile({ person, seed }: { person: EnformionPerson; seed: number }) {
   const fullName    = person.full_name || [person.first_name, person.last_name].filter(Boolean).join(" ");
   const location    = [person.city, person.state].filter(Boolean).join(", ");
   const fullAddress = [
@@ -518,15 +519,15 @@ function EnformionProfile({ person }: { person: EnformionPerson }) {
         <div>
           <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
           <div className="flex flex-col gap-3">
-            <AffiliateCard name="TruthFinder"
+            <AffiliateCard name="PeopleFinders"
               description="Get a full background report including criminal records, contact info, and more"
-              href="https://www.truthfinder.com/?utm_source=whoismy.date" />
-            <AffiliateCard name="BeenVerified"
+              href={pickAffiliate("background", seed)} />
+            <AffiliateCard name="PeopleFinders"
               description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href="https://www.beenverified.com/?utm_source=whoismy.date" />
-            <AffiliateCard name="Spokeo"
+              href={pickAffiliate("background", seed + 1)} />
+            <AffiliateCard name="PeopleFinders"
               description="Find contact info, social profiles, photos and more"
-              href="https://www.spokeo.com/?utm_source=whoismy.date" />
+              href={pickAffiliate("background", seed + 2)} />
           </div>
         </div>
 
@@ -566,21 +567,22 @@ function ProfileNotFound() {
 export default async function ProfilePage({ params }: Props) {
   const { slug } = await params;
   const parsed = parseProfileSlug(slug);
+  const seed = slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
 
   if (parsed.type === "uuid") {
     const person = await fetchByUUID(parsed.id);
     if (!person) return <ProfileNotFound />;
-    return <SupabaseProfile person={person} />;
+    return <SupabaseProfile person={person} seed={seed} />;
   }
 
   if (parsed.type === "supabase") {
     const person = await fetchBySlugParts(parsed.shortId, parsed.first, parsed.last, parsed.city, parsed.state);
     if (!person) return <ProfileNotFound />;
-    return <SupabaseProfile person={person} />;
+    return <SupabaseProfile person={person} seed={seed} />;
   }
 
   // Enformion
   const person = await fetchEnformion(parsed.first, parsed.last, parsed.age, parsed.city, parsed.state);
   if (!person) return <ProfileNotFound />;
-  return <EnformionProfile person={person} />;
+  return <EnformionProfile person={person} seed={seed} />;
 }

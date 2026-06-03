@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import ProfessionalInfo from "@/components/ProfessionalInfo";
+import { pickAffiliate } from "@/lib/affiliates";
 
 type SP = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -84,8 +85,7 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
 
   const location    = [city, state].filter(Boolean).join(", ");
   const fullAddress = [address, city, [state, zip].filter(Boolean).join(" ")].filter(Boolean).join(", ");
-
-
+  const seed = (firstName + lastName + city).split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -201,19 +201,19 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
           </h2>
           <div className="flex flex-col gap-3">
             <AffiliateCard
-              name="TruthFinder"
+              name="PeopleFinders"
               description="Get a full background report including criminal records, contact info, and more"
-              href={`https://www.truthfinder.com/?utm_source=whoismy.date`}
+              href={pickAffiliate("background", seed)}
             />
             <AffiliateCard
-              name="BeenVerified"
+              name="PeopleFinders"
               description="Search billions of public records including phone numbers, addresses, and criminal history"
-              href={`https://www.beenverified.com/?utm_source=whoismy.date`}
+              href={pickAffiliate("background", seed + 1)}
             />
             <AffiliateCard
-              name="Spokeo"
+              name="PeopleFinders"
               description="Find contact info, social profiles, photos and more"
-              href={`https://www.spokeo.com/?utm_source=whoismy.date`}
+              href={pickAffiliate("background", seed + 2)}
             />
           </div>
         </div>

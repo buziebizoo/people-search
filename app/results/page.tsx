@@ -13,6 +13,7 @@ import { buildSupabaseSlug } from "@/lib/profile-slug";
 import { fetchBlocklist, isBlocklisted } from "@/lib/blocklist";
 import { CODE_TO_STATE } from "@/lib/states";
 import { sanitizeSearchInput } from "@/lib/sanitize";
+import { pickAffiliate } from "@/lib/affiliates";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -166,6 +167,7 @@ function pageHref(params: SearchParams, page: number): string {
 // ---------------------------------------------------------------------------
 
 function EmptyState({ params }: { params: SearchParams }) {
+  const ts = Date.now();
   return (
     <div className="bg-gray-50 flex-1">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
@@ -173,8 +175,32 @@ function EmptyState({ params }: { params: SearchParams }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803a7.5 7.5 0 0 0 10.607 0Z" />
         </svg>
         <p className="text-gray-700 text-xl font-medium">Oops! We couldn&rsquo;t find anyone matching that name.</p>
-        <p className="text-gray-500 mt-2">Try a different spelling or location.</p>
+        <p className="text-gray-500 mt-2">Try a different spelling or location, or search with one of these services:</p>
       </div>
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <a href={pickAffiliate("dating", ts)} target="_blank" rel="noopener noreferrer"
+            className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:border-teal-300 transition-colors text-center block">
+            <p className="font-semibold text-gray-800 mb-1">Background Check</p>
+            <p className="text-sm text-gray-500 mb-3">Verify who you&apos;re meeting online</p>
+            <span className="text-sm font-semibold text-teal-600">Search Now →</span>
+          </a>
+          <a href={pickAffiliate("phone", ts + 1)} target="_blank" rel="noopener noreferrer"
+            className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:border-teal-300 transition-colors text-center block">
+            <p className="font-semibold text-gray-800 mb-1">Reverse Phone Lookup</p>
+            <p className="text-sm text-gray-500 mb-3">Find out who&apos;s calling you</p>
+            <span className="text-sm font-semibold text-teal-600">Search Now →</span>
+          </a>
+          <a href={pickAffiliate("background", ts + 2)} target="_blank" rel="noopener noreferrer"
+            className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:border-teal-300 transition-colors text-center block">
+            <p className="font-semibold text-gray-800 mb-1">People Finder</p>
+            <p className="text-sm text-gray-500 mb-3">Search millions of public records</p>
+            <span className="text-sm font-semibold text-teal-600">Search Now →</span>
+          </a>
+        </div>
+      </div>
+
       <ResultsSearchBar
         initialType={params.type ?? "name"}
         initialFirst={params.first}
@@ -488,58 +514,76 @@ function ResultsList({
         </p>
 
         <div className="flex flex-col gap-4">
-          {people.map((person) => (
-            <div key={person.key} className="bg-white border border-gray-200 rounded-xl px-4 py-4 sm:px-6 sm:py-5 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
-                <div>
-                  <span className="text-lg font-bold text-gray-900">{person.full_name}</span>
-                  {person.age && (
-                    <span className="ml-2 text-sm text-gray-400">Age {person.age}</span>
+          {people.flatMap((person, idx) => {
+            const card = (
+              <div key={person.key} className="bg-white border border-gray-200 rounded-xl px-4 py-4 sm:px-6 sm:py-5 shadow-sm">
+                <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+                  <div>
+                    <span className="text-lg font-bold text-gray-900">{person.full_name}</span>
+                    {person.age && (
+                      <span className="ml-2 text-sm text-gray-400">Age {person.age}</span>
+                    )}
+                  </div>
+                  {(person.city || person.state) && (
+                    <span className="text-sm text-gray-500">
+                      📍 {[person.city, person.state].filter(Boolean).join(", ")}
+                    </span>
                   )}
                 </div>
-                {(person.city || person.state) && (
-                  <span className="text-sm text-gray-500">
-                    📍 {[person.city, person.state].filter(Boolean).join(", ")}
-                  </span>
+
+                {person.address && (
+                  <p className="text-sm text-gray-400 mb-2">
+                    {[person.address, person.city, [person.state, person.zip].filter(Boolean).join(" ")]
+                      .filter(Boolean).join(", ")}
+                  </p>
                 )}
+
+                {person.phone_teaser && (
+                  <p className="text-sm text-gray-400 italic mb-2">Phone: {person.phone_teaser}</p>
+                )}
+
+                {person.relatives.length > 0 && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    <span className="font-medium">Possible relatives:</span>{" "}
+                    {person.relatives.join(" · ")}
+                  </p>
+                )}
+
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href={person.profileHref}
+                    className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors min-h-[44px] inline-flex items-center"
+                  >
+                    View Full Profile
+                  </Link>
+                  <a
+                    href={pickAffiliate("background", idx)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-3 rounded-lg transition-colors min-h-[44px] inline-flex items-center"
+                  >
+                    Get Full Report →
+                  </a>
+                </div>
               </div>
+            );
 
-              {person.address && (
-                <p className="text-sm text-gray-400 mb-2">
-                  {[person.address, person.city, [person.state, person.zip].filter(Boolean).join(" ")]
-                    .filter(Boolean).join(", ")}
-                </p>
-              )}
-
-              {person.phone_teaser && (
-                <p className="text-sm text-gray-400 italic mb-2">Phone: {person.phone_teaser}</p>
-              )}
-
-              {person.relatives.length > 0 && (
-                <p className="text-sm text-gray-600 mb-4">
-                  <span className="font-medium">Possible relatives:</span>{" "}
-                  {person.relatives.join(" · ")}
-                </p>
-              )}
-
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href={person.profileHref}
-                  className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors min-h-[44px] inline-flex items-center"
-                >
-                  View Full Profile
-                </Link>
+            if ((idx + 1) % 5 === 0 && idx < people.length - 1) {
+              return [
+                card,
                 <a
-                  href="https://www.spokeo.com"
+                  key={`aff-${idx}`}
+                  href={pickAffiliate("background", idx + 100)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-3 rounded-lg transition-colors min-h-[44px] inline-flex items-center"
+                  className="block text-center text-sm text-teal-600 hover:text-teal-700 hover:underline py-2 transition-colors"
                 >
-                  Get Full Report →
-                </a>
-              </div>
-            </div>
-          ))}
+                  → Run a full background check on this person with PeopleFinders
+                </a>,
+              ];
+            }
+            return [card];
+          })}
         </div>
 
         <PaginationBar params={params} currentPage={page} totalPages={totalPages} />

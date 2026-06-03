@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { pickAffiliate } from "@/lib/affiliates";
 
 export default function ImageResultsPanel() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -50,7 +51,7 @@ export default function ImageResultsPanel() {
           Search criminal records, social profiles, contact info, and more.
         </p>
         <a
-          href="https://www.truthfinder.com"
+          href={pickAffiliate("background", 0)}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-colors"
