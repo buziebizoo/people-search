@@ -503,7 +503,7 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
 }
 
 /** Posts in the same category as `post`, excluding it, newest first. */
-export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
+export function getRelatedPosts(post: BlogPost, limit = 4): BlogPost[] {
   return getAllPosts()
     .filter((p) => p.category === post.category && p.slug !== post.slug)
     .slice(0, limit);
