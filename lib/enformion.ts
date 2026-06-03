@@ -130,13 +130,6 @@ export async function searchByName(
   city: string,
   state: string,
 ): Promise<EnformionPerson[]> {
-  // Enformion requires at least 2 fields — name alone causes a 400.
-  // Require state at minimum alongside the name.
-  if (!state) {
-    console.log("[enformion] searchByName: skipping — no state provided (need ≥2 fields)");
-    return [];
-  }
-
   const key = `name:${firstName}:${lastName}:${city}:${state}`;
   const cached = cacheGet(key);
   if (cached) return cached;
@@ -151,7 +144,7 @@ export async function searchByName(
     };
     if (city) body.City = city.trim();
     const result = extractPersons(
-      await post("/contact/enrich", body, "DevAPIContactEnrich")
+      await post("/person/search", body, "DevAPIPersonSearch")
     );
     cacheSet(key, result);
     return result;

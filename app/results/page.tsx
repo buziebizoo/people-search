@@ -235,14 +235,10 @@ export default async function ResultsPage({
     // Fall back to Enformion
     if (params.type === "name") {
       const { city, state } = parseLocation(params.location ?? "");
-      if (!state) {
-        console.log("[results] Enformion name fallback skipped — no state in location param");
-      } else {
-        console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
-        const enf = await searchByName(params.first ?? "", params.last ?? "", city, state);
-        console.log(`[results] Enformion name fallback returned ${enf.length} results`);
-        display = enf.map(fromEnformion);
-      }
+      console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
+      const enf = await searchByName(params.first ?? "", params.last ?? "", city, state);
+      console.log(`[results] Enformion name fallback returned ${enf.length} results`);
+      display = enf.map(fromEnformion);
     } else if (params.type === "address") {
       const parts = (params.location ?? "").split(",");
       const city  = parts[0]?.trim() ?? "";
