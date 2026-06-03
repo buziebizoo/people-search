@@ -49,15 +49,24 @@ export function isBlocklisted(
 ): boolean {
   const fn = norm(firstName);
   const ln = norm(lastName);
-  const matched = blocklist.some(
-    (e) =>
-      norm(e.first_name) === fn &&
-      norm(e.last_name)  === ln &&
-      addressMatches(e.address, address),
-  );
-  console.log(
-    `[blocklist] isBlocklisted("${fn}", "${ln}", addr="${address ?? "null"}") → ${matched}`,
-    blocklist.length === 0 ? "(blocklist is EMPTY)" : "",
-  );
+
+  console.log(`[blocklist] checking result: raw=("${firstName}"|"${lastName}") norm=("${fn}"|"${ln}")`);
+
+  let matched = false;
+  for (const e of blocklist) {
+    const efn = norm(e.first_name);
+    const eln = norm(e.last_name);
+    const fnMatch   = efn === fn;
+    const lnMatch   = eln === ln;
+    const addrMatch = addressMatches(e.address, address);
+    const hit = fnMatch && lnMatch && addrMatch;
+    console.log(
+      `[blocklist]   entry raw=("${e.first_name}"|"${e.last_name}") norm=("${efn}"|"${eln}") ` +
+      `→ firstName=${fnMatch} lastName=${lnMatch} address=${addrMatch} MATCH=${hit}`,
+    );
+    if (hit) { matched = true; break; }
+  }
+
+  console.log(`[blocklist] isBlocklisted result: ${matched}`);
   return matched;
 }
