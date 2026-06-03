@@ -2,6 +2,27 @@
 
 const BASE_URL = "https://devapi.enformion.com";
 
+// ---------------------------------------------------------------------------
+// In-memory cache — prevents duplicate API charges for repeated searches
+// ---------------------------------------------------------------------------
+
+const TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+type CacheEntry = { result: EnformionPerson[]; expiresAt: number };
+const cache = new Map<string, CacheEntry>();
+
+function cacheGet(key: string): EnformionPerson[] | null {
+  const entry = cache.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) { cache.delete(key); return null; }
+  console.log(`[enformion] cache hit: ${key}`);
+  return entry.result;
+}
+
+function cacheSet(key: string, result: EnformionPerson[]): void {
+  cache.set(key, { result, expiresAt: Date.now() + TTL_MS });
+}
+
 export type EnformionPerson = {
   first_name: string;
   last_name: string;
@@ -105,13 +126,19 @@ export async function searchByName(
   city: string,
   state: string,
 ): Promise<EnformionPerson[]> {
+  const key = `name:${firstName}:${lastName}:${city}:${state}`;
+  const cached = cacheGet(key);
+  if (cached) return cached;
+
   try {
     const body: Record<string, unknown> = { firstName, lastName };
     if (city)  body.city  = city;
     if (state) body.state = state;
-    return extractPersons(
+    const result = extractPersons(
       await post("/ContactEnrichment/api/ContactEnrichment", body, "DevAPIContactEnrich")
     );
+    cacheSet(key, result);
+    return result;
   } catch (err) {
     console.error("[enformion] searchByName error:", err);
     return [];
@@ -145,8 +172,12 @@ function mapCallerIdResponse(data: Record<string, any>): EnformionPerson | null 
 }
 
 export async function searchByPhone(phoneNumber: string): Promise<EnformionPerson[]> {
+  const cleaned = cleanPhone(phoneNumber);
+  const key = `phone:${cleaned}`;
+  const cached = cacheGet(key);
+  if (cached) return cached;
+
   try {
-    const cleaned = cleanPhone(phoneNumber);
     console.log(`[enformion] searchByPhone: raw="${phoneNumber}" cleaned="${cleaned}"`);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -157,7 +188,9 @@ export async function searchByPhone(phoneNumber: string): Promise<EnformionPerso
     ) as Record<string, any> | null;
 
     const person = mapCallerIdResponse(data ?? {});
-    return person ? [person] : [];
+    const result = person ? [person] : [];
+    cacheSet(key, result);
+    return result;
   } catch (err) {
     console.error("[enformion] searchByPhone error:", err);
     return [];
@@ -170,13 +203,19 @@ export async function searchByAddress(
   state: string,
   zip: string,
 ): Promise<EnformionPerson[]> {
+  const key = `address:${address}:${city}:${state}`;
+  const cached = cacheGet(key);
+  if (cached) return cached;
+
   try {
     const body: Record<string, unknown> = {};
     if (address) body.address = address;
     if (city)    body.city    = city;
     if (state)   body.state   = state;
     if (zip)     body.zip     = zip;
-    return extractPersons(await post("/AddressId/api/AddressId", body, "DevAPIAddressID"));
+    const result = extractPersons(await post("/AddressId/api/AddressId", body, "DevAPIAddressID"));
+    cacheSet(key, result);
+    return result;
   } catch (err) {
     console.error("[enformion] searchByAddress error:", err);
     return [];
