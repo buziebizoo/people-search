@@ -16,14 +16,14 @@ export default function ProfessionalInfo({
   const [jobTitle,    setJobTitle]    = useState("");
   const [university,  setUniversity]  = useState("");
 
-  function buildQuery() {
-    return [firstName, lastName, city, state, jobTitle.trim(), university.trim()]
-      .filter(Boolean)
-      .join(" ");
-  }
+  const job = jobTitle.trim();
+  const uni = university.trim();
 
-  const linkedinUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(buildQuery())}`;
-  const googleUrl   = `https://www.google.com/search?q=${encodeURIComponent(buildQuery() + " linkedin")}`;
+  const linkedinQuery = [firstName, lastName, job, uni].filter(Boolean).join(" ");
+  const googleQuery   = [firstName, lastName, city, state, job, uni, "linkedin"].filter(Boolean).join(" ");
+
+  const linkedinUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(linkedinQuery)}`;
+  const googleUrl   = `https://www.google.com/search?q=${encodeURIComponent(googleQuery)}`;
 
   return (
     <div className="bg-white border border-teal-200 rounded-xl shadow-sm overflow-hidden">
@@ -38,14 +38,14 @@ export default function ProfessionalInfo({
             type="text"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
-            placeholder="e.g. Software Engineer at Google"
+            placeholder="Insert Job Title or Company Name"
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 placeholder-gray-400 outline-none focus:ring-2 focus:ring-teal-500"
           />
           <input
             type="text"
             value={university}
             onChange={(e) => setUniversity(e.target.value)}
-            placeholder="e.g. UCLA"
+            placeholder="Enter University"
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 placeholder-gray-400 outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
