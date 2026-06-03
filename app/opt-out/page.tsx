@@ -83,9 +83,9 @@ export default function OptOutPage() {
           Request Received
         </h1>
         <p className="text-lg text-gray-600 mb-4">
-          Your opt-out request has been submitted. We will process your request
-          and remove your information within{" "}
-          <strong>30 days</strong>, as required by law.
+          Your opt-out and removal request has been submitted. We will process
+          your request and remove your information within{" "}
+          <strong>45 days</strong>, as required by the CCPA and applicable law.
         </p>
         <p className="text-sm text-gray-500">
           A confirmation will be sent to <strong>{form.email}</strong> once
@@ -99,19 +99,30 @@ export default function OptOutPage() {
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
       <div className="mb-10">
         <h1 className="text-4xl font-bold text-gray-900 mb-3">
-          Opt Out / Remove My Info
+          Do Not Sell or Share My Personal Information
         </h1>
-        <p className="text-gray-600 leading-relaxed">
-          You have the right to request removal of your personal information
-          from Who Is My Date?&apos;s search results. Fill out the form below and we will
-          process your request within <strong>30 days</strong>.
+        <p className="text-lg font-medium text-gray-700 mb-2">Opt Out / Remove My Info</p>
+        <p className="text-gray-600 leading-relaxed mb-4">
+          Use this form to submit a <strong>CCPA opt-out request</strong> and/or
+          request removal of your personal information from Who Is My Date?&apos;s
+          search results. This covers your right to opt out of the sale or sharing
+          of your personal information and your right to have your data deleted.
+          There is no charge to submit this request.
         </p>
-        <div className="mt-4 bg-teal-50 border border-teal-200 rounded-lg px-4 py-3 text-sm text-teal-800">
-          <strong>Required by law:</strong> Under applicable state and federal
-          privacy laws, including the California Consumer Privacy Act (CCPA) and
-          similar state statutes, you are entitled to request deletion of your
-          personal information at no charge. Who Is My Date? is required to honor
-          these requests within 30 days.
+        <div className="bg-teal-50 border border-teal-200 rounded-lg px-4 py-3 text-sm text-teal-800 space-y-2">
+          <p>
+            <strong>California residents (CCPA / CPRA):</strong> Under the California
+            Consumer Privacy Act and the California Privacy Rights Act, you have the right
+            to know what personal information we collect, the right to delete it, and the
+            right to opt out of its sale or sharing. We are required to honor your request
+            within <strong>45 days</strong>.
+          </p>
+          <p>
+            <strong>All other residents:</strong> Under applicable state privacy laws
+            (Virginia VCDPA, Colorado CPA, Connecticut CTDPA, and others), you have similar
+            rights to access, delete, and opt out. We will process all requests within
+            <strong> 45 days</strong>.
+          </p>
         </div>
       </div>
 
@@ -280,8 +291,8 @@ export default function OptOutPage() {
         <p className="text-xs text-gray-400 text-center leading-relaxed">
           By submitting this form you certify that the information provided is
           accurate and that you are the individual named or are authorized to
-          act on their behalf. Requests are processed within 30 days as required
-          by applicable law.
+          act on their behalf under the CCPA or applicable state law. Requests
+          are processed within 45 days as required by applicable law.
         </p>
       </form>
     </div>

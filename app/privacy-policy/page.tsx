@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy — Who Is My Date?",
   description:
-    "Who Is My Date? privacy policy covering data collection, cookies, FCRA compliance, and your opt-out rights.",
+    "Who Is My Date? privacy policy covering data collection, cookies, FCRA compliance, CCPA rights, and your opt-out rights.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -198,9 +198,9 @@ export default function PrivacyPolicyPage() {
             from our search index at no cost. To submit a removal request,
             visit our{" "}
             <a href="/opt-out" className="text-teal-600 hover:underline">
-              Opt-Out page
+              Opt-Out / Do Not Sell page
             </a>
-            . We will process your request within 30 days as required by
+            . We will process your request within 45 days as required by
             applicable law.
           </p>
           <p className="mb-3">
@@ -211,7 +211,7 @@ export default function PrivacyPolicyPage() {
             <li>
               <strong className="text-gray-800">California residents</strong> — rights under the California
               Consumer Privacy Act (CCPA) including the right to know, delete,
-              and opt out of sale of personal information
+              and opt out of the sale or sharing of personal information (see Section 8)
             </li>
             <li>
               <strong className="text-gray-800">Virginia, Colorado, Connecticut, and other state residents</strong> —
@@ -219,11 +219,12 @@ export default function PrivacyPolicyPage() {
             </li>
           </ul>
           <p>
-            To exercise any of these rights, contact us at{" "}
-            <a
-              href="mailto:privacy@whoismy.date"
-              className="text-teal-600 hover:underline"
-            >
+            To exercise any of these rights, visit our{" "}
+            <a href="/opt-out" className="text-teal-600 hover:underline">
+              Opt-Out page
+            </a>{" "}
+            or contact us at{" "}
+            <a href="mailto:privacy@whoismy.date" className="text-teal-600 hover:underline">
               privacy@whoismy.date
             </a>
             .
@@ -232,8 +233,113 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">
-            8. Data Retention and Security
+            8. California Privacy Rights — Do Not Sell or Share My Personal Information
           </h2>
+          <p className="mb-3">
+            This section applies to residents of California and is provided pursuant to the
+            California Consumer Privacy Act of 2018 and the California Privacy Rights Act
+            of 2020 (collectively, &ldquo;CCPA&rdquo;).
+          </p>
+
+          <h3 className="font-semibold text-gray-800 mb-2">8.1 What Personal Information We Collect</h3>
+          <p className="mb-3">
+            In the course of operating the Service, we collect the following categories of
+            personal information about California residents who use our site:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-2 text-gray-600 mb-3">
+            <li>Identifiers — IP address, browser identifiers, search queries you submit</li>
+            <li>Internet or electronic network activity — pages visited, time on site, referring URLs</li>
+            <li>Geolocation data — approximate location derived from IP address</li>
+            <li>
+              Records we index from public government sources — names, addresses, and other
+              information originally published by government agencies
+            </li>
+          </ul>
+          <p className="mb-4">
+            We use this information solely to operate and improve the Service, prevent fraud,
+            and comply with legal obligations. We do not use it for targeted advertising
+            profiling without your consent.
+          </p>
+
+          <h3 className="font-semibold text-gray-800 mb-2">8.2 Your Rights Under the CCPA</h3>
+          <p className="mb-2">California residents have the following rights, exercisable free of charge:</p>
+          <ul className="list-disc list-inside space-y-2 ml-2 text-gray-600 mb-4">
+            <li>
+              <strong className="text-gray-800">Right to Know</strong> — You may request that we disclose the
+              categories and specific pieces of personal information we have collected about
+              you, the sources from which it was collected, the business purpose for collection,
+              and the categories of third parties with whom we share it.
+            </li>
+            <li>
+              <strong className="text-gray-800">Right to Delete</strong> — You may request that we delete
+              personal information we have collected from or about you, subject to certain
+              exceptions permitted by law (e.g., information needed to complete a transaction
+              or comply with a legal obligation).
+            </li>
+            <li>
+              <strong className="text-gray-800">Right to Opt Out of Sale or Sharing</strong> — You may direct us
+              not to sell or share your personal information with third parties. We do not sell
+              personal information for monetary consideration; however, certain disclosures to
+              advertising partners (such as cookies and identifiers shared with Google Analytics
+              and advertising networks) may constitute a &ldquo;sale&rdquo; or &ldquo;sharing&rdquo; under the CCPA.
+              You may opt out of these disclosures using the link below.
+            </li>
+            <li>
+              <strong className="text-gray-800">Right to Non-Discrimination</strong> — We will not discriminate
+              against you for exercising any of your CCPA rights.
+            </li>
+            <li>
+              <strong className="text-gray-800">Right to Correct</strong> — You may request correction of
+              inaccurate personal information we maintain about you.
+            </li>
+            <li>
+              <strong className="text-gray-800">Right to Limit Use of Sensitive Personal Information</strong> —
+              We do not collect or use sensitive personal information beyond what is necessary
+              to operate the Service.
+            </li>
+          </ul>
+
+          <h3 className="font-semibold text-gray-800 mb-2">8.3 How to Submit a Request</h3>
+          <p className="mb-3">
+            To exercise any of the rights described above — including to opt out of the sale
+            or sharing of your personal information — submit a request using any of the
+            following methods:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-2 text-gray-600 mb-4">
+            <li>
+              <strong className="text-gray-800">Online:</strong>{" "}
+              <a href="/opt-out" className="text-teal-600 hover:underline">
+                whoismy.date/opt-out
+              </a>{" "}
+              (our Do Not Sell / Remove My Info page)
+            </li>
+            <li>
+              <strong className="text-gray-800">Email:</strong>{" "}
+              <a href="mailto:privacy@whoismy.date" className="text-teal-600 hover:underline">
+                privacy@whoismy.date
+              </a>
+            </li>
+          </ul>
+          <p className="mb-4">
+            We will acknowledge your request within 10 business days and respond substantively
+            within <strong>45 days</strong> of receipt. If we need additional time (up to
+            90 days total), we will notify you of the extension and the reason for the delay.
+            We may ask you to verify your identity before processing your request.
+          </p>
+
+          <h3 className="font-semibold text-gray-800 mb-2">8.4 Authorized Agent</h3>
+          <p>
+            You may designate an authorized agent to submit a CCPA request on your behalf.
+            We will require written proof of the agent&apos;s authorization and may verify
+            your identity directly to ensure the request is legitimate.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            9. Data Retention and Security
+          </h2>
+
           <p className="mb-3">
             We retain user-generated data (search logs, technical data) for up
             to 24 months, after which it is deleted or anonymized. Opt-out
@@ -250,7 +356,7 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">
-            9. Children&apos;s Privacy
+            10. Children&apos;s Privacy
           </h2>
           <p>
             The Service is not directed to individuals under the age of 18. We
@@ -269,7 +375,7 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">
-            10. Changes to This Policy
+            11. Changes to This Policy
           </h2>
           <p>
             We may update this Privacy Policy from time to time. When we do, we
@@ -281,7 +387,7 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">
-            11. Contact Information
+            12. Contact Information
           </h2>
           <p className="mb-3">
             For privacy-related questions, requests, or concerns, please contact

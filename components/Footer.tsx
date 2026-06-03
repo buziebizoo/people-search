@@ -69,14 +69,17 @@ export default async function Footer() {
           <Link href="/privacy-policy" className="hover:text-white transition-colors">
             Privacy Policy
           </Link>
-          <Link href="/opt-out" className="hover:text-white transition-colors">
-            Opt Out / Remove My Info
-          </Link>
           <Link href="/terms" className="hover:text-white transition-colors">
             Terms of Service
           </Link>
           <Link href="/contact" className="hover:text-white transition-colors">
             Contact
+          </Link>
+          <Link href="/opt-out" className="hover:text-white transition-colors">
+            Opt Out / Remove My Info
+          </Link>
+          <Link href="/opt-out" className="text-teal-400 hover:text-teal-300 font-medium transition-colors">
+            Do Not Sell My Personal Information
           </Link>
         </div>
         <p className="mt-6 text-xs text-gray-600">
