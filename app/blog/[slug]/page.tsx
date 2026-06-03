@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
   const seed = slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
 
-  const related = getRelatedPosts(post);
+  const related = getRelatedPosts(post, 4);
 
   const splitIdx = post.content.indexOf("</p>");
   const contentBefore = splitIdx >= 0 ? post.content.slice(0, splitIdx + 4) : "";
@@ -204,8 +204,11 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Related posts */}
       {related.length > 0 && (
         <section className="mt-14 border-t border-gray-200 pt-10">
+          <div className="flex justify-center my-8">
+            <BannerAd size="300x250" seed={seed + 50} page="blog-bottom" />
+          </div>
           <h2 className="text-xl font-bold text-gray-900 mb-6">Related Articles</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5">
             {related.map((r) => (
               <Link
                 key={r.slug}
