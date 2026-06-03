@@ -129,8 +129,11 @@ export default async function BlogIndexPage({ searchParams }: Props) {
         <p className="text-gray-500 text-center py-12">No posts in this category yet.</p>
       )}
 
-      <div className="flex justify-center my-8">
-        <BannerAd size="300x250" seed={Date.now()} page="blog-index" />
+      <div className="flex justify-center gap-4 my-8">
+        <BannerAd size="300x250" seed={42} page="blog-index-1" />
+        <div className="hidden md:block">
+          <BannerAd size="300x250" seed={43} page="blog-index-2" />
+        </div>
       </div>
 
       {/* Pagination */}
