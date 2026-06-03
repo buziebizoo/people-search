@@ -10,6 +10,7 @@ import {
   type EnformionPerson,
 } from "@/lib/enformion";
 import { buildSupabaseSlug } from "@/lib/profile-slug";
+import { fetchBlocklist, isBlocklisted } from "@/lib/blocklist";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -314,11 +315,17 @@ export default async function ResultsPage({
   let display: DisplayPerson[] = [];
   let totalCount: number | null = null;
 
+  // Fetch blocklist once; applied to every result source below
+  const blocklist = await fetchBlocklist();
+  const notBlocked = <T extends { first_name: string; last_name: string; address: string | null }>(
+    rows: T[],
+  ) => rows.filter((p) => !isBlocklisted(p.first_name, p.last_name, p.address, blocklist));
+
   // ── PHONE: Enformion only, no pagination ─────────────────────────────────
   if (params.type === "phone") {
     if (params.q) {
       const enf = await searchByPhone(params.q);
-      display = enf.map(fromEnformion);
+      display = notBlocked(enf).map(fromEnformion);
     }
     if (display.length === 0) return <EmptyState params={params} />;
     return (
@@ -358,7 +365,7 @@ export default async function ResultsPage({
   const { data: rows, count, error } = await baseQuery.range(start, end);
   if (error) return <ErrorState />;
 
-  const supabaseHits = (rows ?? []) as SupabasePerson[];
+  const supabaseHits = notBlocked((rows ?? []) as SupabasePerson[]);
   console.log(`[results] Supabase returned ${supabaseHits.length} rows (total=${count}) for type=${params.type} page=${page}`);
 
   if (count !== null && count > 0) {
@@ -380,13 +387,13 @@ export default async function ResultsPage({
     console.log(`[results] Supabase 0 — Enformion name fallback: first="${params.first}" last="${params.last}" page=${page}`);
     const enf = await searchByName(params.first ?? "", params.last ?? "", city, state, page, PAGE_SIZE);
     console.log(`[results] Enformion returned ${enf.length} results`);
-    display = sortByLocation(enf.map(fromEnformion), city, state);
+    display = sortByLocation(notBlocked(enf).map(fromEnformion), city, state);
   } else if (params.type === "address") {
     const parts = (params.location ?? "").split(",");
     const city  = parts[0]?.trim() ?? "";
     const state = parts[1]?.trim() ?? "";
     const enf   = await searchByAddress(params.street ?? "", city, state, "");
-    display = enf.map(fromEnformion);
+    display = notBlocked(enf).map(fromEnformion);
   }
 
   if (display.length === 0) return <EmptyState params={params} />;

@@ -72,12 +72,13 @@ export async function POST(req: NextRequest) {
       .from("opt_out_blocklist")
       .insert({ first_name: firstName, last_name: lastName, address, email });
 
-    // 3. Mark matching people records as opted out
+    // 3. Mark matching people records as opted out (name + address for precision)
     await supabase
       .from("people")
       .update({ opted_out: true })
       .ilike("first_name", firstName)
-      .ilike("last_name", lastName);
+      .ilike("last_name",  lastName)
+      .ilike("address",    `%${address}%`);
   }
 
   return NextResponse.json({ success: true, referenceNumber });
