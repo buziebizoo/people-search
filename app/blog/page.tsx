@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   },
 };
 
-type Props = { searchParams: Promise<{ category?: string }> };
+type Props = { searchParams: Promise<{ category?: string; page?: string }> };
+
+const PAGE_SIZE = 9;
 
 const CATEGORY_STYLES: Record<BlogCategory, string> = {
   "Dating Safety": "bg-rose-100 text-rose-700",
@@ -27,15 +29,29 @@ const CATEGORY_STYLES: Record<BlogCategory, string> = {
   "Background Checks": "bg-indigo-100 text-indigo-700",
 };
 
+/** Build a /blog URL preserving category, overriding page (defaults omitted). */
+function buildHref(category: "All" | BlogCategory, page: number): string {
+  const sp = new URLSearchParams();
+  if (category !== "All") sp.set("category", category);
+  if (page > 1) sp.set("page", String(page));
+  const qs = sp.toString();
+  return qs ? `/blog?${qs}` : "/blog";
+}
+
 export default async function BlogIndexPage({ searchParams }: Props) {
-  const { category } = await searchParams;
+  const { category, page: pageParam } = await searchParams;
   const active = (BLOG_CATEGORIES.find((c) => c === category) ?? "All") as
     | "All"
     | BlogCategory;
 
-  const posts = getAllPosts().filter(
+  const filtered = getAllPosts().filter(
     (p) => active === "All" || p.category === active,
   );
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const page = Math.min(totalPages, Math.max(1, parseInt(pageParam ?? "1", 10) || 1));
+  const start = (page - 1) * PAGE_SIZE;
+  const posts = filtered.slice(start, start + PAGE_SIZE);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14">
@@ -52,7 +68,7 @@ export default async function BlogIndexPage({ searchParams }: Props) {
       {/* Category filter pills */}
       <div className="flex flex-wrap gap-2 mb-10">
         {BLOG_CATEGORIES.map((c) => {
-          const href = c === "All" ? "/blog" : `/blog?category=${encodeURIComponent(c)}`;
+          const href = buildHref(c, 1);
           const isActive = c === active;
           return (
             <Link
@@ -110,6 +126,35 @@ export default async function BlogIndexPage({ searchParams }: Props) {
 
       {posts.length === 0 && (
         <p className="text-gray-500 text-center py-12">No posts in this category yet.</p>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <nav className="flex items-center justify-between border-t border-gray-200 pt-6 mt-10">
+          <Link
+            href={page > 1 ? buildHref(active, page - 1) : "#"}
+            aria-disabled={page <= 1}
+            className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
+              page > 1 ? "text-teal-600 hover:bg-teal-50" : "text-gray-300 pointer-events-none"
+            }`}
+          >
+            ← Previous
+          </Link>
+
+          <span className="text-sm text-gray-500">
+            Page {page} of {totalPages}
+          </span>
+
+          <Link
+            href={page < totalPages ? buildHref(active, page + 1) : "#"}
+            aria-disabled={page >= totalPages}
+            className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
+              page < totalPages ? "text-teal-600 hover:bg-teal-50" : "text-gray-300 pointer-events-none"
+            }`}
+          >
+            Next →
+          </Link>
+        </nav>
       )}
     </div>
   );
