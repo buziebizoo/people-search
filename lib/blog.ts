@@ -445,6 +445,51 @@ export const BLOG_POSTS: BlogPost[] = [
 `,
   },
   {
+    slug: "signs-partner-is-cheating",
+    title: "10 Signs Your Partner Is Cheating and How to Find the Truth",
+    date: "2026-06-03",
+    category: "Dating Safety",
+    excerpt:
+      "Something feels different and you can't ignore it anymore. Here are the clearest signs your partner might be cheating — and the legitimate steps you can take to find the truth.",
+    content: `
+<p>Suspecting infidelity is one of the most disorienting experiences in a relationship. The doubt creeps in slowly — a change in routine, a phone that never leaves their side, answers that don't quite add up. Before you confront a partner or make any major decisions, it helps to know what you're actually looking at and to verify your suspicions with something more than a gut feeling.</p>
+
+<h2>The behavioral signs that matter most</h2>
+<p>Not every change in a partner's behavior means cheating — stress, depression, and life transitions all cause shifts in how people act. But certain patterns show up consistently in accounts of discovered infidelity:</p>
+
+<ul>
+<li><strong>Unusual phone behavior.</strong> A phone that always used to sit on the counter now never leaves their pocket. The screen stays face-down. New passwords appear overnight. They leave the room to take calls. Phone guarding is one of the most universally reported early signs.</li>
+<li><strong>Unexplained schedule changes.</strong> "Working late" starts happening more often. Weekend errands stretch for hours. Plans that never used to exclude you begin multiplying. Inconsistencies between what they said and where their card activity shows up are worth noting.</li>
+<li><strong>Emotional and physical withdrawal.</strong> Less conversation, less affection, a growing sense that they're mentally elsewhere when you're together. A partner who was once curious about your day suddenly seems distracted or indifferent.</li>
+<li><strong>New appearance habits.</strong> Sudden interest in working out, a new wardrobe, cologne or perfume worn to "just go to the store" — these alone mean nothing, but paired with other signs they can paint a picture.</li>
+<li><strong>Defensiveness about ordinary questions.</strong> Asking about their evening shouldn't produce irritation or a counter-attack. A partner who consistently overreacts to normal check-ins may be deflecting.</li>
+<li><strong>Unexplained expenses.</strong> Restaurant charges for two when they ate "alone," hotel receipts, or unfamiliar recurring subscriptions on a shared account are concrete data points, not just feelings.</li>
+<li><strong>Less interest in shared plans.</strong> Someone building a life with someone else often stops investing in the future of their current relationship — fewer plans made, less enthusiasm for shared goals.</li>
+<li><strong>New friends who are vague or unnamed.</strong> "A friend from work" who has no last name and is never mentioned again is different from a normal new friendship.</li>
+<li><strong>Picking fights.</strong> Some people unconsciously manufacture conflict to justify emotional distance, or to create excuses for time spent away.</li>
+<li><strong>A gut feeling you can't shake.</strong> Research consistently finds that people often sense infidelity before they have any concrete evidence. If something feels deeply wrong, that instinct is worth taking seriously — not acting on blindly, but not ignoring either.</li>
+</ul>
+
+<h2>How to verify your suspicion</h2>
+<p>Behavioral signs give you a reason to look closer. Here's how to do that using legitimate, publicly available tools — no hacking, no illegal surveillance required.</p>
+
+<h3>Check for dating app accounts</h3>
+<p>Go to the login page of the major apps — Tinder, Bumble, Hinge, OkCupid — and enter your partner's email address in the "forgot password" field. If the app says it will send a reset link to that address, an account exists under that email. You don't need to access their account; this one step tells you whether the email is registered. Repeat for any secondary email addresses you know they use.</p>
+
+<h3>Search their name and photos online</h3>
+<p>Run their full name alongside your city in a standard web search. Add the name of a specific dating app to narrow results. Dating profiles are sometimes indexed by search engines, especially on platforms with less aggressive privacy settings. A reverse image search on a current photo can also surface profiles using their image that you weren't aware of.</p>
+
+<h3>Run a reverse phone lookup on unfamiliar numbers</h3>
+<p>If an unknown number has been calling or texting at odd hours, a reverse phone lookup matches the number to a name and general location. A name you don't recognize calling your partner repeatedly is a concrete lead, not just a suspicion.</p>
+
+<h3>Use a people search to find associated accounts</h3>
+<p>A public records search on your partner's name and location can surface associated email addresses, usernames, and social accounts you may not know exist. People often create secondary accounts using a nickname, an old email, or a username they've used elsewhere — aggregated people-search databases sometimes surface exactly those connections.</p>
+
+<h2>What to do with what you find</h2>
+<p>If your search turns up a hidden account or unexplained contact, document it before you bring it up. Screenshots of profiles and call logs can disappear quickly once someone knows they've been discovered. Then decide whether to confront your partner directly, speak with a counselor first, or make your own decision about the relationship based on what you've learned. The tools above exist to help you get to the truth — what you do with it is entirely yours to decide.</p>
+`,
+  },
+  {
     slug: "find-secret-dating-profile",
     title: "How to Find Out If Someone Has a Secret Dating Profile",
     date: "2026-06-03",
