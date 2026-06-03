@@ -120,25 +120,36 @@ function extractPersons(data: any): EnformionPerson[] {
   return [];
 }
 
+function capitalize(s: string): string {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s;
+}
+
 export async function searchByName(
   firstName: string,
   lastName: string,
   city: string,
   state: string,
 ): Promise<EnformionPerson[]> {
+  // Enformion requires at least 2 fields — name alone causes a 400.
+  // Require state at minimum alongside the name.
+  if (!state) {
+    console.log("[enformion] searchByName: skipping — no state provided (need ≥2 fields)");
+    return [];
+  }
+
   const key = `name:${firstName}:${lastName}:${city}:${state}`;
   const cached = cacheGet(key);
   if (cached) return cached;
 
   try {
     const body: Record<string, unknown> = {
-      FirstName: firstName,
-      LastName:  lastName,
-      Page:      1,
+      FirstName:     capitalize(firstName),
+      LastName:      capitalize(lastName),
+      State:         state.toUpperCase(),
+      Page:          1,
       ResultsPerPage: 10,
     };
-    if (city)  body.City  = city;
-    if (state) body.State = state;
+    if (city) body.City = city.trim();
     const result = extractPersons(
       await post("/contact/enrich", body, "DevAPIContactEnrich")
     );

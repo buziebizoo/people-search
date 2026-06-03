@@ -97,6 +97,34 @@ function queryLabel(params: SearchParams): string {
   return "People Search";
 }
 
+/**
+ * Parse a free-form location string into city + 2-letter state code.
+ * Handles: "san diego, ca" | "san diego ca" | "CA" | "San Diego CA"
+ */
+function parseLocation(raw: string): { city: string; state: string } {
+  const s = raw.trim();
+  if (!s) return { city: "", state: "" };
+
+  // Prefer comma split: "san diego, ca"
+  if (s.includes(",")) {
+    const [cityPart, statePart] = s.split(",");
+    return {
+      city:  (cityPart ?? "").trim(),
+      state: (statePart ?? "").trim().toUpperCase(),
+    };
+  }
+
+  // No comma — take the last whitespace-separated token as state
+  const words = s.trim().split(/\s+/);
+  if (words.length === 1) {
+    // Could be just a state code
+    return { city: "", state: words[0].toUpperCase() };
+  }
+  const state = words[words.length - 1].toUpperCase();
+  const city  = words.slice(0, -1).join(" ");
+  return { city, state };
+}
+
 // Shared empty-state UI
 function EmptyState({ params }: { params: SearchParams }) {
   return (
@@ -181,16 +209,16 @@ export default async function ResultsPage({
   let query = supabase.from("people").select("*").limit(20);
 
   if (params.type === "name") {
-    if (params.first)    query = query.ilike("first_name", `%${params.first}%`);
-    if (params.last)     query = query.ilike("last_name",  `%${params.last}%`);
+    if (params.first) query = query.ilike("first_name", `%${params.first}%`);
+    if (params.last)  query = query.ilike("last_name",  `%${params.last}%`);
     if (params.location) {
-      const city = params.location.split(",")[0].trim();
+      const { city } = parseLocation(params.location);
       if (city) query = query.ilike("city", `%${city}%`);
     }
   } else if (params.type === "address") {
-    if (params.street)   query = query.ilike("address", `%${params.street}%`);
+    if (params.street) query = query.ilike("address", `%${params.street}%`);
     if (params.location) {
-      const city = params.location.split(",")[0].trim();
+      const { city } = parseLocation(params.location);
       if (city) query = query.ilike("city", `%${city}%`);
     }
   }
@@ -206,13 +234,15 @@ export default async function ResultsPage({
   } else {
     // Fall back to Enformion
     if (params.type === "name") {
-      const parts = (params.location ?? "").split(",");
-      const city  = parts[0]?.trim() ?? "";
-      const state = parts[1]?.trim() ?? "";
-      console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
-      const enf   = await searchByName(params.first ?? "", params.last ?? "", city, state);
-      console.log(`[results] Enformion name fallback returned ${enf.length} results`);
-      display = enf.map(fromEnformion);
+      const { city, state } = parseLocation(params.location ?? "");
+      if (!state) {
+        console.log("[results] Enformion name fallback skipped — no state in location param");
+      } else {
+        console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
+        const enf = await searchByName(params.first ?? "", params.last ?? "", city, state);
+        console.log(`[results] Enformion name fallback returned ${enf.length} results`);
+        display = enf.map(fromEnformion);
+      }
     } else if (params.type === "address") {
       const parts = (params.location ?? "").split(",");
       const city  = parts[0]?.trim() ?? "";
