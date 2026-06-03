@@ -1,36 +1,36 @@
-const useCases: { image: string; title: string; description: string }[] = [
+const useCases: { emoji: string; title: string; description: string }[] = [
   {
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=80&h=80&fit=crop",
+    emoji: "🔍",
     title: "Verify someone you met online",
     description:
       "Make sure the person you matched with is who they say they are before meeting up.",
   },
   {
-    image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=80&h=80&fit=crop",
+    emoji: "📱",
     title: "Identify unknown callers",
     description:
       "Look up any phone number to find out who's been calling or texting you.",
   },
   {
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=80&h=80&fit=crop",
+    emoji: "👨‍👩‍👧",
     title: "Find lost friends & family",
     description:
       "Reconnect with people from your past using their name or last known address.",
   },
   {
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=80&h=80&fit=crop",
+    emoji: "🏠",
     title: "Research your neighbors",
     description:
       "Look up who lives nearby or check the history of an address.",
   },
   {
-    image: "https://images.unsplash.com/photo-1609220136736-443140cfeaa8?w=80&h=80&fit=crop",
+    emoji: "🛡️",
     title: "Protect yourself & your family",
     description:
       "Run a quick background check before letting someone into your life.",
   },
   {
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=80&h=80&fit=crop",
+    emoji: "💼",
     title: "Do your due diligence",
     description:
       "Verify contact info, check address history, and confirm someone's identity.",
@@ -50,13 +50,7 @@ export default function ExplainerSection() {
               key={u.title}
               className="border border-gray-200 rounded-xl p-6"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={u.image}
-                alt=""
-                aria-hidden="true"
-                className="w-16 h-16 rounded-full object-cover mb-3"
-              />
+              <div className="text-4xl text-center mb-3">{u.emoji}</div>
               <h3 className="font-bold text-gray-900 mb-1">{u.title}</h3>
               <p className="text-gray-500 text-sm leading-relaxed">{u.description}</p>
             </div>
