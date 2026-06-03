@@ -124,6 +124,34 @@ function capitalize(s: string): string {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapPersonSearchResult(p: Record<string, any>): EnformionPerson {
+  const firstName = String(p.name?.firstName ?? "");
+  const lastName  = String(p.name?.lastName  ?? "");
+  const addr      = (p.addresses ?? [])[0] ?? {};
+  const phone     = ((p.phoneNumbers ?? [])[0]?.phoneNumber ?? "").replace(/\D/g, "");
+  const emails    = ((p.emailAddresses ?? []) as Record<string, string>[])
+    .map((e) => e.emailAddress ?? "")
+    .filter(Boolean);
+  const relatives = ((p.relativesSummary ?? []) as Record<string, string>[])
+    .map((r) => [r.firstName, r.lastName].filter(Boolean).join(" "))
+    .filter(Boolean);
+
+  return {
+    first_name: firstName,
+    last_name:  lastName,
+    full_name:  [firstName, lastName].filter(Boolean).join(" "),
+    age:        p.age ? parseInt(String(p.age), 10) || null : null,
+    address:    addr.fullAddress ?? addr.street ?? null,
+    city:       addr.city  ?? null,
+    state:      addr.state ?? null,
+    zip:        addr.zip   ?? null,
+    phones:     phone ? [phone] : [],
+    emails,
+    relatives,
+  };
+}
+
 export async function searchByName(
   firstName: string,
   lastName: string,
@@ -135,17 +163,24 @@ export async function searchByName(
   if (cached) return cached;
 
   try {
+    const addresses: Record<string, string> = {};
+    if (city)  addresses.City  = city.trim();
+    if (state) addresses.State = state.toUpperCase();
+
     const body: Record<string, unknown> = {
       FirstName:     capitalize(firstName),
       LastName:      capitalize(lastName),
-      State:         state.toUpperCase(),
+      Addresses:     [addresses],
+      Includes:      ["Addresses", "PhoneNumbers"],
+      FilterOptions: ["IncludeLowQualityAddresses"],
       Page:          1,
       ResultsPerPage: 10,
     };
-    if (city) body.City = city.trim();
-    const result = extractPersons(
-      await post("/person/search", body, "DevAPIPersonSearch")
-    );
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = await post("/personsearch", body, "Person") as Record<string, any> | null;
+    const persons = (data?.persons ?? []) as Record<string, unknown>[];
+    const result = persons.slice(0, 20).map(mapPersonSearchResult);
     cacheSet(key, result);
     return result;
   } catch (err) {
