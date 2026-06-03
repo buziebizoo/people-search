@@ -176,22 +176,22 @@ def load_file(txt_path: Path, client, limit: Optional[int]) -> dict:
             except ValueError:
                 age = None
 
-            phone = get(row, "full_phone_number").replace("-", "").replace(".", "").replace(" ", "")
-            phone_prefix = phone[:3] if len(phone) >= 10 else None
+            phone_raw = get(row, "full_phone_number").replace("-", "").replace(".", "").replace(" ", "")
+            phone = phone_raw if len(phone_raw) >= 10 else None
 
             zip_raw = get(row, "zip_code")
 
             record = {
-                "first_name":   first or None,
-                "last_name":    last or None,
-                "full_name":    build_full_name(first, get(row, "middle_name"), last, get(row, "name_suffix_lbl")) or None,
-                "age":          age,
-                "address":      get(row, "res_street_address") or None,
-                "city":         get(row, "res_city_desc") or None,
-                "state":        get(row, "state_cd") or "NC",
-                "zip":          zip_raw[:10] or None,
-                "phone_prefix": phone_prefix,
-                "relatives":    None,
+                "first_name": first or None,
+                "last_name":  last or None,
+                "full_name":  build_full_name(first, get(row, "middle_name"), last, get(row, "name_suffix_lbl")) or None,
+                "age":        age,
+                "address":    get(row, "res_street_address") or None,
+                "city":       get(row, "res_city_desc") or None,
+                "state":      get(row, "state_cd") or "NC",
+                "zip":        zip_raw[:10] or None,
+                "phone":      phone,
+                "relatives":  None,
             }
 
             batch.append(record)
