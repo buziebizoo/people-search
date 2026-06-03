@@ -10,6 +10,7 @@ function isValidEmail(s: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  try {
   const ip = clientIp(req);
   if (!checkOptOutRateLimit(ip)) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
@@ -70,8 +71,7 @@ export async function POST(req: NextRequest) {
   const origin     = req.headers.get("origin") ?? req.nextUrl.origin;
   const confirmUrl = `${origin}/api/opt-out/confirm/${token}`;
 
-  console.log(`[opt-out] token for ${firstName} ${lastName} <${email}> (source=${source})`);
-  console.log(`[opt-out] confirm URL: ${confirmUrl}`);
+  console.log(`[opt-out] token created (source=${source})`);
 
   if (process.env.RESEND_API_KEY) {
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -146,13 +146,16 @@ export async function POST(req: NextRequest) {
 
     if (emailError) {
       console.error("[opt-out] Resend error:", emailError.message);
-      // Still return success — the token is valid and the confirm URL was logged
     } else {
-      console.log(`[opt-out] confirmation email sent to ${email}`);
+      console.log("[opt-out] confirmation email sent");
     }
   } else {
-    console.log("[opt-out] No RESEND_API_KEY — confirm URL logged above for manual testing");
+    console.log("[opt-out] No RESEND_API_KEY — skipping email");
   }
 
   return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[opt-out] unhandled error:", err instanceof Error ? err.message : err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

@@ -20,7 +20,7 @@ export async function fetchBlocklist(): Promise<BlocklistEntry[]> {
     return [];
   }
   const entries = (data ?? []) as BlocklistEntry[];
-  console.log(`[blocklist] fetchBlocklist: ${entries.length} entries`, entries.map(e => `${e.first_name} ${e.last_name}`));
+  console.log(`[blocklist] fetchBlocklist: ${entries.length} entries`);
   return entries;
 }
 
@@ -50,23 +50,14 @@ export function isBlocklisted(
   const fn = norm(firstName);
   const ln = norm(lastName);
 
-  console.log(`[blocklist] checking result: raw=("${firstName}"|"${lastName}") norm=("${fn}"|"${ln}")`);
-
   let matched = false;
   for (const e of blocklist) {
     const efn = norm(e.first_name);
     const eln = norm(e.last_name);
-    const fnMatch   = efn === fn;
-    const lnMatch   = eln === ln;
-    const addrMatch = addressMatches(e.address, address);
-    const hit = fnMatch && lnMatch && addrMatch;
-    console.log(
-      `[blocklist]   entry raw=("${e.first_name}"|"${e.last_name}") norm=("${efn}"|"${eln}") ` +
-      `→ firstName=${fnMatch} lastName=${lnMatch} address=${addrMatch} MATCH=${hit}`,
-    );
-    if (hit) { matched = true; break; }
+    if (efn === fn && eln === ln && addressMatches(e.address, address)) {
+      matched = true;
+      break;
+    }
   }
-
-  console.log(`[blocklist] isBlocklisted result: ${matched}`);
   return matched;
 }

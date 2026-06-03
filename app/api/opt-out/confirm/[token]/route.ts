@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase";
 import { verifyOptOutToken } from "@/lib/opt-out-token";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 
 function redirect(req: NextRequest, path: string) {
   return NextResponse.redirect(new URL(path, req.url));
@@ -10,6 +11,11 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ token: string }> },
 ) {
+  try {
+  if (!checkRateLimit(`opt-out-confirm:hour:${clientIp(req)}`, 10, 60 * 60 * 1000)) {
+    return redirect(req, "/opt-out?error=too_many_requests");
+  }
+
   const { token } = await params;
 
   const payload = verifyOptOutToken(token);
@@ -70,6 +76,10 @@ export async function GET(
     // Non-fatal
   }
 
-  console.log(`[opt-out/confirm] opted out ${firstName} ${lastName} (source=${source}, id=${personId ?? "n/a"})`);
+  console.log(`[opt-out/confirm] opt-out confirmed (source=${source})`);
   return redirect(req, "/opt-out?confirmed=1");
+  } catch (err) {
+    console.error("[opt-out/confirm] unhandled error:", err instanceof Error ? err.message : err);
+    return redirect(req, "/opt-out?error=unavailable");
+  }
 }

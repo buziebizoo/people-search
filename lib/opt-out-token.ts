@@ -7,11 +7,9 @@ import { createHmac } from "crypto";
 const TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 function secret(): string {
-  return (
-    process.env.SUPABASE_SERVICE_ROLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-    "opt-out-fallback-secret"
-  );
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!key) throw new Error("Missing token signing key — set SUPABASE_SERVICE_ROLE_KEY");
+  return key;
 }
 
 function sign(payload: string): string {
@@ -40,14 +38,14 @@ export function createOptOutToken(payload: TokenPayload): string {
  * Returns null if tampered, malformed, or expired.
  */
 export function verifyOptOutToken(token: string): TokenPayload | null {
-  const sep = token.lastIndexOf("_");
-  if (sep === -1) return null;
-
-  const data = token.slice(0, sep);
-  const sig  = token.slice(sep + 1);
-  if (sign(data) !== sig) return null;
-
   try {
+    const sep = token.lastIndexOf("_");
+    if (sep === -1) return null;
+
+    const data = token.slice(0, sep);
+    const sig  = token.slice(sep + 1);
+    if (sign(data) !== sig) return null;
+
     const d = JSON.parse(Buffer.from(data, "base64url").toString());
     if (
       (d.src !== "supabase" && d.src !== "enformion") ||

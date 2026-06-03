@@ -17,7 +17,7 @@ function cacheGet(key: string): EnformionPerson[] | null {
   const entry = cache.get(key);
   if (!entry) return null;
   if (Date.now() > entry.expiresAt) { cache.delete(key); return null; }
-  console.log(`[enformion] cache hit: ${key}`);
+  console.log(`[enformion] cache hit`);
   return entry.result;
 }
 
@@ -50,8 +50,7 @@ async function post(
   body: Record<string, unknown>,
   searchType: string,
 ): Promise<unknown> {
-  console.log(`[enformion] POST ${BASE_URL}${path}`);
-  console.log(`[enformion] request body:`, JSON.stringify(body));
+  console.log(`[enformion] POST ${path}`);
 
   const res = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
@@ -66,8 +65,7 @@ async function post(
   });
 
   const rawText = await res.text();
-  console.log(`[enformion] response status:`, res.status, res.statusText);
-  console.log(`[enformion] raw response:`, rawText.slice(0, 1000));
+  console.log(`[enformion] response status:`, res.status);
 
   if (!res.ok) {
     return null;
@@ -226,7 +224,7 @@ export async function searchByPhone(phoneNumber: string): Promise<EnformionPerso
   if (cached) return cached;
 
   try {
-    console.log(`[enformion] searchByPhone: raw="${phoneNumber}" cleaned="${cleaned}"`);
+    console.log("[enformion] searchByPhone");
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = await post(

@@ -2,17 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase";
 import { checkSearchRateLimit, clientIp } from "@/lib/rate-limit";
 import { searchByName } from "@/lib/enformion";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 export async function GET(req: NextRequest) {
+  try {
   if (!checkSearchRateLimit(clientIp(req))) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
   const sp    = new URL(req.url).searchParams;
-  const first = (sp.get("first") ?? "").trim().slice(0, 100);
-  const last  = (sp.get("last")  ?? "").trim().slice(0, 100);
-  const city  = (sp.get("city")  ?? "").trim().slice(0, 100);
-  const state = (sp.get("state") ?? "").trim().slice(0, 2).toUpperCase();
+  const first = sanitizeSearchInput(sp.get("first")).slice(0, 100);
+  const last  = sanitizeSearchInput(sp.get("last")).slice(0, 100);
+  const city  = sanitizeSearchInput(sp.get("city")).slice(0, 100);
+  const state = sanitizeSearchInput(sp.get("state")).slice(0, 2).toUpperCase();
 
   if (!first || !last) {
     return NextResponse.json({ error: "first and last name are required" }, { status: 400 });
@@ -60,4 +62,8 @@ export async function GET(req: NextRequest) {
   }));
 
   return NextResponse.json({ results });
+  } catch (err) {
+    console.error("[opt-out/search] unhandled error:", err instanceof Error ? err.message : err);
+    return NextResponse.json({ error: "Search failed" }, { status: 500 });
+  }
 }

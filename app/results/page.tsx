@@ -323,7 +323,7 @@ export default async function ResultsPage({
   const street   = sanitizeSearchInput(params.street);
   const phone    = sanitizeSearchInput(params.q);
 
-  console.log(`[results] ResultsPage executing: type=${params.type} first="${first}" last="${last}" page=${page}`);
+  console.log(`[results] executing: type=${params.type} page=${page}`);
 
   if (!params.type) {
     return (
@@ -409,12 +409,9 @@ export default async function ResultsPage({
   let display: DisplayPerson[] = [];
 
   if (params.type === "name") {
-    console.log(`[results] Supabase 0 — Enformion fallback: first="${first}" last="${last}" page=${page}`);
+    console.log(`[results] Supabase 0 — Enformion fallback, page=${page}`);
     const enf = await searchByName(first, last, city, state, page, PAGE_SIZE);
     console.log(`[results] Enformion returned ${enf.length} results`);
-    enf.forEach((p, i) =>
-      console.log(`[results] enf[${i}] first_name="${p.first_name}" last_name="${p.last_name}" address="${p.address ?? "null"}"`),
-    );
     const filtered = notBlocked(enf);
     console.log(`[results] after blocklist filter: ${filtered.length} of ${enf.length} remain`);
     display = sortByLocation(filtered.map(fromEnformion), city, state);
