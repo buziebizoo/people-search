@@ -98,6 +98,25 @@ function queryLabel(params: SearchParams): string {
 }
 
 /**
+ * Sort DisplayPerson[] so city+state matches come first, then state-only, then rest.
+ * Case-insensitive. Mutates a copy — original array is not changed.
+ */
+function sortByLocation(people: DisplayPerson[], city: string, state: string): DisplayPerson[] {
+  const normCity  = city.trim().toLowerCase();
+  const normState = state.trim().toLowerCase();
+
+  function score(p: DisplayPerson): number {
+    const pCity  = (p.city  ?? "").toLowerCase();
+    const pState = (p.state ?? "").toLowerCase();
+    if (normCity && normState && pCity === normCity && pState === normState) return 0;
+    if (normState && pState === normState) return 1;
+    return 2;
+  }
+
+  return [...people].sort((a, b) => score(a) - score(b));
+}
+
+/**
  * Parse a free-form location string into city + 2-letter state code.
  * Handles: "san diego, ca" | "san diego ca" | "CA" | "San Diego CA"
  */
@@ -238,7 +257,7 @@ export default async function ResultsPage({
       console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
       const enf = await searchByName(params.first ?? "", params.last ?? "", city, state);
       console.log(`[results] Enformion name fallback returned ${enf.length} results`);
-      display = enf.map(fromEnformion);
+      display = sortByLocation(enf.map(fromEnformion), city, state);
     } else if (params.type === "address") {
       const parts = (params.location ?? "").split(",");
       const city  = parts[0]?.trim() ?? "";
