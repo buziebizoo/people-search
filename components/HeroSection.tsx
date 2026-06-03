@@ -17,12 +17,12 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center gap-8 px-4 sm:px-6 py-20 w-full max-w-4xl mx-auto">
         <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight">
-          Find anyone.{" "}
-          <span className="text-teal-400">Instantly.</span>
+          Who is your date,{" "}
+          <span className="text-teal-400">really?</span>
         </h1>
         <p className="text-xl text-white/80 max-w-xl">
-          Search public records by name, phone number, or address to find
-          contact details, background info, and more.
+          Search 100M+ public records by name, phone, or address. Free,
+          instant, no sign-up.
         </p>
         <SearchTabs />
         <p className="text-xs text-white/50">

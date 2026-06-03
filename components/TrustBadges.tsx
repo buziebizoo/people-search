@@ -1,7 +1,7 @@
 const badges = [
   "Always Free",
   "No Sign Up Required",
-  "No Credit Card",
+  "Instant Results",
 ];
 
 function CheckIcon() {

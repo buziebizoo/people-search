@@ -1,8 +1,8 @@
 const stats = [
-  { headline: "100M+ Public Records", label: "Nationwide Database" },
+  { headline: "100M+", label: "Public Records" },
   { headline: "All 50 States", label: "Nationwide Coverage" },
-  { headline: "Always Free", label: "No Sign Up Required" },
-  { headline: "Instant Results", label: "Powered by Public Data" },
+  { headline: "Always Free", label: "No Hidden Fees" },
+  { headline: "Instant", label: "Search Results" },
 ];
 
 export default function StatsBar() {

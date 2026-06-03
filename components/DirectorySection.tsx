@@ -26,7 +26,8 @@ export default async function DirectorySection() {
   return (
     <section className="bg-gray-50 py-14 px-4 sm:px-6 border-t border-gray-200">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Browse by State</h2>
+        <h2 className="text-lg font-semibold text-gray-700 mb-1">Browse by State</h2>
+        <p className="text-sm text-gray-500 mb-4">Tap any state to browse public records</p>
         <div className="flex flex-wrap gap-2">
           {STATES.map((s) =>
             withData.has(s.code) ? (
@@ -41,7 +42,7 @@ export default async function DirectorySection() {
               <span
                 key={s.code}
                 aria-disabled="true"
-                className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-200 rounded-full cursor-not-allowed"
+                className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-full cursor-not-allowed"
               >
                 {s.name}
               </span>
