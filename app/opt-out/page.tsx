@@ -17,11 +17,16 @@ const REMOVAL_REASONS = [
   "Other",
 ];
 
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export default function OptOutPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [referenceNumber, setReferenceNumber] = useState<string>("");
+  const [emailTouched, setEmailTouched] = useState(false);
   const [form, setForm] = useState({
     fullName: "",
     address: "",
@@ -32,6 +37,22 @@ export default function OptOutPage() {
     reason: "",
   });
 
+  const emailError =
+    emailTouched && form.email && !isValidEmail(form.email)
+      ? "Please enter a valid email address (e.g. you@example.com)"
+      : null;
+
+  const canSubmit =
+    !submitting &&
+    form.fullName.trim() !== "" &&
+    form.address.trim() !== "" &&
+    form.city.trim() !== "" &&
+    form.state !== "" &&
+    form.zip.trim() !== "" &&
+    form.email.trim() !== "" &&
+    form.reason !== "" &&
+    isValidEmail(form.email);
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
@@ -40,25 +61,40 @@ export default function OptOutPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setEmailTouched(true);
+    if (!isValidEmail(form.email)) return;
+
     setSubmitting(true);
     setError(null);
 
-    const res = await fetch("/api/opt-out", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: form.fullName,
-        address: form.address,
-        city: form.city,
-        state: form.state,
-        zip: form.zip,
-        email: form.email,
-        reason: form.reason,
-      }),
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/opt-out", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          address: form.address,
+          city: form.city,
+          state: form.state,
+          zip: form.zip,
+          email: form.email,
+          reason: form.reason,
+        }),
+      });
+    } catch {
+      setError("Network error — please check your connection and try again.");
+      setSubmitting(false);
+      return;
+    }
 
     if (!res.ok) {
-      setError("Something went wrong submitting your request. Please try again.");
+      let msg = "Something went wrong submitting your request. Please try again.";
+      try {
+        const body = await res.json();
+        if (typeof body?.error === "string") msg = body.error;
+      } catch { /* ignore parse failure */ }
+      setError(msg);
       setSubmitting(false);
       return;
     }
@@ -252,11 +288,18 @@ export default function OptOutPage() {
             placeholder="you@example.com"
             value={form.email}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+            onBlur={() => setEmailTouched(true)}
+            className={`w-full border rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 ${
+              emailError ? "border-red-400 bg-red-50" : "border-gray-300"
+            }`}
           />
-          <p className="mt-1 text-xs text-gray-500">
-            Used only to send you a confirmation of your request.
-          </p>
+          {emailError ? (
+            <p className="mt-1 text-xs text-red-600">{emailError}</p>
+          ) : (
+            <p className="mt-1 text-xs text-gray-500">
+              Used only to send you a confirmation of your request.
+            </p>
+          )}
         </div>
 
         <div>
@@ -291,8 +334,8 @@ export default function OptOutPage() {
 
         <button
           type="submit"
-          disabled={submitting}
-          className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+          disabled={!canSubmit}
+          className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? "Submitting…" : "Submit Opt-Out Request"}
         </button>
