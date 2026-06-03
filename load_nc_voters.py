@@ -123,18 +123,11 @@ def build_full_name(first: str, middle: str, last: str, suffix: str) -> str:
 
 def insert_batch(batch: list, client, line_num: int):
     try:
-        client.table("people").insert(batch).execute()
+        client.table("people").upsert(batch, ignore_duplicates=True).execute()
         return len(batch), 0
     except Exception as e:
-        print(f"\n  WARN: batch insert failed near line {line_num}: {e}")
-        ok = fail = 0
-        for row in batch:
-            try:
-                client.table("people").insert(row).execute()
-                ok += 1
-            except Exception:
-                fail += 1
-        return ok, fail
+        print(f"\n  WARN: batch upsert failed near line {line_num}: {e}")
+        return 0, len(batch)
 
 
 # ---------------------------------------------------------------------------
