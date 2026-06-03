@@ -318,8 +318,6 @@ export default async function ResultsPage({
   }
 
   const label = queryLabel(params);
-  let display: DisplayPerson[] = [];
-  let totalCount: number | null = null;
 
   // Fetch blocklist once; applied to every result source below
   const blocklist = await fetchBlocklist();
@@ -329,10 +327,9 @@ export default async function ResultsPage({
 
   // ── PHONE: Enformion only, no pagination ─────────────────────────────────
   if (params.type === "phone") {
-    if (params.q) {
-      const enf = await searchByPhone(params.q);
-      display = notBlocked(enf).map(fromEnformion);
-    }
+    const display: DisplayPerson[] = params.q
+      ? notBlocked(await searchByPhone(params.q)).map(fromEnformion)
+      : [];
     if (display.length === 0) return <EmptyState params={params} />;
     return (
       <ResultsList
@@ -342,18 +339,20 @@ export default async function ResultsPage({
     );
   }
 
-  // ── NAME / ADDRESS: Supabase first, Enformion fallback ───────────────────
+  // ── NAME / ADDRESS: Supabase + Enformion simultaneously ──────────────────
   const supabase = createServerClient();
   if (!supabase) return <ErrorState />;
 
-  // Build the base Supabase query (filters only — range applied below)
   let baseQuery = supabase.from("people").select("*", { count: "exact" }).eq("opted_out", false);
+  let city = "";
+  let state = "";
 
   if (params.type === "name") {
     if (params.first)    baseQuery = baseQuery.ilike("first_name", `%${params.first}%`);
     if (params.last)     baseQuery = baseQuery.ilike("last_name",  `%${params.last}%`);
     if (params.location) {
-      const { city } = parseLocation(params.location);
+      const loc = parseLocation(params.location);
+      city = loc.city; state = loc.state;
       if (city) baseQuery = baseQuery.ilike("city", `%${city}%`);
     }
   } else if (params.type === "address") {
@@ -362,59 +361,63 @@ export default async function ResultsPage({
       baseQuery = baseQuery.or(variants.map((v) => `address.ilike.%${v}%`).join(","));
     }
     if (params.location) {
-      const { city, state } = parseLocation(params.location);
-      if (city)                     baseQuery = baseQuery.ilike("city",  `%${city}%`);
+      const loc = parseLocation(params.location);
+      city = loc.city; state = loc.state;
+      if (city)                        baseQuery = baseQuery.ilike("city",  `%${city}%`);
       if (state && state.length === 2) baseQuery = baseQuery.eq("state", state);
     }
   }
 
-  const { data: rows, count, error } = await baseQuery.range(start, end);
+  // Fire both sources in parallel — Enformion is no longer a fallback
+  const enfFetch: Promise<EnformionPerson[]> =
+    params.type === "name"
+      ? searchByName(params.first ?? "", params.last ?? "", city, state, page, PAGE_SIZE)
+      : searchByAddress(params.street ?? "", city, state, "");
+
+  const [{ data: rows, count, error }, enfResults] = await Promise.all([
+    baseQuery.range(start, end),
+    enfFetch,
+  ]);
+
   if (error) return <ErrorState />;
 
-  const supabaseHits = notBlocked((rows ?? []) as SupabasePerson[]);
-  console.log(`[results] Supabase returned ${supabaseHits.length} rows (total=${count}) for type=${params.type} page=${page}`);
+  // Apply blocklist to both sources
+  const supabaseFiltered = notBlocked((rows ?? []) as SupabasePerson[]);
+  const enfFiltered      = notBlocked(enfResults);
 
-  if (count !== null && count > 0) {
-    // Supabase has results — use them with exact pagination
-    display = supabaseHits.map(fromSupabase);
-    totalCount = count;
-    const totalPages = Math.ceil(count / PAGE_SIZE);
-    return (
-      <ResultsList
-        params={params} label={label} people={display}
-        page={page} totalPages={totalPages} total={count}
-      />
-    );
-  }
+  console.log(`[results] Supabase: ${supabaseFiltered.length} (total=${count}), Enformion: ${enfFiltered.length} (before dedup)`);
+  enfFiltered.forEach((p, i) =>
+    console.log(`[results] enf[${i}] first_name="${p.first_name}" last_name="${p.last_name}" address="${p.address ?? "null"}"`),
+  );
 
-  // ── Enformion fallback ────────────────────────────────────────────────────
-  if (params.type === "name") {
-    const { city, state } = parseLocation(params.location ?? "");
-    console.log(`[results] Supabase 0 — Enformion name fallback: first="${params.first}" last="${params.last}" page=${page}`);
-    const enf = await searchByName(params.first ?? "", params.last ?? "", city, state, page, PAGE_SIZE);
-    console.log(`[results] Enformion returned ${enf.length} results`);
-    enf.forEach((p, i) =>
-      console.log(`[results] enf[${i}] first_name="${p.first_name}" last_name="${p.last_name}" address="${p.address ?? "null"}"`),
-    );
-    const filtered = notBlocked(enf);
-    console.log(`[results] after blocklist filter: ${filtered.length} of ${enf.length} remain`);
-    display = sortByLocation(filtered.map(fromEnformion), city, state);
-  } else if (params.type === "address") {
-    const parts = (params.location ?? "").split(",");
-    const city  = parts[0]?.trim() ?? "";
-    const state = parts[1]?.trim() ?? "";
-    const enf   = await searchByAddress(params.street ?? "", city, state, "");
-    display = notBlocked(enf).map(fromEnformion);
-  }
+  // Convert Supabase hits to display shape
+  const supabasePeople = supabaseFiltered.map(fromSupabase);
 
-  if (display.length === 0) return <EmptyState params={params} />;
+  // Deduplicate: drop Enformion entries whose full_name+city already appear in Supabase
+  const dedupe = (fullName: string, personCity: string | null) =>
+    `${(fullName ?? "").toLowerCase().trim()}|${(personCity ?? "").toLowerCase().trim()}`;
+  const seenKeys = new Set(supabasePeople.map((p) => dedupe(p.full_name, p.city)));
+  const enfUnique = enfFiltered
+    .filter((p) => !seenKeys.has(dedupe(p.full_name, p.city)))
+    .map((p, i) => fromEnformion(p, start + i));
 
-  // For Enformion we don't have an exact total — use result count to estimate pages
-  const enfTotalPages = display.length === PAGE_SIZE ? page + 1 : page;
+  // Merge and sort by location relevance
+  const combined = sortByLocation([...supabasePeople, ...enfUnique], city, state);
+  console.log(`[results] merged: ${supabasePeople.length} supabase + ${enfUnique.length} enf-unique = ${combined.length}`);
+
+  if (combined.length === 0) return <EmptyState params={params} />;
+
+  // Pagination anchored to Supabase exact count; Enformion adds extras per page
+  const supabaseTotal  = count ?? 0;
+  const combinedTotal  = supabaseTotal > 0 ? supabaseTotal + enfUnique.length : null;
+  const totalPages     = supabaseTotal > 0
+    ? Math.ceil(supabaseTotal / PAGE_SIZE)
+    : enfFiltered.length === PAGE_SIZE ? page + 1 : page;
+
   return (
     <ResultsList
-      params={params} label={label} people={display}
-      page={page} totalPages={enfTotalPages} total={null}
+      params={params} label={label} people={combined}
+      page={page} totalPages={totalPages} total={combinedTotal}
     />
   );
 }
