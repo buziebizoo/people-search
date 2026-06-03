@@ -16,7 +16,7 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center gap-8 px-4 sm:px-6 py-20 w-full max-w-4xl mx-auto">
-        <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
           Who is your date,{" "}
           <span className="text-teal-400">really?</span>
         </h1>

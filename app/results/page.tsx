@@ -489,7 +489,7 @@ function ResultsList({
 
         <div className="flex flex-col gap-4">
           {people.map((person) => (
-            <div key={person.key} className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm">
+            <div key={person.key} className="bg-white border border-gray-200 rounded-xl px-4 py-4 sm:px-6 sm:py-5 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                 <div>
                   <span className="text-lg font-bold text-gray-900">{person.full_name}</span>
@@ -525,7 +525,7 @@ function ResultsList({
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={person.profileHref}
-                  className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                  className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors min-h-[44px] inline-flex items-center"
                 >
                   View Full Profile
                 </Link>
@@ -533,7 +533,7 @@ function ResultsList({
                   href="https://www.spokeo.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-3 rounded-lg transition-colors min-h-[44px] inline-flex items-center"
                 >
                   Get Full Report →
                 </a>

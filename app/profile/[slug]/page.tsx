@@ -167,7 +167,7 @@ function SectionCard({
   className?: string;
 }) {
   return (
-    <div className={`bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm ${className}`}>
+    <div className={`bg-white border border-gray-200 rounded-xl px-4 py-4 sm:px-6 sm:py-5 shadow-sm ${className}`}>
       {children}
     </div>
   );
@@ -220,7 +220,7 @@ function LockedSection({
       </div>
       <p className="text-sm text-gray-500">{teaser}</p>
       <a href={href} target="_blank" rel="noopener noreferrer"
-        className="mt-3 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+        className="mt-3 inline-flex items-center min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors">
         {buttonLabel}
       </a>
     </SectionCard>
@@ -237,7 +237,7 @@ function AffiliateCard({ name, description, href }: { name: string; description:
         <p className="text-sm text-gray-600">{description}</p>
       </div>
       <a href={href} target="_blank" rel="noopener noreferrer"
-        className="shrink-0 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+        className="shrink-0 inline-flex items-center min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors whitespace-nowrap">
         Get Report →
       </a>
     </SectionCard>

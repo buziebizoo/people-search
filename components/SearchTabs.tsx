@@ -19,11 +19,11 @@ const US_STATES = [
 ];
 
 const inputClass =
-  "flex-1 min-w-[110px] border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400";
+  "w-full sm:flex-1 sm:min-w-0 border border-gray-200 rounded-lg px-3 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400";
 const selectClass =
-  "w-24 shrink-0 border border-gray-200 rounded-lg px-2 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 bg-white";
+  "w-full sm:w-24 sm:shrink-0 border border-gray-200 rounded-lg px-2 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 bg-white";
 const btnClass =
-  "px-5 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap shrink-0";
+  "w-full sm:w-auto min-h-[44px] px-5 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap";
 
 export default function SearchTabs() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function SearchTabs() {
       router.push(`/results?type=phone&q=${encodeURIComponent(phone)}`);
     } else if (active === "address") {
       const params = new URLSearchParams({ type: "address" });
-      if (street)      params.set("street",   street);
+      if (street)       params.set("street",   street);
       if (addrLocation) params.set("location", addrLocation);
       router.push(`/results?${params}`);
     }
@@ -90,9 +90,9 @@ export default function SearchTabs() {
       </div>
 
       {/* Input card */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-b-xl px-5 py-5 shadow-xl">
+      <form onSubmit={handleSubmit} className="bg-white rounded-b-xl px-4 sm:px-5 py-4 sm:py-5 shadow-xl">
         {active === "name" && (
-          <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center">
             <input
               type="text"
               value={firstName}
@@ -132,7 +132,7 @@ export default function SearchTabs() {
         )}
 
         {active === "phone" && (
-          <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="tel"
               value={phone}
@@ -146,7 +146,7 @@ export default function SearchTabs() {
         )}
 
         {active === "address" && (
-          <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center">
             <input
               type="text"
               value={street}

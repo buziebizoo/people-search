@@ -58,13 +58,13 @@ export default function ResultsSearchBar({
 
   const [initCity, initState] = splitLocation(initialLocation);
 
-  const [firstName,     setFirstName]     = useState(initialFirst);
-  const [lastName,      setLastName]      = useState(initialLast);
-  const [nameCity,      setNameCity]      = useState(initCity);
-  const [nameState,     setNameState]     = useState(initState);
-  const [phone,         setPhone]         = useState(initialPhone);
-  const [street,        setStreet]        = useState(initialStreet);
-  const [addrLocation,  setAddrLocation]  = useState(initialLocation);
+  const [firstName,    setFirstName]    = useState(initialFirst);
+  const [lastName,     setLastName]     = useState(initialLast);
+  const [nameCity,     setNameCity]     = useState(initCity);
+  const [nameState,    setNameState]    = useState(initState);
+  const [phone,        setPhone]        = useState(initialPhone);
+  const [street,       setStreet]       = useState(initialStreet);
+  const [addrLocation, setAddrLocation] = useState(initialLocation);
 
   function doSearch() {
     if (active === "name") {
@@ -97,11 +97,11 @@ export default function ResultsSearchBar({
   }
 
   const inputClass =
-    "flex-1 min-w-0 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400";
+    "w-full sm:flex-1 sm:min-w-0 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400";
   const selectClass =
-    "w-20 shrink-0 border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 bg-white";
+    "w-full sm:w-20 sm:shrink-0 border border-gray-200 rounded-lg px-2 py-2.5 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-teal-500 bg-white";
   const submitClass =
-    "px-4 py-2 bg-teal-600 text-white text-sm font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap shrink-0";
+    "w-full sm:w-auto min-h-[44px] px-4 py-2.5 bg-teal-600 text-white text-sm font-semibold rounded-lg hover:bg-teal-700 active:bg-teal-800 transition-colors whitespace-nowrap";
 
   return (
     <div className="bg-white border-b border-gray-200">
@@ -127,7 +127,7 @@ export default function ResultsSearchBar({
         {/* Input row */}
         <form onSubmit={handleSubmit}>
           {active === "name" && (
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center">
               <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} onKeyDown={handleKeyDown} placeholder="First Name" className={inputClass} />
               <input type="text" value={lastName}  onChange={(e) => setLastName(e.target.value)}  onKeyDown={handleKeyDown} placeholder="Last Name"  className={inputClass} />
               <input type="text" value={nameCity}  onChange={(e) => setNameCity(e.target.value)}  onKeyDown={handleKeyDown} placeholder="City"        className={inputClass} />
@@ -139,13 +139,13 @@ export default function ResultsSearchBar({
             </div>
           )}
           {active === "phone" && (
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} onKeyDown={handleKeyDown} placeholder="Phone Number" className={inputClass} />
               <button type="submit" className={submitClass}>Search</button>
             </div>
           )}
           {active === "address" && (
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center">
               <input type="text" value={street}       onChange={(e) => setStreet(e.target.value)}       onKeyDown={handleKeyDown} placeholder="Street Address" className={inputClass} />
               <input type="text" value={addrLocation} onChange={(e) => setAddrLocation(e.target.value)} onKeyDown={handleKeyDown} placeholder="City, State"    className={inputClass} />
               <button type="submit" className={submitClass}>Search</button>

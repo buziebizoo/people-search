@@ -61,7 +61,7 @@ function BlogTeaser() {
   return (
     <section className="bg-white py-20 px-4 sm:px-6 border-t border-gray-100">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex flex-wrap items-end justify-between gap-3 mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Latest from the Blog</h2>
           <Link href="/blog" className="text-sm font-semibold text-teal-600 hover:text-teal-700">
             View all →
