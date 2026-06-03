@@ -51,7 +51,7 @@ export default function ExplainerSection() {
     <section className="bg-gray-50 py-28 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-900 text-center mb-16">
-          How Who Is My Date? works
+          How It Works
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
           {steps.map((step) => (

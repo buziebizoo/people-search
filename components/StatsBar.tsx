@@ -1,8 +1,8 @@
 const stats = [
-  { headline: "343M+ People", label: "US Population Covered" },
-  { headline: "148M+ Properties", label: "Address Records" },
-  { headline: "100M+ Voter Records", label: "Publicly Available" },
+  { headline: "100M+ Public Records", label: "Nationwide Database" },
   { headline: "All 50 States", label: "Nationwide Coverage" },
+  { headline: "Always Free", label: "No Sign Up Required" },
+  { headline: "Instant Results", label: "Powered by Public Data" },
 ];
 
 export default function StatsBar() {
