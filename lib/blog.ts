@@ -319,6 +319,50 @@ export const BLOG_POSTS: BlogPost[] = [
 `,
   },
   {
+    slug: "how-to-verify-match-com-date",
+    title: "How to Verify Your Match.com Date Before Meeting In Person",
+    date: "2026-06-03",
+    category: "Dating Safety",
+    excerpt:
+      "Match.com attracts people who say they want something serious — but profiles are still self-reported. Here's how to verify your match's identity before your first date.",
+    content: `
+<p>Match.com has been connecting people since 1995, and its paid membership filters out some of the casual traffic you'd see on free apps. But a subscription fee doesn't verify anyone's identity. Names, ages, locations, and relationship statuses on Match profiles are entered by users themselves — with no independent check. Before you drive across town to meet a stranger, it's worth spending ten minutes confirming the basics are actually true.</p>
+
+<h2>Why Match profiles need a second look</h2>
+<p>Paid platforms like Match attract people who are serious about dating, which is exactly why scammers operate there too — the pool of emotionally invested, financially stable adults is exactly what a romance scammer is looking for. Catfishing, married people posing as single, and age misrepresentation are all documented problems on Match.com despite the subscription model. A quick identity check isn't cynicism; it's the same instinct that makes you look both ways before crossing a street you've crossed a hundred times.</p>
+
+<h2>Get a full name before you search anything</h2>
+<p>Match profiles show a username and a first name, which isn't enough for a meaningful search. Before your first date, ask for a last name. A straightforward approach works best: "I like to know who I'm meeting — mind sharing your last name?" Anyone genuine will understand and comply. If your match gets evasive or annoyed at a simple request for their last name before you meet in person, that reaction is itself useful information.</p>
+
+<h2>Run a public records search</h2>
+<p>Once you have a full name and the city they claim to live in, plug both into a public records or people-search tool. You're confirming three things: that a real person by that name lives in or near that city, that their approximate age matches what's on their profile, and that any other basic facts they've shared — like a general neighborhood or how long they've lived in the area — are consistent with the public record. People-search databases pull from voter rolls, property records, and other publicly available sources, so the results are usually reliable for basic identity confirmation.</p>
+
+<h2>Check their marital status</h2>
+<p>Match.com requires users to self-report their relationship status, and "divorced" or "separated" is easy to select even when it isn't true. If your match says they're divorced, you can verify it. Marriage and divorce records are public in every U.S. state, maintained at the county level. Search for their name in the county recorder or court portal for the area where they live or where they say they grew up. Finding a marriage record with no corresponding divorce filing is a reason to ask a direct question before you go further.</p>
+
+<h2>Do a reverse image search on their photos</h2>
+<p>Save one or two profile photos and run them through a reverse image search. Match users can upload up to 26 photos, which often provides more material to work with than apps that limit you to a handful. If the images appear elsewhere under a different name — or on a modeling or stock-photo site — the profile is almost certainly fake. Genuine people's photos typically don't turn up anywhere except their own social accounts, if they appear online at all.</p>
+
+<h2>Look them up on LinkedIn</h2>
+<p>Match profiles often include a job title and employer. A quick LinkedIn search for their name and company takes thirty seconds and tells you whether the career they described is real. A real LinkedIn profile with a multi-year employment history and mutual connections is a strong authenticity signal. A complete absence of any professional footprint for someone who claims a white-collar job in a major city is worth noting — most people with those jobs have at least a minimal LinkedIn presence.</p>
+
+<h2>Confirm with a video call first</h2>
+<p>Before committing to a time and place, suggest a short video call. Frame it casually — "Want to do a quick video chat before we meet? I find it helps break the ice." A real person will agree. A catfish, a scammer, or someone whose photos are ten years old will find a reason to skip it. One five-minute video call removes more uncertainty than any records search because you're seeing the person in real time.</p>
+
+<h2>Red flags specific to Match.com</h2>
+<ul>
+<li><strong>Profile photos are all professionally shot</strong> — a few candid, everyday photos are a sign of a real person; a gallery of perfect shots often isn't.</li>
+<li><strong>They push to move off Match immediately</strong> — Match has in-app messaging for a reason; pressure to switch to WhatsApp or personal email before you're comfortable is a scammer pattern.</li>
+<li><strong>Their age or location doesn't match their story</strong> — someone who says they've lived in Boston for twenty years but whose public records show a different state deserves a follow-up question.</li>
+<li><strong>They talk about finances, investments, or crypto early</strong> — romance scammers on paid platforms often build trust over weeks before introducing a "can't-miss" investment opportunity.</li>
+<li><strong>Excuses for skipping video calls pile up</strong> — a broken camera works once; a broken camera that's still broken three weeks later is a pattern.</li>
+</ul>
+
+<h2>The ten-minute routine that makes a difference</h2>
+<p>Put it together and the whole verification process takes about ten minutes: confirm their full name, run a public records search, glance at LinkedIn, drop a photo into a reverse image search, and schedule a video call. You'll walk into your Match.com first date with a meaningful baseline of confidence — not because the records guarantee a great match, but because they confirm you're meeting a real person who is who they say they are. That's the only foundation worth building on.</p>
+`,
+  },
+  {
     slug: "how-to-check-if-someone-is-married",
     title: "How to Check If Someone Is Married Before Your First Date",
     date: "2026-06-07",
