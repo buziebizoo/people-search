@@ -16,27 +16,27 @@ export type EnformionPerson = {
   relatives: string[];
 };
 
-function basicAuth(): string {
-  const key = process.env.ENFORMION_API_KEY ?? "";
-  const pass = process.env.ENFORMION_API_PASS ?? "";
-  return "Basic " + Buffer.from(`${key}:${pass}`).toString("base64");
-}
-
 /** Strip non-digits and remove a leading country code 1 to yield a 10-digit US number. */
 function cleanPhone(raw: string): string {
   const digits = raw.replace(/\D/g, "");
   return digits.length === 11 && digits[0] === "1" ? digits.slice(1) : digits;
 }
 
-async function post(path: string, body: Record<string, unknown>): Promise<unknown> {
+async function post(
+  path: string,
+  body: Record<string, unknown>,
+  searchType: string,
+): Promise<unknown> {
   console.log(`[enformion] POST ${BASE_URL}${path}`);
   console.log(`[enformion] request body:`, JSON.stringify(body));
 
   const res = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: basicAuth(),
+      "Content-Type":       "application/json",
+      "galaxy-ap-name":     process.env.ENFORMION_API_KEY ?? "",
+      "galaxy-ap-password": process.env.ENFORMION_API_PASS ?? "",
+      "galaxy-search-type": searchType,
     },
     body: JSON.stringify(body),
     cache: "no-store",
@@ -109,7 +109,9 @@ export async function searchByName(
     const body: Record<string, unknown> = { firstName, lastName };
     if (city)  body.city  = city;
     if (state) body.state = state;
-    return extractPersons(await post("/ContactEnrichment/api/ContactEnrichment", body));
+    return extractPersons(
+      await post("/ContactEnrichment/api/ContactEnrichment", body, "DevAPIContactEnrich")
+    );
   } catch (err) {
     console.error("[enformion] searchByName error:", err);
     return [];
@@ -122,7 +124,7 @@ export async function searchByPhone(phoneNumber: string): Promise<EnformionPerso
     console.log(`[enformion] searchByPhone: raw="${phoneNumber}" cleaned="${cleaned}"`);
     // Caller ID endpoint expects phone nested as { phone: { phoneNumber: "..." } }
     return extractPersons(
-      await post("/CallerId/api/CallerId", { phone: { phoneNumber: cleaned } })
+      await post("/CallerId/api/CallerId", { phone: { phoneNumber: cleaned } }, "DevAPICallerID")
     );
   } catch (err) {
     console.error("[enformion] searchByPhone error:", err);
@@ -142,7 +144,7 @@ export async function searchByAddress(
     if (city)    body.city    = city;
     if (state)   body.state   = state;
     if (zip)     body.zip     = zip;
-    return extractPersons(await post("/AddressId/api/AddressId", body));
+    return extractPersons(await post("/AddressId/api/AddressId", body, "DevAPIAddressID"));
   } catch (err) {
     console.error("[enformion] searchByAddress error:", err);
     return [];
