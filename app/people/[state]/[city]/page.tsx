@@ -205,6 +205,13 @@ export default async function CityPage({ params, searchParams }: Props) {
         )}
       </div>
 
+      {/* SEO intro */}
+      <p className="text-gray-600 leading-relaxed mb-8">
+        Browse public records for people in {cityDisplay}, {stateInfo.name}.
+        Find addresses, phone numbers, and background information for residents
+        of {cityDisplay}.
+      </p>
+
       {/* Search bar */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-8">
         <p className="text-sm font-medium text-gray-700 mb-3">

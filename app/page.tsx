@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import HeroSection from "@/components/HeroSection";
 import TrustBadges from "@/components/TrustBadges";
 import StatsBar from "@/components/StatsBar";
 import ExplainerSection from "@/components/ExplainerSection";
 import DirectorySection from "@/components/DirectorySection";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const title = "Who Is My Date? - Free People Search | Public Records Lookup";
+  const description =
+    "Search 100M+ public records free. Find anyone by name, phone, or address. View addresses, phone numbers, relatives and background info. No sign-up required.";
+  return { title, description, openGraph: { title, description } };
+}
 
 const includedItems = [
   { emoji: "📍", label: "Current Address" },

@@ -120,8 +120,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name     = [firstName, lastName].filter(Boolean).join(" ");
   const location = [city, state].filter(Boolean).join(", ");
   const title    = `${name}${location ? ` - ${location}` : ""} | Who Is My Date?`;
-  const description = `Find information about ${name}${location ? ` from ${location}` : ""}. View address history, possible relatives, and background check options on Who Is My Date.`;
+  const description = `Find public records for ${name}${location ? ` from ${location}` : ""}. View address history, phone numbers, possible relatives and more on Who Is My Date.`;
   return { title, description, openGraph: { title, description } };
+}
+
+// ---------------------------------------------------------------------------
+// Structured data (JSON-LD)
+// ---------------------------------------------------------------------------
+
+function PersonJsonLd({
+  name,
+  city,
+  state,
+}: {
+  name: string;
+  city: string | null;
+  state: string | null;
+}) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: city ?? "",
+      addressRegion: state ?? "",
+    },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -244,6 +275,7 @@ function SupabaseProfile({ person }: { person: SupabasePerson }) {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <PersonJsonLd name={person.full_name} city={person.city} state={person.state} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-5">
 
         <div>
@@ -387,6 +419,7 @@ function EnformionProfile({ person }: { person: EnformionPerson }) {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <PersonJsonLd name={fullName} city={person.city} state={person.state} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-5">
 
         <div>

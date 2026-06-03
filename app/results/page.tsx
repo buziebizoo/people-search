@@ -282,9 +282,19 @@ export async function generateMetadata({
   searchParams: Promise<SearchParams>;
 }): Promise<Metadata> {
   const params = await searchParams;
-  const query = queryLabel(params);
-  const title = `Results for ${query} | Who Is My Date?`;
-  const description = `Find people named ${query} on Who Is My Date - free public records search.`;
+  const name = [params.first, params.last].filter(Boolean).join(" ").trim();
+  const { state } = parseLocation(params.location ?? "");
+
+  let title: string;
+  let description: string;
+  if (name) {
+    title = `People named ${name}${state ? ` in ${state}` : ""} | Who Is My Date?`;
+    description = `Search results for ${name} on Who Is My Date. Browse public records including addresses, phone numbers and background information.`;
+  } else {
+    const query = queryLabel(params);
+    title = `${query} | Who Is My Date?`;
+    description = `Search results for ${query} on Who Is My Date. Browse public records including addresses, phone numbers and background information.`;
+  }
   return { title, description, openGraph: { title, description } };
 }
 

@@ -112,6 +112,14 @@ export default async function StatePage({ params }: Props) {
         </p>
       </div>
 
+      {/* SEO intro */}
+      <p className="text-gray-600 leading-relaxed mb-10">
+        Browse public records for people in {info.name}. Search by name, phone
+        number, or address to find contact details, address history, and more.
+        Who Is My Date? aggregates publicly available records from government
+        databases across {info.name}.
+      </p>
+
       {/* Search bar */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-10">
         <p className="text-sm font-medium text-gray-700 mb-3">
