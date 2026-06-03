@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Who Is My Date? — Search Public Records",
   description:
     "Search public records by name, phone number, or address. Find contact details and background information instantly.",
+  other: {
+    "impact-site-verification": "41c8dc34-7f1d-47df-8bb2-87c6ff5b3ccf",
+  },
 };
 
 export default function RootLayout({
