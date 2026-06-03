@@ -118,14 +118,46 @@ export async function searchByName(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapCallerIdResponse(data: Record<string, any>): EnformionPerson | null {
+  const p = data?.person;
+  if (!p) return null;
+
+  const firstName = String(p.name?.firstName ?? "");
+  const lastName  = String(p.name?.lastName  ?? "");
+  const addr      = p.address ?? {};
+  const phone     = (p.phone?.phoneNumber ?? "").replace(/\D/g, "");
+  const email     = p.email ? String(p.email) : null;
+
+  return {
+    first_name: firstName,
+    last_name:  lastName,
+    full_name:  [firstName, lastName].filter(Boolean).join(" "),
+    age:        p.age ? parseInt(String(p.age), 10) || null : null,
+    address:    addr.street ?? null,
+    city:       addr.city   ?? null,
+    state:      addr.state  ?? null,
+    zip:        addr.zip    ?? null,
+    phones:     phone ? [phone] : [],
+    emails:     email ? [email] : [],
+    relatives:  [],
+  };
+}
+
 export async function searchByPhone(phoneNumber: string): Promise<EnformionPerson[]> {
   try {
     const cleaned = cleanPhone(phoneNumber);
     console.log(`[enformion] searchByPhone: raw="${phoneNumber}" cleaned="${cleaned}"`);
-    // Caller ID endpoint expects phone nested as { phone: { phoneNumber: "..." } }
-    return extractPersons(
-      await post("/CallerId/api/CallerId", { phone: { phoneNumber: cleaned } }, "DevAPICallerID")
-    );
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = await post(
+      "/phone/enrich",
+      { Phone: cleaned, Page: 1, ResultsPerPage: 10 },
+      "DevAPICallerID",
+    ) as Record<string, any> | null;
+
+    const person = mapCallerIdResponse(data ?? {});
+    return person ? [person] : [];
   } catch (err) {
     console.error("[enformion] searchByPhone error:", err);
     return [];
