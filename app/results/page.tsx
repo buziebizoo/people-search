@@ -15,6 +15,8 @@ import { buildSupabaseSlug } from "@/lib/profile-slug";
 // Types
 // ---------------------------------------------------------------------------
 
+const PAGE_SIZE = 20;
+
 type SearchParams = {
   type?: string;
   first?: string;
@@ -22,6 +24,7 @@ type SearchParams = {
   location?: string;
   q?: string;
   street?: string;
+  page?: string;
 };
 
 type SupabasePerson = {
@@ -47,7 +50,7 @@ type DisplayPerson = {
   state: string | null;
   zip: string | null;
   address: string | null;
-  phone_teaser: string | null; // e.g. "310-***-****" or null
+  phone_teaser: string | null;
   relatives: string[];
   profileHref: string;
 };
@@ -99,14 +102,9 @@ function queryLabel(params: SearchParams): string {
   return "People Search";
 }
 
-/**
- * Sort DisplayPerson[] so city+state matches come first, then state-only, then rest.
- * Case-insensitive. Mutates a copy — original array is not changed.
- */
 function sortByLocation(people: DisplayPerson[], city: string, state: string): DisplayPerson[] {
   const normCity  = city.trim().toLowerCase();
   const normState = state.trim().toLowerCase();
-
   function score(p: DisplayPerson): number {
     const pCity  = (p.city  ?? "").toLowerCase();
     const pState = (p.state ?? "").toLowerCase();
@@ -114,49 +112,25 @@ function sortByLocation(people: DisplayPerson[], city: string, state: string): D
     if (normState && pState === normState) return 1;
     return 2;
   }
-
   return [...people].sort((a, b) => score(a) - score(b));
 }
 
-/**
- * Parse a free-form location string into city + 2-letter state code.
- * Handles: "san diego, ca" | "san diego ca" | "CA" | "San Diego CA"
- */
 function parseLocation(raw: string): { city: string; state: string } {
   const s = raw.trim();
   if (!s) return { city: "", state: "" };
-
-  // Prefer comma split: "san diego, ca"
   if (s.includes(",")) {
     const [cityPart, statePart] = s.split(",");
-    return {
-      city:  (cityPart ?? "").trim(),
-      state: (statePart ?? "").trim().toUpperCase(),
-    };
+    return { city: (cityPart ?? "").trim(), state: (statePart ?? "").trim().toUpperCase() };
   }
-
-  // No comma — take the last whitespace-separated token as state
   const words = s.trim().split(/\s+/);
-  if (words.length === 1) {
-    // Could be just a state code
-    return { city: "", state: words[0].toUpperCase() };
-  }
-  const state = words[words.length - 1].toUpperCase();
-  const city  = words.slice(0, -1).join(" ");
-  return { city, state };
+  if (words.length === 1) return { city: "", state: words[0].toUpperCase() };
+  return { city: words.slice(0, -1).join(" "), state: words[words.length - 1].toUpperCase() };
 }
 
 const ABBREV_PAIRS: [string, string][] = [
-  ["st",   "street"],
-  ["ave",  "avenue"],
-  ["blvd", "boulevard"],
-  ["dr",   "drive"],
-  ["rd",   "road"],
-  ["ln",   "lane"],
-  ["ct",   "court"],
-  ["pl",   "place"],
-  ["pkwy", "parkway"],
-  ["hwy",  "highway"],
+  ["st", "street"], ["ave", "avenue"], ["blvd", "boulevard"], ["dr", "drive"],
+  ["rd", "road"], ["ln", "lane"], ["ct", "court"], ["pl", "place"],
+  ["pkwy", "parkway"], ["hwy", "highway"],
 ];
 
 function streetVariants(input: string): string[] {
@@ -171,7 +145,23 @@ function streetVariants(input: string): string[] {
   return Array.from(variants);
 }
 
-// Shared empty-state UI
+/** Build a results URL preserving all current params but overriding page. */
+function pageHref(params: SearchParams, page: number): string {
+  const sp = new URLSearchParams();
+  if (params.type)     sp.set("type",     params.type);
+  if (params.first)    sp.set("first",    params.first);
+  if (params.last)     sp.set("last",     params.last);
+  if (params.location) sp.set("location", params.location);
+  if (params.q)        sp.set("q",        params.q);
+  if (params.street)   sp.set("street",   params.street);
+  if (page > 1)        sp.set("page",     String(page));
+  return `/results?${sp}`;
+}
+
+// ---------------------------------------------------------------------------
+// Empty / Error states
+// ---------------------------------------------------------------------------
+
 function EmptyState({ params }: { params: SearchParams }) {
   return (
     <div className="bg-gray-50 flex-1">
@@ -209,6 +199,75 @@ function ErrorState() {
 }
 
 // ---------------------------------------------------------------------------
+// Pagination bar
+// ---------------------------------------------------------------------------
+
+function PaginationBar({
+  params,
+  currentPage,
+  totalPages,
+}: {
+  params: SearchParams;
+  currentPage: number;
+  totalPages: number;
+}) {
+  if (totalPages <= 1) return null;
+
+  // Build page list: always include 1, last, and up to 2 around current
+  const pageSet = new Set<number>();
+  pageSet.add(1);
+  pageSet.add(totalPages);
+  for (let p = Math.max(1, currentPage - 1); p <= Math.min(totalPages, currentPage + 1); p++) {
+    pageSet.add(p);
+  }
+  const pages = [...pageSet].sort((a, b) => a - b);
+
+  return (
+    <nav className="flex items-center justify-between border-t border-gray-200 pt-6 mt-6">
+      <Link
+        href={currentPage > 1 ? pageHref(params, currentPage - 1) : "#"}
+        className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
+          currentPage > 1 ? "text-teal-600 hover:bg-teal-50" : "text-gray-300 pointer-events-none"
+        }`}
+      >
+        ← Previous
+      </Link>
+
+      <div className="flex items-center gap-1">
+        {pages.map((p, i) => {
+          const prev = pages[i - 1];
+          const gap = prev !== undefined && p - prev > 1;
+          return (
+            <span key={p} className="flex items-center gap-1">
+              {gap && <span className="text-gray-300 px-1 text-sm">…</span>}
+              <Link
+                href={pageHref(params, p)}
+                className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                  p === currentPage
+                    ? "bg-teal-600 text-white"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+              >
+                {p}
+              </Link>
+            </span>
+          );
+        })}
+      </div>
+
+      <Link
+        href={currentPage < totalPages ? pageHref(params, currentPage + 1) : "#"}
+        className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
+          currentPage < totalPages ? "text-teal-600 hover:bg-teal-50" : "text-gray-300 pointer-events-none"
+        }`}
+      >
+        Next →
+      </Link>
+    </nav>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Metadata
 // ---------------------------------------------------------------------------
 
@@ -221,11 +280,7 @@ export async function generateMetadata({
   const query = queryLabel(params);
   const title = `Results for ${query} | Who Is My Date?`;
   const description = `Find people named ${query} on Who Is My Date - free public records search.`;
-  return {
-    title,
-    description,
-    openGraph: { title, description },
-  };
+  return { title, description, openGraph: { title, description } };
 }
 
 // ---------------------------------------------------------------------------
@@ -238,8 +293,10 @@ export default async function ResultsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+  const start = (page - 1) * PAGE_SIZE;
+  const end   = start + PAGE_SIZE - 1;
 
-  // No search type — show prompt
   if (!params.type) {
     return (
       <div className="bg-gray-50 flex-1">
@@ -255,90 +312,117 @@ export default async function ResultsPage({
 
   const label = queryLabel(params);
   let display: DisplayPerson[] = [];
+  let totalCount: number | null = null;
 
-  // ── PHONE: Enformion only ─────────────────────────────────────────────────
+  // ── PHONE: Enformion only, no pagination ─────────────────────────────────
   if (params.type === "phone") {
     if (params.q) {
       const enf = await searchByPhone(params.q);
       display = enf.map(fromEnformion);
     }
-
     if (display.length === 0) return <EmptyState params={params} />;
-
-    return <ResultsList params={params} label={label} people={display} />;
+    return (
+      <ResultsList
+        params={params} label={label} people={display}
+        page={1} totalPages={1} total={display.length}
+      />
+    );
   }
 
   // ── NAME / ADDRESS: Supabase first, Enformion fallback ───────────────────
   const supabase = createServerClient();
   if (!supabase) return <ErrorState />;
 
-  let query = supabase.from("people").select("*").limit(20);
+  // Build the base Supabase query (filters only — range applied below)
+  let baseQuery = supabase.from("people").select("*", { count: "exact" });
 
   if (params.type === "name") {
-    if (params.first) query = query.ilike("first_name", `%${params.first}%`);
-    if (params.last)  query = query.ilike("last_name",  `%${params.last}%`);
+    if (params.first)    baseQuery = baseQuery.ilike("first_name", `%${params.first}%`);
+    if (params.last)     baseQuery = baseQuery.ilike("last_name",  `%${params.last}%`);
     if (params.location) {
       const { city } = parseLocation(params.location);
-      if (city) query = query.ilike("city", `%${city}%`);
+      if (city) baseQuery = baseQuery.ilike("city", `%${city}%`);
     }
   } else if (params.type === "address") {
     if (params.street) {
       const variants = streetVariants(params.street);
-      const orFilter = variants.map((v) => `address.ilike.%${v}%`).join(",");
-      query = query.or(orFilter);
+      baseQuery = baseQuery.or(variants.map((v) => `address.ilike.%${v}%`).join(","));
     }
     if (params.location) {
       const { city, state } = parseLocation(params.location);
-      if (city)                    query = query.ilike("city",  `%${city}%`);
-      if (state && state.length === 2) query = query.eq("state", state);
+      if (city)                     baseQuery = baseQuery.ilike("city",  `%${city}%`);
+      if (state && state.length === 2) baseQuery = baseQuery.eq("state", state);
     }
   }
 
-  const { data: rows, error } = await query;
+  const { data: rows, count, error } = await baseQuery.range(start, end);
   if (error) return <ErrorState />;
 
   const supabaseHits = (rows ?? []) as SupabasePerson[];
-  console.log(`[results] Supabase returned ${supabaseHits.length} rows for type=${params.type}`);
+  console.log(`[results] Supabase returned ${supabaseHits.length} rows (total=${count}) for type=${params.type} page=${page}`);
 
-  if (supabaseHits.length > 0) {
+  if (count !== null && count > 0) {
+    // Supabase has results — use them with exact pagination
     display = supabaseHits.map(fromSupabase);
-  } else {
-    // Fall back to Enformion
-    if (params.type === "name") {
-      const { city, state } = parseLocation(params.location ?? "");
-      console.log(`[results] Supabase 0 results — triggering Enformion name fallback: first="${params.first}" last="${params.last}" city="${city}" state="${state}"`);
-      const enf = await searchByName(params.first ?? "", params.last ?? "", city, state);
-      console.log(`[results] Enformion name fallback returned ${enf.length} results`);
-      display = sortByLocation(enf.map(fromEnformion), city, state);
-    } else if (params.type === "address") {
-      const parts = (params.location ?? "").split(",");
-      const city  = parts[0]?.trim() ?? "";
-      const state = parts[1]?.trim() ?? "";
-      console.log(`[results] Supabase 0 results — triggering Enformion address fallback: street="${params.street}" city="${city}" state="${state}"`);
-      const enf   = await searchByAddress(params.street ?? "", city, state, "");
-      console.log(`[results] Enformion address fallback returned ${enf.length} results`);
-      display = enf.map(fromEnformion);
-    }
+    totalCount = count;
+    const totalPages = Math.ceil(count / PAGE_SIZE);
+    return (
+      <ResultsList
+        params={params} label={label} people={display}
+        page={page} totalPages={totalPages} total={count}
+      />
+    );
+  }
+
+  // ── Enformion fallback ────────────────────────────────────────────────────
+  if (params.type === "name") {
+    const { city, state } = parseLocation(params.location ?? "");
+    console.log(`[results] Supabase 0 — Enformion name fallback: first="${params.first}" last="${params.last}" page=${page}`);
+    const enf = await searchByName(params.first ?? "", params.last ?? "", city, state, page, PAGE_SIZE);
+    console.log(`[results] Enformion returned ${enf.length} results`);
+    display = sortByLocation(enf.map(fromEnformion), city, state);
+  } else if (params.type === "address") {
+    const parts = (params.location ?? "").split(",");
+    const city  = parts[0]?.trim() ?? "";
+    const state = parts[1]?.trim() ?? "";
+    const enf   = await searchByAddress(params.street ?? "", city, state, "");
+    display = enf.map(fromEnformion);
   }
 
   if (display.length === 0) return <EmptyState params={params} />;
 
-  return <ResultsList params={params} label={label} people={display} />;
+  // For Enformion we don't have an exact total — use result count to estimate pages
+  const enfTotalPages = display.length === PAGE_SIZE ? page + 1 : page;
+  return (
+    <ResultsList
+      params={params} label={label} people={display}
+      page={page} totalPages={enfTotalPages} total={null}
+    />
+  );
 }
 
 // ---------------------------------------------------------------------------
-// ResultsList sub-component
+// ResultsList
 // ---------------------------------------------------------------------------
 
 function ResultsList({
   params,
   label,
   people,
+  page,
+  totalPages,
+  total,
 }: {
   params: SearchParams;
   label: string;
   people: DisplayPerson[];
+  page: number;
+  totalPages: number;
+  total: number | null;
 }) {
+  const pageStart = (page - 1) * PAGE_SIZE + 1;
+  const pageEnd   = (page - 1) * PAGE_SIZE + people.length;
+
   return (
     <div className="bg-gray-50 flex-1">
       <ResultsSearchBar
@@ -351,13 +435,29 @@ function ResultsList({
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+        {/* Result count line */}
         <p className="text-sm text-gray-500 mb-4">
-          Showing{" "}
-          <span className="font-semibold text-gray-800">{people.length} results</span>{" "}
-          for <span className="font-semibold text-gray-800">{label}</span>
+          {total !== null ? (
+            <>
+              Showing{" "}
+              <span className="font-semibold text-gray-800">{pageStart}–{pageEnd}</span>
+              {" "}of{" "}
+              <span className="font-semibold text-gray-800">{total.toLocaleString()}</span>
+              {" "}results for{" "}
+              <span className="font-semibold text-gray-800">{label}</span>
+            </>
+          ) : (
+            <>
+              Showing{" "}
+              <span className="font-semibold text-gray-800">{people.length} results</span>
+              {" "}for{" "}
+              <span className="font-semibold text-gray-800">{label}</span>
+              {page > 1 && <span className="text-gray-400"> — page {page}</span>}
+            </>
+          )}
         </p>
 
-        {/* ── AD UNIT ── */}
+        {/* Ad unit */}
         <div className="w-[728px] max-w-full h-[90px] mx-auto bg-gray-200 flex items-center justify-center text-gray-400 text-sm mb-6">
           Advertisement
         </div>
@@ -365,7 +465,6 @@ function ResultsList({
         <div className="flex flex-col gap-4">
           {people.map((person) => (
             <div key={person.key} className="bg-white border border-gray-200 rounded-xl px-6 py-5 shadow-sm">
-              {/* Name / age / location */}
               <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                 <div>
                   <span className="text-lg font-bold text-gray-900">{person.full_name}</span>
@@ -380,21 +479,17 @@ function ResultsList({
                 )}
               </div>
 
-              {/* Address */}
               {person.address && (
                 <p className="text-sm text-gray-400 mb-2">
                   {[person.address, person.city, [person.state, person.zip].filter(Boolean).join(" ")]
-                    .filter(Boolean)
-                    .join(", ")}
+                    .filter(Boolean).join(", ")}
                 </p>
               )}
 
-              {/* Phone teaser */}
               {person.phone_teaser && (
                 <p className="text-sm text-gray-400 italic mb-2">Phone: {person.phone_teaser}</p>
               )}
 
-              {/* Relatives */}
               {person.relatives.length > 0 && (
                 <p className="text-sm text-gray-600 mb-4">
                   <span className="font-medium">Possible relatives:</span>{" "}
@@ -402,7 +497,6 @@ function ResultsList({
                 </p>
               )}
 
-              {/* Actions */}
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={person.profileHref}
@@ -423,7 +517,8 @@ function ResultsList({
           ))}
         </div>
 
-        {/* FCRA disclaimer */}
+        <PaginationBar params={params} currentPage={page} totalPages={totalPages} />
+
         <p className="text-xs text-gray-400 border-t border-gray-100 pt-6 mt-8 leading-relaxed">
           Who Is My Date? is not a consumer reporting agency as defined by the Fair Credit
           Reporting Act (FCRA). The information available on this site may not be used
@@ -432,7 +527,7 @@ function ResultsList({
           to our{" "}
           <Link href="/terms" className="underline hover:text-gray-600">Terms of Service</Link>
           {" "}and{" "}
-          <Link href="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>.
+          <Link href="/privacy-policy" className="underline hover:text-gray-600">Privacy Policy</Link>.
         </p>
       </div>
     </div>

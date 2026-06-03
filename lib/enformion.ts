@@ -159,8 +159,10 @@ export async function searchByName(
   lastName: string,
   city: string,
   state: string,
+  page = 1,
+  pageSize = 20,
 ): Promise<EnformionPerson[]> {
-  const key = `name:${firstName}:${lastName}:${city}:${state}`;
+  const key = `name:${firstName}:${lastName}:${city}:${state}:${page}`;
   const cached = cacheGet(key);
   if (cached) return cached;
 
@@ -170,19 +172,19 @@ export async function searchByName(
     if (state) addresses.State = state.toUpperCase();
 
     const body: Record<string, unknown> = {
-      FirstName:     capitalize(firstName),
-      LastName:      capitalize(lastName),
-      Addresses:     [addresses],
-      Includes:      ["Addresses", "PhoneNumbers"],
-      FilterOptions: ["IncludeLowQualityAddresses"],
-      Page:          1,
-      ResultsPerPage: 10,
+      FirstName:      capitalize(firstName),
+      LastName:       capitalize(lastName),
+      Addresses:      [addresses],
+      Includes:       ["Addresses", "PhoneNumbers"],
+      FilterOptions:  ["IncludeLowQualityAddresses"],
+      Page:           page,
+      ResultsPerPage: pageSize,
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = await post("/personsearch", body, "Person") as Record<string, any> | null;
     const persons = (data?.persons ?? []) as Record<string, unknown>[];
-    const result = persons.slice(0, 20).map(mapPersonSearchResult);
+    const result = persons.map(mapPersonSearchResult);
     cacheSet(key, result);
     return result;
   } catch (err) {
