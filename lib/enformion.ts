@@ -270,5 +270,5 @@ export async function searchByAddress(
 
 /** Build the clean slug URL for an Enformion-sourced profile page. */
 export function enformionProfileHref(p: EnformionPerson): string {
-  return `/profile/${buildEnformionSlug(p.first_name, p.last_name, p.city, p.state)}`;
+  return `/profile/${buildEnformionSlug(p.first_name, p.last_name, p.age, p.city, p.state)}`;
 }

@@ -22,14 +22,16 @@ export function buildSupabaseSlug(
     .join("-");
 }
 
-/** /profile/julia-zhu-san-francisco-ca */
+/** /profile/julia-zhu-32-san-francisco-ca */
 export function buildEnformionSlug(
   firstName: string,
   lastName: string,
+  age: number | null,
   city: string | null,
   state: string | null,
 ): string {
-  return [firstName, lastName, city ?? "", state ?? ""]
+  const agePart = age != null ? String(age) : "";
+  return [firstName, lastName, agePart, city ?? "", state ?? ""]
     .map(slugify)
     .filter(Boolean)
     .join("-");
@@ -43,7 +45,7 @@ const HEX8_RE = /^[a-f0-9]{8}$/i;
 const UUID_RE =
   /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 
-export type NameParts = { first: string; last: string; city: string; state: string };
+export type NameParts = { first: string; last: string; age: number | null; city: string; state: string };
 
 export type ParsedSlug =
   | { type: "uuid"; id: string }
@@ -72,13 +74,17 @@ export function parseProfileSlug(slug: string): ParsedSlug {
     const first = rest[0] ?? "";
     const last  = rest[1] ?? "";
     const city  = rest.slice(2, rest.length - 1).join(" ");
-    return { type: "supabase", shortId: tail, first, last, city, state };
+    return { type: "supabase", shortId: tail, first, last, age: null, city, state };
   }
 
-  // Enformion: [first, last, ...cityWords, state]
-  const state = tail.toUpperCase();
-  const first = parts[0] ?? "";
-  const last  = parts[1] ?? "";
-  const city  = parts.slice(2, parts.length - 1).join(" ");
-  return { type: "enformion", first, last, city, state };
+  // Enformion: [first, last, [age], ...cityWords, state]
+  const AGE_RE = /^\d+$/;
+  const state    = tail.toUpperCase();
+  const first    = parts[0] ?? "";
+  const last     = parts[1] ?? "";
+  const hasAge   = parts[2] != null && AGE_RE.test(parts[2]);
+  const age      = hasAge ? parseInt(parts[2]!, 10) : null;
+  const cityStart = hasAge ? 3 : 2;
+  const city     = parts.slice(cityStart, parts.length - 1).join(" ");
+  return { type: "enformion", first, last, age, city, state };
 }

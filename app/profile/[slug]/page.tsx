@@ -70,19 +70,19 @@ const fetchByUUID = cache(async (id: string): Promise<SupabasePerson | null> => 
 
 /**
  * Enformion lookup: search by name + city + state, then pick the best match.
- * City and state from the slug are critical for disambiguation.
+ * Age is the highest-priority discriminator, followed by state and city.
  */
 const fetchEnformion = cache(
-  async (first: string, last: string, city: string, state: string): Promise<EnformionPerson | null> => {
+  async (first: string, last: string, age: number | null, city: string, state: string): Promise<EnformionPerson | null> => {
     const results = await searchByName(first, last, city, state);
     if (results.length === 0) return null;
 
-    // Prefer the result that best matches city and state from the slug
     const normCity  = city.toLowerCase();
     const normState = state.toLowerCase();
     const scored = results.map((p) => {
       let score = 0;
-      if (normState && p.state?.toLowerCase() === normState) score += 2;
+      if (age != null && p.age === age)                         score += 4;
+      if (normState && p.state?.toLowerCase() === normState)    score += 2;
       if (normCity  && p.city?.toLowerCase().includes(normCity)) score += 1;
       return { p, score };
     });
@@ -559,7 +559,7 @@ export default async function ProfilePage({ params }: Props) {
   }
 
   // Enformion
-  const person = await fetchEnformion(parsed.first, parsed.last, parsed.city, parsed.state);
+  const person = await fetchEnformion(parsed.first, parsed.last, parsed.age, parsed.city, parsed.state);
   if (!person) return <ProfileNotFound />;
   return <EnformionProfile person={person} />;
 }
