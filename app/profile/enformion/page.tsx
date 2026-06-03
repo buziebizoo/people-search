@@ -164,7 +164,7 @@ export default async function EnformionProfilePage({ searchParams }: { searchPar
         <ProfessionalInfo
           firstName={firstName}
           lastName={lastName}
-          city={city}
+          state={state}
         />
 
         {/* ── RELATIVES ── */}
