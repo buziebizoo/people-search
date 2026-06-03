@@ -46,3 +46,34 @@ export function clientIp(req: Request): string {
   if (fwd) return fwd.split(",")[0].trim();
   return "unknown";
 }
+
+// ---------------------------------------------------------------------------
+// Named limits
+// ---------------------------------------------------------------------------
+
+const MINUTE = 60_000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+export const LIMITS = {
+  searchPerMinute: { limit: 30, windowMs: MINUTE },
+  searchPerDay: { limit: 200, windowMs: DAY },
+  optOutPerHour: { limit: 5, windowMs: HOUR },
+} as const;
+
+/**
+ * Enforce both the per-minute (30) and per-day (200) search limits for an IP.
+ * Returns true if the request is allowed. The two buckets are independent, so
+ * a request that passes the minute check still counts toward the daily total.
+ */
+export function checkSearchRateLimit(ip: string): boolean {
+  if (!checkRateLimit(`search:min:${ip}`, LIMITS.searchPerMinute.limit, LIMITS.searchPerMinute.windowMs)) {
+    return false;
+  }
+  return checkRateLimit(`search:day:${ip}`, LIMITS.searchPerDay.limit, LIMITS.searchPerDay.windowMs);
+}
+
+/** Enforce the opt-out submission limit (5 per IP per hour). */
+export function checkOptOutRateLimit(ip: string): boolean {
+  return checkRateLimit(`opt-out:hour:${ip}`, LIMITS.optOutPerHour.limit, LIMITS.optOutPerHour.windowMs);
+}

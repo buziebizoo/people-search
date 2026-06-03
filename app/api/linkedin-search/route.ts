@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { checkSearchRateLimit, clientIp } from "@/lib/rate-limit";
 
 const MAX_LEN = 100;
 
@@ -8,7 +8,7 @@ function sanitize(s: string | null): string {
 }
 
 export async function GET(req: NextRequest) {
-  if (!checkRateLimit(clientIp(req), 20, 60_000)) {
+  if (!checkSearchRateLimit(clientIp(req))) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 

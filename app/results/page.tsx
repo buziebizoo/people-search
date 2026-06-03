@@ -12,6 +12,7 @@ import {
 import { buildSupabaseSlug } from "@/lib/profile-slug";
 import { fetchBlocklist, isBlocklisted } from "@/lib/blocklist";
 import { CODE_TO_STATE } from "@/lib/states";
+import { sanitizeSearchInput } from "@/lib/sanitize";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -315,7 +316,14 @@ export default async function ResultsPage({
   const start = (page - 1) * PAGE_SIZE;
   const end   = start + PAGE_SIZE - 1;
 
-  console.log(`[results] ResultsPage executing: type=${params.type} first="${params.first}" last="${params.last}" page=${page}`);
+  // Sanitize every user-supplied search input before it reaches Supabase/Enformion
+  const first    = sanitizeSearchInput(params.first);
+  const last     = sanitizeSearchInput(params.last);
+  const locationInput = sanitizeSearchInput(params.location);
+  const street   = sanitizeSearchInput(params.street);
+  const phone    = sanitizeSearchInput(params.q);
+
+  console.log(`[results] ResultsPage executing: type=${params.type} first="${first}" last="${last}" page=${page}`);
 
   if (!params.type) {
     return (
@@ -340,8 +348,8 @@ export default async function ResultsPage({
 
   // ── PHONE: Enformion only, no pagination ─────────────────────────────────
   if (params.type === "phone") {
-    const display: DisplayPerson[] = params.q
-      ? notBlocked(await searchByPhone(params.q)).map(fromEnformion)
+    const display: DisplayPerson[] = phone
+      ? notBlocked(await searchByPhone(phone)).map(fromEnformion)
       : [];
     if (display.length === 0) return <EmptyState params={params} />;
     return (
@@ -361,20 +369,20 @@ export default async function ResultsPage({
   let state = "";
 
   if (params.type === "name") {
-    if (params.first)    baseQuery = baseQuery.ilike("first_name", `%${params.first}%`);
-    if (params.last)     baseQuery = baseQuery.ilike("last_name",  `%${params.last}%`);
-    if (params.location) {
-      const loc = parseLocation(params.location);
+    if (first)    baseQuery = baseQuery.ilike("first_name", `%${first}%`);
+    if (last)     baseQuery = baseQuery.ilike("last_name",  `%${last}%`);
+    if (locationInput) {
+      const loc = parseLocation(locationInput);
       city = loc.city; state = loc.state;
       if (city) baseQuery = baseQuery.ilike("city", `%${city}%`);
     }
   } else if (params.type === "address") {
-    if (params.street) {
-      const variants = streetVariants(params.street);
+    if (street) {
+      const variants = streetVariants(street);
       baseQuery = baseQuery.or(variants.map((v) => `address.ilike.%${v}%`).join(","));
     }
-    if (params.location) {
-      const loc = parseLocation(params.location);
+    if (locationInput) {
+      const loc = parseLocation(locationInput);
       city = loc.city; state = loc.state;
       if (city)                        baseQuery = baseQuery.ilike("city",  `%${city}%`);
       if (state && state.length === 2) baseQuery = baseQuery.eq("state", state);
@@ -401,8 +409,8 @@ export default async function ResultsPage({
   let display: DisplayPerson[] = [];
 
   if (params.type === "name") {
-    console.log(`[results] Supabase 0 — Enformion fallback: first="${params.first}" last="${params.last}" page=${page}`);
-    const enf = await searchByName(params.first ?? "", params.last ?? "", city, state, page, PAGE_SIZE);
+    console.log(`[results] Supabase 0 — Enformion fallback: first="${first}" last="${last}" page=${page}`);
+    const enf = await searchByName(first, last, city, state, page, PAGE_SIZE);
     console.log(`[results] Enformion returned ${enf.length} results`);
     enf.forEach((p, i) =>
       console.log(`[results] enf[${i}] first_name="${p.first_name}" last_name="${p.last_name}" address="${p.address ?? "null"}"`),
@@ -411,7 +419,7 @@ export default async function ResultsPage({
     console.log(`[results] after blocklist filter: ${filtered.length} of ${enf.length} remain`);
     display = sortByLocation(filtered.map(fromEnformion), city, state);
   } else if (params.type === "address") {
-    const enf = await searchByAddress(params.street ?? "", city, state, "");
+    const enf = await searchByAddress(street, city, state, "");
     display = notBlocked(enf).map(fromEnformion);
   }
 

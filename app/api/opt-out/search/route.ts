@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase";
-import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { checkSearchRateLimit, clientIp } from "@/lib/rate-limit";
 import { searchByName } from "@/lib/enformion";
 
 export async function GET(req: NextRequest) {
-  if (!checkRateLimit(`opt-out-search:${clientIp(req)}`, 20, 60_000)) {
+  if (!checkSearchRateLimit(clientIp(req))) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 

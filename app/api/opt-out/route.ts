@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createServerClient } from "@/lib/supabase";
-import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { checkOptOutRateLimit, clientIp } from "@/lib/rate-limit";
+import { readJsonBody } from "@/lib/api-guards";
 import { createOptOutToken } from "@/lib/opt-out-token";
 
 function isValidEmail(s: string): boolean {
@@ -10,16 +11,13 @@ function isValidEmail(s: string): boolean {
 
 export async function POST(req: NextRequest) {
   const ip = clientIp(req);
-  if (!checkRateLimit(`opt-out:${ip}`, 5, 60_000)) {
+  if (!checkOptOutRateLimit(ip)) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
-  let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
-  }
+  const parsed = await readJsonBody(req);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.body;
 
   const source    = String(body.source    ?? "").trim();
   const personId  = String(body.personId  ?? "").trim().slice(0, 100);
