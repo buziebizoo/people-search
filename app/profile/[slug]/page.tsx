@@ -32,15 +32,33 @@ type Props = { params: Promise<{ slug: string }> };
 // Data fetching
 // ---------------------------------------------------------------------------
 
-const fetchByShortId = cache(async (shortId: string): Promise<SupabasePerson | null> => {
+/**
+ * Supabase lookup: query by text fields (first, last, city, state) which are
+ * reliably indexed, then use the shortId to pick the exact record when multiple
+ * people share the same name. This avoids unreliable ILIKE on the UUID column.
+ */
+const fetchBySlugParts = cache(async (
+  shortId: string,
+  first: string,
+  last: string,
+  city: string,
+  state: string,
+): Promise<SupabasePerson | null> => {
   const supabase = createServerClient();
   if (!supabase) return null;
-  const { data } = await supabase
-    .from("people")
-    .select("*")
-    .ilike("id", `${shortId}%`)
-    .limit(1);
-  return (data?.[0] as SupabasePerson) ?? null;
+
+  let query = supabase.from("people").select("*");
+  if (first) query = query.ilike("first_name", first);
+  if (last)  query = query.ilike("last_name",  last);
+  if (city)  query = query.ilike("city",  city);
+  if (state) query = query.eq("state", state.toUpperCase());
+
+  const { data } = await query.limit(20);
+  if (!data || data.length === 0) return null;
+
+  // Prefer the record whose UUID prefix matches the shortId
+  const exact = (data as SupabasePerson[]).find((p) => p.id.startsWith(shortId));
+  return exact ?? (data[0] as SupabasePerson);
 });
 
 const fetchByUUID = cache(async (id: string): Promise<SupabasePerson | null> => {
@@ -50,10 +68,26 @@ const fetchByUUID = cache(async (id: string): Promise<SupabasePerson | null> => 
   return (data as SupabasePerson) ?? null;
 });
 
+/**
+ * Enformion lookup: search by name + city + state, then pick the best match.
+ * City and state from the slug are critical for disambiguation.
+ */
 const fetchEnformion = cache(
   async (first: string, last: string, city: string, state: string): Promise<EnformionPerson | null> => {
     const results = await searchByName(first, last, city, state);
-    return results[0] ?? null;
+    if (results.length === 0) return null;
+
+    // Prefer the result that best matches city and state from the slug
+    const normCity  = city.toLowerCase();
+    const normState = state.toLowerCase();
+    const scored = results.map((p) => {
+      let score = 0;
+      if (normState && p.state?.toLowerCase() === normState) score += 2;
+      if (normCity  && p.city?.toLowerCase().includes(normCity)) score += 1;
+      return { p, score };
+    });
+    scored.sort((a, b) => b.score - a.score);
+    return scored[0]!.p;
   },
 );
 
@@ -73,7 +107,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     firstName = p.first_name; lastName = p.last_name;
     city = p.city ?? ""; state = p.state ?? "";
   } else if (parsed.type === "supabase") {
-    const p = await fetchByShortId(parsed.shortId);
+    const p = await fetchBySlugParts(parsed.shortId, parsed.first, parsed.last, parsed.city, parsed.state);
     if (!p) return { title: "Person Not Found | Who Is My Date?" };
     firstName = p.first_name; lastName = p.last_name;
     city = p.city ?? ""; state = p.state ?? "";
@@ -519,7 +553,7 @@ export default async function ProfilePage({ params }: Props) {
   }
 
   if (parsed.type === "supabase") {
-    const person = await fetchByShortId(parsed.shortId);
+    const person = await fetchBySlugParts(parsed.shortId, parsed.first, parsed.last, parsed.city, parsed.state);
     if (!person) return <ProfileNotFound />;
     return <SupabaseProfile person={person} />;
   }

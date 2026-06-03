@@ -43,33 +43,42 @@ const HEX8_RE = /^[a-f0-9]{8}$/i;
 const UUID_RE =
   /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 
+export type NameParts = { first: string; last: string; city: string; state: string };
+
 export type ParsedSlug =
   | { type: "uuid"; id: string }
-  | { type: "supabase"; shortId: string }
-  | { type: "enformion"; first: string; last: string; city: string; state: string };
+  | { type: "supabase"; shortId: string } & NameParts
+  | { type: "enformion" } & NameParts;
 
 /**
- * Distinguishes three slug shapes:
- *   - Full UUID                          → uuid lookup (backward compat)
- *   - ends with 8-char hex segment        → Supabase prefix lookup
- *   - everything else                     → Enformion name search
+ * Slug structures:
+ *   - Full UUID                              → backward-compat uuid lookup
+ *   - first-last-[city...]-state-{hex8}      → Supabase record (shortId + name parts)
+ *   - first-last-[city...]-state             → Enformion search (name parts only)
  *
- * Enformion slug structure: first-last-[city-words]-state
- * (assumes single-word first and last name — covers the common case)
+ * Name parsing assumes single-word first and last name (covers the common case).
+ * City words are everything between last name and state.
  */
 export function parseProfileSlug(slug: string): ParsedSlug {
   if (UUID_RE.test(slug)) return { type: "uuid", id: slug };
 
   const parts = slug.split("-");
-  const tail = parts[parts.length - 1] ?? "";
+  const tail  = parts[parts.length - 1] ?? "";
 
-  if (HEX8_RE.test(tail)) return { type: "supabase", shortId: tail };
+  if (HEX8_RE.test(tail)) {
+    // Supabase: strip the shortId tail, then parse name/city/state from remaining
+    const rest  = parts.slice(0, -1);
+    const state = rest[rest.length - 1]?.toUpperCase() ?? "";
+    const first = rest[0] ?? "";
+    const last  = rest[1] ?? "";
+    const city  = rest.slice(2, rest.length - 1).join(" ");
+    return { type: "supabase", shortId: tail, first, last, city, state };
+  }
 
   // Enformion: [first, last, ...cityWords, state]
   const state = tail.toUpperCase();
   const first = parts[0] ?? "";
   const last  = parts[1] ?? "";
   const city  = parts.slice(2, parts.length - 1).join(" ");
-
   return { type: "enformion", first, last, city, state };
 }
