@@ -334,6 +334,8 @@ function SupabaseProfile({ person, seed }: { person: SupabasePerson; seed: numbe
         </SectionCard>
 
         <LockedReport type="criminal" seed={seed + 2} title="Criminal Records" />
+        <LockedReport type="arrest" seed={seed + 6} title="Arrest Records" />
+        <LockedReport type="sex_offender" seed={seed + 7} title="Sex Offender Check" />
         <LockedReport type="vehicle" seed={seed + 3} title="Vehicle Registration" />
         <LockedReport type="property" seed={seed + 4} title="Property Records" />
         <LockedReport type="debt" seed={seed + 5} title="Debt & Liens" />

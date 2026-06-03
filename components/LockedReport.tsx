@@ -2,7 +2,13 @@
 
 import { pickAffiliate } from "@/lib/affiliates";
 
-type ReportType = "criminal" | "vehicle" | "property" | "debt";
+type ReportType =
+  | "criminal"
+  | "vehicle"
+  | "property"
+  | "debt"
+  | "arrest"
+  | "sex_offender";
 
 const FAKE_ROWS: Record<ReportType, string[]> = {
   criminal: [
@@ -28,6 +34,18 @@ const FAKE_ROWS: Record<ReportType, string[]> = {
     "Lien 1: [REDACTED] — Filed 20██, $[REDACTED]",
     "Judgment: Case ██-██-████, [REDACTED]",
     "Collection: [REDACTED] — Status [REDACTED]",
+  ],
+  arrest: [
+    "Arrest Record 1: [REDACTED] County, 20██",
+    "Charge: [REDACTED]",
+    "Disposition: [REDACTED]",
+    "Booking No. ██-█████, [REDACTED] — 20██",
+  ],
+  sex_offender: [
+    "Registry Status: Checking national database...",
+    "State Registry: [REDACTED]",
+    "Federal Registry: [REDACTED]",
+    "Last Verified: 20██ — [REDACTED]",
   ],
 };
 
