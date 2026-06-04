@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createServerClient } from "@/lib/supabase";
 import { STATES } from "@/lib/states";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Browse People by State | Who Is My Date?",
@@ -13,19 +13,13 @@ export const metadata: Metadata = {
 async function getCodesWithData(): Promise<Set<string>> {
   const supabase = createServerClient();
   if (!supabase) return new Set();
-  const seen = new Set<string>();
-  let from = 0;
-  while (true) {
-    const { data, error } = await supabase
-      .from("people")
-      .select("state")
-      .range(from, from + 999);
-    if (error || !data || data.length === 0) break;
-    data.forEach((r) => r.state && seen.add(r.state));
-    if (data.length < 1000) break;
-    from += 1000;
-  }
-  return seen;
+  const { data, error } = await supabase
+    .from("people")
+    .select("state")
+    .not("state", "is", null)
+    .limit(1000);
+  if (error || !data) return new Set();
+  return new Set(data.map((r) => r.state).filter(Boolean));
 }
 
 export default async function BrowsePage() {
