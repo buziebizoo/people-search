@@ -1,6 +1,7 @@
 // Server-side only — never import this from a client component.
 
 import { buildEnformionSlug } from "@/lib/profile-slug";
+import { getCachedPerson, setCachedPerson } from "@/lib/enformion-cache";
 
 const BASE_URL = "https://devapi.enformion.com";
 
@@ -164,6 +165,12 @@ export async function searchByName(
   const cached = cacheGet(key);
   if (cached) return cached;
 
+  // Persistent cache — page 1 only, since buildCacheKey is not page-aware.
+  if (page === 1) {
+    const persisted = await getCachedPerson(firstName, lastName, city, state);
+    if (persisted) { cacheSet(key, persisted); return persisted; }
+  }
+
   try {
     const addresses: Record<string, string> = {};
     if (city)  addresses.City  = city.trim();
@@ -184,6 +191,9 @@ export async function searchByName(
     const persons = (data?.persons ?? []) as Record<string, unknown>[];
     const result = persons.map(mapPersonSearchResult);
     cacheSet(key, result);
+    if (page === 1 && result.length > 0) {
+      await setCachedPerson(firstName, lastName, city, state, result);
+    }
     return result;
   } catch (err) {
     console.error("[enformion] searchByName error:", err);
@@ -223,19 +233,25 @@ export async function searchByPhone(phoneNumber: string): Promise<EnformionPerso
   const cached = cacheGet(key);
   if (cached) return cached;
 
+  // Persistent cache — keyed on the cleaned phone digits.
+  const persisted = await getCachedPerson(cleaned, "", "", "");
+  if (persisted) { cacheSet(key, persisted); return persisted; }
+
   try {
     console.log("[enformion] searchByPhone");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = await post(
+    const raw = await post(
       "/phone/enrich",
       { Phone: cleaned, Page: 1, ResultsPerPage: 10 },
       "DevAPICallerID",
-    ) as Record<string, any> | null;
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = raw as Record<string, any> | null;
 
     const person = mapCallerIdResponse(data ?? {});
     const result = person ? [person] : [];
     cacheSet(key, result);
+    if (result.length > 0) await setCachedPerson(cleaned, "", "", "", result);
     return result;
   } catch (err) {
     console.error("[enformion] searchByPhone error:", err);
@@ -253,6 +269,10 @@ export async function searchByAddress(
   const cached = cacheGet(key);
   if (cached) return cached;
 
+  // Persistent cache — keyed on address + city + state.
+  const persisted = await getCachedPerson(address, "", city, state);
+  if (persisted) { cacheSet(key, persisted); return persisted; }
+
   try {
     const body: Record<string, unknown> = {};
     if (address) body.address = address;
@@ -261,6 +281,7 @@ export async function searchByAddress(
     if (zip)     body.zip     = zip;
     const result = extractPersons(await post("/AddressId/api/AddressId", body, "DevAPIAddressID"));
     cacheSet(key, result);
+    if (result.length > 0) await setCachedPerson(address, "", city, state, result);
     return result;
   } catch (err) {
     console.error("[enformion] searchByAddress error:", err);
