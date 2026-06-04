@@ -98,12 +98,12 @@ export default function ReversePhoneLookupPage() {
       <FaqJsonLd />
 
       {/* Hero */}
-      <section className="bg-gray-50 border-b border-gray-100 px-4 sm:px-6 py-16 sm:py-20">
+      <section className="bg-gradient-to-b from-gray-900 to-gray-800 text-white py-20 px-4 text-center">
         <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
             Free Reverse Phone Lookup
           </h1>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-white mb-8">
             Enter any phone number to find out who&apos;s really calling or texting you.
           </p>
 
@@ -119,7 +119,7 @@ export default function ReversePhoneLookupPage() {
               required
               placeholder="(555) 555-5555"
               aria-label="Phone number"
-              className="flex-1 rounded-lg px-4 py-3.5 text-base text-gray-900 placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+              className="flex-1 rounded-lg px-4 py-3.5 text-base bg-white text-gray-900 placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
             />
             <button
               type="submit"
@@ -130,7 +130,7 @@ export default function ReversePhoneLookupPage() {
           </form>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-6 text-sm font-medium text-gray-600">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-6 text-sm font-medium text-teal-300">
             <span>✓ Free to Search</span>
             <span>✓ No Sign Up Required</span>
             <span>✓ Instant Results</span>
