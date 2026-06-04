@@ -52,10 +52,37 @@ export default function ComingSoon() {
     <html lang="en">
       <body className="antialiased">
         <div
-          style={{ minHeight: "100vh", backgroundColor: "#0f2027" }}
-          className="flex flex-col items-center px-4 text-center"
+          style={{
+            minHeight: "100vh",
+            backgroundColor: "#0f2027",
+            backgroundImage: "url(/coming-soon-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
+          className="px-4 text-center"
         >
-          <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full max-w-md">
+          {/* Dark overlay for text readability */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.6)",
+              zIndex: 0,
+            }}
+          />
+
+          {/* Content above the overlay */}
+          <div style={{ position: "relative", zIndex: 1 }} className="flex flex-col items-center gap-6 w-full max-w-md">
+            <div className="flex flex-col items-center gap-6 w-full">
             <p className="text-2xl sm:text-3xl font-bold text-teal-400 tracking-tight">
               Who Is My Date?
             </p>
@@ -111,11 +138,12 @@ export default function ComingSoon() {
                 </button>
               </form>
             )}
-          </div>
+            </div>
 
-          <footer className="py-6 text-white/40 text-sm">
-            © 2026 Who Is My Date?
-          </footer>
+            <footer className="text-white/40 text-sm pt-2">
+              © 2026 Who Is My Date?
+            </footer>
+          </div>
         </div>
       </body>
     </html>
