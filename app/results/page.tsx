@@ -167,8 +167,27 @@ function pageHref(params: SearchParams, page: number): string {
 // Empty / Error states
 // ---------------------------------------------------------------------------
 
+/** Build a /results href preserving the current search but overriding location. */
+function searchHrefWithLocation(params: SearchParams, location: string): string {
+  const sp = new URLSearchParams();
+  if (params.type)   sp.set("type",   params.type);
+  if (params.first)  sp.set("first",  params.first);
+  if (params.last)   sp.set("last",   params.last);
+  if (params.q)      sp.set("q",      params.q);
+  if (params.street) sp.set("street", params.street);
+  if (location)      sp.set("location", location);
+  return `/results?${sp}`;
+}
+
 function EmptyState({ params }: { params: SearchParams }) {
-  const ts = Date.now();
+  // Deterministic seed from the query — varies the affiliate links per search
+  // without calling an impure function during render.
+  const seedBase = `${params.first ?? ""}${params.last ?? ""}${params.q ?? ""}${params.location ?? ""}${params.street ?? ""}`;
+  const ts = seedBase.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const { city, state } = parseLocation(params.location ?? "");
+  const isLocationSearch = params.type !== "phone";
+  const peopleFindersHref = pickAffiliate("background", ts + 3);
+
   return (
     <div className="bg-gray-50 flex-1">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
@@ -178,6 +197,26 @@ function EmptyState({ params }: { params: SearchParams }) {
         <p className="text-gray-700 text-xl font-medium">Oops! We couldn&rsquo;t find anyone matching that name.</p>
         <p className="text-gray-500 mt-2">Try a different spelling or location, or search with one of these services:</p>
       </div>
+
+      {/* Refine-search suggestions */}
+      {isLocationSearch && (
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-8">
+          <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm flex flex-col gap-3 text-center">
+            {city && (
+              <Link href={searchHrefWithLocation(params, state)} className="text-sm font-medium text-teal-600 hover:text-teal-700">
+                Try searching without a city →
+              </Link>
+            )}
+            <Link href={searchHrefWithLocation(params, "")} className="text-sm font-medium text-teal-600 hover:text-teal-700">
+              Try searching in a different state →
+            </Link>
+            <a href={peopleFindersHref} target="_blank" rel="noopener noreferrer"
+              className="mt-1 inline-block bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-5 py-3 rounded-lg transition-colors">
+              Search on PeopleFinders directly →
+            </a>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -459,6 +498,43 @@ export default async function ResultsPage({
 }
 
 // ---------------------------------------------------------------------------
+// People Also Searched — static common names from NC / OH
+// ---------------------------------------------------------------------------
+
+const COMMON_NAMES: { first: string; last: string }[] = [
+  { first: "James",    last: "Smith" },
+  { first: "Mary",     last: "Johnson" },
+  { first: "Robert",   last: "Williams" },
+  { first: "Patricia", last: "Brown" },
+  { first: "John",     last: "Jones" },
+  { first: "Jennifer", last: "Miller" },
+  { first: "Michael",  last: "Davis" },
+  { first: "Linda",    last: "Wilson" },
+  { first: "David",    last: "Moore" },
+  { first: "Barbara",  last: "Taylor" },
+];
+
+function PeopleAlsoSearched() {
+  const names = COMMON_NAMES.slice(0, 5);
+  return (
+    <div className="border-t border-gray-100 pt-6 mt-8">
+      <h2 className="text-sm font-semibold text-gray-700 mb-3">People Also Searched</h2>
+      <div className="flex flex-wrap gap-x-5 gap-y-2">
+        {names.map((n) => (
+          <Link
+            key={`${n.first}-${n.last}`}
+            href={`/results?type=name&first=${encodeURIComponent(n.first)}&last=${encodeURIComponent(n.last)}`}
+            className="text-sm text-gray-500 hover:text-teal-600 hover:underline"
+          >
+            {n.first} {n.last}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // ResultsList
 // ---------------------------------------------------------------------------
 
@@ -582,6 +658,8 @@ function ResultsList({
         </div>
 
         <PaginationBar params={params} currentPage={page} totalPages={totalPages} />
+
+        <PeopleAlsoSearched />
 
         <p className="text-xs text-gray-400 border-t border-gray-100 pt-6 mt-8 leading-relaxed">
           Who Is My Date? is not a consumer reporting agency as defined by the Fair Credit

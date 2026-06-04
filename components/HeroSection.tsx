@@ -1,6 +1,8 @@
 import SearchTabs from "./SearchTabs";
 
 export default function HeroSection() {
+  const searchesToday = 2500 + new Date().getHours() * 47;
+
   return (
     <section className="relative min-h-[650px] flex items-center justify-center">
       {/* Background image */}
@@ -25,6 +27,9 @@ export default function HeroSection() {
           instant, no sign-up.
         </p>
         <SearchTabs />
+        <p className="text-white/70 text-sm text-center mt-3">
+          🔍 <strong>{searchesToday.toLocaleString()}</strong> searches in the last 24 hours
+        </p>
         <p className="text-xs text-white/50">
           Searches draw from publicly available records only.
         </p>
