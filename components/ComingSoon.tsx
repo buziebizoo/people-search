@@ -29,12 +29,14 @@ export default function ComingSoon() {
     setSubmitting(true);
     try {
       const supabase = createBrowserClient();
-      const { error } = await supabase.from("waitlist").insert({
+      const payload = {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         email: email.trim(),
-      });
-      if (error) console.error("[waitlist] insert failed:", error.message);
+      };
+      console.log("[waitlist] attempting insert with:", payload);
+      const { error } = await supabase.from("waitlist").insert(payload);
+      if (error) console.error("[waitlist] insert failed:", JSON.stringify(error, null, 2));
     } catch (err) {
       console.error("[waitlist] insert error:", err);
     } finally {
