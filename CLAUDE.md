@@ -1,5 +1,15 @@
 @AGENTS.md
 
+## GitHub Authentication (run this first, every session)
+
+Before doing anything, set the authenticated remote so pushes work:
+
+```bash
+git remote set-url origin https://<PAT>@github.com/buziebizoo/people-search.git
+```
+
+Replace `<PAT>` with the repo's personal access token (stored outside the repo to avoid secret scanning).
+
 ## Blog Post Publishing
 
 IMPORTANT: Before writing the post, run the shell command: `date +%Y-%m-%d`
