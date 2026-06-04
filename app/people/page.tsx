@@ -14,12 +14,9 @@ async function getCodesWithData(): Promise<Set<string>> {
   const supabase = createServerClient();
   if (!supabase) return new Set();
   const { data, error } = await supabase
-    .from("people")
-    .select("state")
-    .not("state", "is", null)
-    .limit(1000);
+    .rpc("get_distinct_states");
   if (error || !data) return new Set();
-  return new Set(data.map((r) => r.state).filter(Boolean));
+  return new Set(data.map((r: { state: string }) => r.state).filter(Boolean));
 }
 
 export default async function BrowsePage() {
