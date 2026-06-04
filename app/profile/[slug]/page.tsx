@@ -194,23 +194,6 @@ function PinIcon() {
   );
 }
 
-function AffiliateCard({ name, description, href }: { name: string; description: string; href: string }) {
-  return (
-    <SectionCard className="flex flex-col sm:flex-row sm:items-center gap-4">
-      <div className="w-24 h-10 rounded-md bg-gray-100 flex items-center justify-center shrink-0">
-        <span className="text-xs font-bold text-gray-500 text-center leading-tight px-1">{name}</span>
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-600">{description}</p>
-      </div>
-      <a href={href} target="_blank" rel="noopener noreferrer"
-        className="shrink-0 inline-flex items-center min-h-[44px] bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors whitespace-nowrap">
-        Get Report →
-      </a>
-    </SectionCard>
-  );
-}
-
 function FcraDisclaimer() {
   return (
     <div className="text-xs text-gray-400 border-t border-gray-200 pt-5 leading-relaxed flex flex-col gap-2">
@@ -340,16 +323,16 @@ function SupabaseProfile({ person, seed }: { person: SupabasePerson; seed: numbe
         <LockedReport type="property" seed={seed + 4} title="Property Records" />
         <LockedReport type="debt" seed={seed + 5} title="Debt & Liens" />
 
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
-          <div className="flex flex-col gap-3">
-            <AffiliateCard name="PeopleFinders"
-              description="Get a full background report including criminal records, addresses, phone numbers, and more."
-              href={pickAffiliate("dating", seed)} />
-            <AffiliateCard name="PeopleFinders"
-              description="Run a reverse phone lookup to find out who's really calling or texting."
-              href={pickAffiliate("phone", seed + 1)} />
-          </div>
+        <div className="mt-6">
+          <a
+            href={pickAffiliate("background", seed)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg py-5 px-8 rounded-xl transition-colors shadow-lg"
+          >
+            🔍 Get Full Background Report on PeopleFinders →
+          </a>
+          <p className="text-center text-xs text-gray-400 mt-2">Opens in a new tab. Report includes criminal records, addresses, phone numbers and more.</p>
         </div>
 
         <FcraDisclaimer />
@@ -480,16 +463,16 @@ function EnformionProfile({ person, seed }: { person: EnformionPerson; seed: num
           )}
         </SectionCard>
 
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">Full Background Reports</h2>
-          <div className="flex flex-col gap-3">
-            <AffiliateCard name="PeopleFinders"
-              description="Get a full background report including criminal records, addresses, phone numbers, and more."
-              href={pickAffiliate("dating", seed)} />
-            <AffiliateCard name="PeopleFinders"
-              description="Run a reverse phone lookup to find out who's really calling or texting."
-              href={pickAffiliate("phone", seed + 1)} />
-          </div>
+        <div className="mt-6">
+          <a
+            href={pickAffiliate("background", seed)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg py-5 px-8 rounded-xl transition-colors shadow-lg"
+          >
+            🔍 Get Full Background Report on PeopleFinders →
+          </a>
+          <p className="text-center text-xs text-gray-400 mt-2">Opens in a new tab. Report includes criminal records, addresses, phone numbers and more.</p>
         </div>
 
         <FcraDisclaimer />
