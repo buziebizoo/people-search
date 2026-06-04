@@ -5,11 +5,9 @@ import Link from "next/link";
 
 const NAV_LINKS = [
   { href: "/",                     label: "Home"           },
-  { href: "/check",                label: "Check Him"      },
   { href: "/people",               label: "Browse"         },
   { href: "/reverse-phone-lookup", label: "Reverse Lookup" },
   { href: "/blog",                 label: "Blog"           },
-  { href: "/report",               label: "Report"         },
   { href: "/about",                label: "About"          },
   { href: "/opt-out",              label: "Remove My Info" },
 ];

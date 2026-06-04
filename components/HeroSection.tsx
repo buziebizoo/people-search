@@ -23,8 +23,8 @@ export default function HeroSection() {
           <span className="text-teal-400">really?</span>
         </h1>
         <p className="text-xl text-white/80 max-w-xl">
-          Search public records, check community reports, and verify your date
-          before you meet. Free, instant, no sign-up.
+          Search 100M+ public records by name, phone, or address. Free,
+          instant, no sign-up.
         </p>
         <SearchTabs />
         <p className="text-white/70 text-sm text-center mt-3">

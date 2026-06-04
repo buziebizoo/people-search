@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createBrowserClient } from "@/lib/supabase";
-import FloatingTryIt from "@/components/FloatingTryIt";
 
 // Full-document coming-soon gate. Renders its own <html>/<body> so the root
 // layout can `return <ComingSoon />` directly and still produce a valid
@@ -52,7 +51,6 @@ export default function ComingSoon() {
   return (
     <html lang="en">
       <body className="antialiased">
-        <FloatingTryIt />
         <div
           style={{
             minHeight: "100vh",
@@ -94,8 +92,8 @@ export default function ComingSoon() {
             </h1>
 
             <p className="text-white/70 text-lg">
-              The complete dating safety platform. Search public records, check
-              community reports, and verify anyone before you meet.
+              We&apos;re putting the finishing touches on something great. Check
+              back soon.
             </p>
 
             {submitted ? (

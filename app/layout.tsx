@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Script from "next/script";
-import { headers } from "next/headers";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ComingSoon from "@/components/ComingSoon";
-import FloatingTryIt from "@/components/FloatingTryIt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,19 +20,12 @@ export const metadata: Metadata = {
   },
 };
 
-// Routes that stay live even while the COMING_SOON gate is active.
-const COMING_SOON_EXEMPT = ["/check", "/report", "/lookup"];
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  if (process.env.COMING_SOON === "true") {
-    const pathname = (await headers()).get("x-pathname") ?? "";
-    const exempt = COMING_SOON_EXEMPT.some((p) => pathname.startsWith(p));
-    if (!exempt) return <ComingSoon />;
-  }
+  if (process.env.COMING_SOON === "true") return <ComingSoon />;
 
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
@@ -53,7 +44,6 @@ export default async function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <FloatingTryIt />
       </body>
     </html>
   );
