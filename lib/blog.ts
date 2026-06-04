@@ -532,6 +532,43 @@ export const BLOG_POSTS: BlogPost[] = [
 <p>The fact that you're searching at all usually means something has already changed in the relationship — a shift in attention, unexplained late nights, a phone that's suddenly always face-down. The tools above can confirm or rule out a specific suspicion, but they can't fix an underlying problem in the relationship. Whether or not you find a profile, if trust is already broken, that conversation needs to happen regardless of what the search turns up.</p>
 `,
   },
+  {
+    slug: "find-hidden-social-media-accounts",
+    title: "How to Find Someone's Hidden Social Media Accounts",
+    date: "2026-06-04",
+    category: "People Search",
+    excerpt:
+      "Think someone you're dating has social media accounts they're not telling you about? Here's how to find hidden profiles across Facebook, Instagram, TikTok, and more using free search techniques.",
+    content: `
+<p>Most people have at least three or four social media accounts. Some people have more — and not all of them are the ones they mention casually in conversation. Finding a hidden social media account doesn't require hacking or special software. It requires knowing where to look and what patterns to follow.</p>
+
+<h2>Why people hide social media accounts</h2>
+<p>Hidden accounts aren't always sinister. Some people maintain separate accounts to keep different aspects of their life compartmentalized — a professional LinkedIn versus a personal Instagram, or a fitness account separate from a general one. But in the context of dating and relationships, hidden accounts are sometimes used to stay active on dating platforms, maintain contact with an ex, or keep a second identity that a partner doesn't know about. If you have a specific reason to look, these techniques will help you search systematically.</p>
+
+<h2>Start with their username</h2>
+<p>People are creatures of habit. The username someone uses on one platform is frequently the same — or a slight variation — of what they use everywhere else. If you know their Instagram handle, search for it directly on Facebook, TikTok, Snapchat, Twitter/X, Reddit, and anywhere else relevant. Even small variations (adding a number, swapping a dot for an underscore) are worth testing. A username search tool can run this across dozens of platforms simultaneously and surface accounts you'd never find manually.</p>
+
+<h2>Search their email addresses</h2>
+<p>Most social media accounts are created with an email address. If you know one of your partner's or date's email addresses, enter it into the sign-up or login page for major platforms. The "forgot password" feature on most platforms will confirm whether an account is registered to that email without requiring you to access anything. A platform saying it has sent a reset link to an email is confirmation that the email is registered — even if you never see the email itself. Run this test on Tinder, Bumble, Hinge, Facebook, Instagram, and any other platform you're curious about.</p>
+
+<h2>Run a people search</h2>
+<p>Aggregated people-search tools pull together publicly available data from dozens of sources, including linked social accounts, email addresses, and usernames. Searching by someone's full name and city often surfaces associated accounts they may not have mentioned. These tools don't access private data — they index what's already public — but they can surface social accounts, profiles, and usernames in a single search that would take hours to find manually.</p>
+
+<h2>Search their phone number</h2>
+<p>Many platforms let users search for people by phone number. Facebook, for example, allows searching by phone number to find accounts. Enter the number in the platform's search bar and see what comes up. A reverse phone lookup can also cross-reference a number against associated usernames, email addresses, and social profiles in its aggregated database — sometimes surfacing accounts attached to a number that you'd never find through a name search alone.</p>
+
+<h2>Try Google and image searches</h2>
+<p>A simple web search of someone's full name, city, and job title surfaces indexed social content — posts, profile pages, tagged photos — that links back to active accounts. For broader image coverage, a reverse image search using their photo can turn up profiles where the same image was used under a different name or handle. This is especially useful when someone has created a separate account with a slightly different name but reused the same profile photo.</p>
+
+<h2>Check mutual connections</h2>
+<p>If you and your date or partner have mutual contacts on social media, look at who those contacts follow. A hidden account on Instagram or Facebook is only as hidden as its follower list — if someone's coworkers or old friends are following it, it's findable. This is a low-tech approach that often turns up accounts that technical searches miss, simply because the account doesn't appear in regular search results but is still public.</p>
+
+<h2>What to do when you find something</h2>
+<p>Finding a hidden account gives you information, not the full story. An old account that hasn't been used in two years is very different from one with posts from last week. Before drawing conclusions, note when the account was last active, what it contains, and whether its existence contradicts anything the person has told you. Screenshot what you find before confronting anyone — profiles can be made private or deleted quickly once someone suspects they've been found.</p>
+
+<p>If the account is active and shows something concerning, bring it up directly. You're entitled to an honest explanation. The tools above help you get to the facts faster — what you decide to do with those facts is entirely up to you.</p>
+`,
+  },
 ];
 
 // ---------------------------------------------------------------------------
